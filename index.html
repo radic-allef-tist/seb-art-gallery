@@ -2,6 +2,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Stupid, Evil, or Both: Artwork Gallery</title>
+
+<!-- PhotoSwipe CSS -->
+<link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
+
+<!-- PhotoSwipe JS -->
+<script src="https://unpkg.com/photoswipe@5/dist/photoswipe.min.js"></script>
+<script src="https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js" type="module"></script>
+  
   <style>
     body { font-family: serif; background: #f9f9f9; margin: 0; padding: 20px; text-align: center; }
     
@@ -129,93 +137,118 @@
 
 
   
-  <div class="gallery">
+<div class="gallery">
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="FULL COVER ART">
       <img src="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg" alt="Full Cover Art">
     </a>
     <div class="caption">FULL COVER ART</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="OUR VOTE">
       <img src="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg" alt="Our Vote">
     </a>
     <div class="caption">OUR VOTE</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/TRUMP_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/TRUMP_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="DONALD J. TRUMP">
       <img src="Watermarked_JPEGS/TRUMP_Watermarked.jpg" alt="Donald J. Trump">
     </a>
     <div class="caption">DONALD J. TRUMP</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="CAPITALISM">
       <img src="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg" alt="Capitalism">
     </a>
     <div class="caption">CAPITALISM</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/TAXES_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/TAXES_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="TAXES">
       <img src="Watermarked_JPEGS/TAXES_Watermarked.jpg" alt="Taxes">
     </a>
     <div class="caption">TAXES</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="HEALTHCARE">
       <img src="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg" alt="Healthcare">
     </a>
     <div class="caption">HEALTHCARE</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/EDUCATION_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/EDUCATION_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="EDUCATION">
       <img src="Watermarked_JPEGS/EDUCATION_Watermarked.jpg" alt="Education">
     </a>
     <div class="caption">EDUCATION</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="THE ENVIRONMENT">
       <img src="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg" alt="The Environment">
     </a>
     <div class="caption">THE ENVIRONMENT</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="BIGOTRY">
       <img src="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg" alt="Bigotry">
     </a>
     <div class="caption">BIGOTRY</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/JUSTICE_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/JUSTICE_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="JUSTICE">
       <img src="Watermarked_JPEGS/JUSTICE_Watermarked.jpg" alt="Justice">
     </a>
     <div class="caption">JUSTICE</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/RELIGION_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/RELIGION_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="RELIGION">
       <img src="Watermarked_JPEGS/RELIGION_Watermarked.jpg" alt="Religion">
     </a>
     <div class="caption">RELIGION</div>
   </div>
 
   <div class="gallery-item">
-    <a href="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg" target="_blank">
+    <a href="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg"
+       data-pswp-width="2000" data-pswp-height="1500"
+       data-pswp-caption="FINAL RANT">
       <img src="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg" alt="Final Rant">
     </a>
     <div class="caption">FINAL RANT</div>
   </div>
 
-
+</div>
+    
 <div class="footer">
  
   <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. If not, that's okay too.</p> 
@@ -227,9 +260,19 @@
   <p> -Radic</p>
 
 </div>
+   
 
-    
-</div>
+  <script type="module">
+import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js';
+
+const lightbox = new PhotoSwipeLightbox({
+  gallery: '.gallery',      // your gallery container
+  children: 'a',            // each <a> is a gallery item
+  pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.min.js')
+});
+
+lightbox.init();
+</script>
 
 
 <button id="backToTop" title="Go to top" aria-label="Back to top">
