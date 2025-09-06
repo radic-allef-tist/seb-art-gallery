@@ -126,7 +126,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST4</h1>
+  <h1>Stupid, Evil, or Both TEST5</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -243,10 +243,6 @@
           ">✕</button>
 </div>
 
-  <!-- Include Panzoom library -->
-<script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
-
-  
 <div class="footer">
  
   <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. If not, that's okay too.</p> 
@@ -257,77 +253,56 @@
   <p>Thanks again to everyone for the support. Stay strong out there.</p>
   <p> -Radic</p>
 
-</div>
+ </div>
 
-  
+  <!-- Include Panzoom library -->
+<script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
+
+    
 <!-- Click zoom  -->
 
 <script>
-const modal = document.getElementById('imageModal');
-const modalImg = document.getElementById('modalImage');
-const closeBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeModal');
+    let panzoomInstance;
 
-const toggleBodyScroll = disable => {
-  document.body.style.overflow = disable ? 'hidden' : '';
-};
+    document.querySelectorAll('.gallery a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        modal.style.display = 'flex';
+        modalImg.src = link.href;
 
-// Panzoom instance (initialized once)
-let panzoomInstance;
+        document.body.style.overflow = 'hidden';
 
-// Open modal
-document.querySelectorAll('.gallery a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    modal.style.display = 'flex';
-    modalImg.src = a.href;
+        if (panzoomInstance) panzoomInstance.destroy();
+        panzoomInstance = Panzoom(modalImg, { maxScale: 10, minScale: 1, contain: 'invert', cursor: 'grab', animate: true });
+        panzoomInstance.pan(0,0);
 
-    toggleBodyScroll(true);
+        modalImg.onwheel = e => {
+          e.preventDefault();
+          const rect = modalImg.getBoundingClientRect();
+          const offsetX = e.clientX - rect.left;
+          const offsetY = e.clientY - rect.top;
+          panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
+        };
 
-    // Destroy previous instance if it exists
-    if (panzoomInstance) panzoomInstance.destroy();
-
-    // Initialize Panzoom fresh each time
-    panzoomInstance = Panzoom(modalImg, {
-      maxScale: 10,
-      minScale: 1,
-      contain: 'invert', // allows free pan
-      cursor: 'grab',
-      animate: true
+        modalImg.onclick = e => {
+          const scale = panzoomInstance.getScale();
+          panzoomInstance.zoom(scale < 5 ? scale * 1.5 : scale, { x: e.offsetX, y: e.offsetY, animate: true });
+        };
+      });
     });
 
-    // Mousewheel zoom centered at cursor
-    modal.addEventListener('wheel', e => {
-      if (!modal.contains(e.target)) return;
-      e.preventDefault();
-      const rect = modalImg.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const scaleChange = Math.exp(e.deltaY * -0.0025); // adjust for sensitivity
-      panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
-    }, { passive: false });
+    const closeModal = () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
 
-    // Click-to-zoom at cursor
-    modalImg.addEventListener('click', e => {
-      const scale = panzoomInstance.getScale();
-      const zoomAmount = scale < 5 ? 1.5 : 1;
-      panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
-    });
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    // Pointer drag for panning
-    panzoomInstance.pan(0,0); // reset pan
-  });
-});
-
-// Close modal
-const closeModal = () => {
-  modal.style.display = 'none';
-  toggleBodyScroll(false);
-};
-closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   
 </script>
