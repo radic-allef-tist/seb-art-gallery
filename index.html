@@ -97,29 +97,28 @@
 
 
 #backToTop {
-  opacity: 0;               /* hidden by default */
-  pointer-events: none;     /* not clickable when hidden */
-  position: fixed;
-  bottom: 2vw;
-  right: 2vw;
-  z-index: 99;
-  background-color: #333;
-  border: none;
-  border-radius: 50%;
-  padding: 1.2vw;
-  cursor: pointer;
-  box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
-  transition: opacity 0.3s ease, background-color 0.3s ease;
-}
+    display: none;
+    position: fixed;
+    bottom: 2vh;          /* scales with screen height */
+    right: 2vh;
+    z-index: 9999;
+    font-size: clamp(1rem, 2vw, 2rem); /* scales text size */
+    font-family: serif;
+    color: #333;          /* matches other text */
+    background-color: transparent; /* no background for a cleaner look */
+    border: 2px solid #333; /* gives it a visible outline */
+    border-radius: 50%;
+    padding: 0.5em 0.7em; /* scales with font size */
+    cursor: pointer;
+    box-shadow: 0 0.3em 0.8em rgba(0,0,0,0.15);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
 
-#backToTop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-#backToTop:hover {
-  background-color: #555;
-}
+  #backToTop:hover {
+    background-color: #333;
+    color: white; /* inverts on hover for clear feedback */
+    transform: scale(1.1);
+  }
     
   </style>
   </head>
@@ -232,25 +231,31 @@
     
 </div>
 
-<button id="backToTop" aria-label="Back to top">
-  <!-- SVG arrow icon -->
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 1.5em; height: 1.5em;">
-    <polyline points="18 15 12 9 6 15"></polyline>
+<button id="backToTop" title="Go to top" aria-label="Back to top">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="3" 
+       stroke-linecap="round" stroke-linejoin="round"
+       style="width: 1.5em; height: 1.5em;">
+    <polyline points="18 15 12 9 6 15" />
   </svg>
 </button>
 
 <script>
-  const btn = document.getElementById("backToTop");
+  const backToTopBtn = document.getElementById("backToTop");
 
+  // Show/hide on scroll
   window.addEventListener("scroll", () => {
-    if (document.documentElement.scrollTop > 300) {
-      btn.classList.add("show");
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop > 300) {
+      backToTopBtn.style.display = "block";
     } else {
-      btn.classList.remove("show");
+      backToTopBtn.style.display = "none";
     }
   });
 
-  btn.addEventListener("click", () => {
+  // Smooth scroll to top
+  backToTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 </script>
