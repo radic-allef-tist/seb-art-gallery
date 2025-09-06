@@ -4,155 +4,149 @@
   <meta charset="UTF-8">
   <title>Stupid, Evil, or Both: Artwork Gallery</title>
 
- 
   <style>
     body { font-family: serif; background: #f9f9f9; margin: 0; padding: 20px; text-align: center; }
-    
-   h1 {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-family: serif;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 2vh;  /* increases vertical space relative to screen height */
-  line-height: 1.2;
-}
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-family: serif;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 2vh;
+      line-height: 1.2;
+    }
 
     h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-family: serif;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 12vh;  /* increases vertical space relative to screen height */
-  line-height: 1.2;
-}
-    
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-family: serif;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 12vh;
+      line-height: 1.2;
+    }
+
     .gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 6vh;           /* vertical spacing between each gallery-item */
-  align-items: center;
-  max-width: 90%;
-  margin: 0 auto;
-}
+      display: flex;
+      flex-direction: column;
+      gap: 6vh;
+      align-items: center;
+      max-width: 90%;
+      margin: 0 auto;
+    }
 
-.gallery img {
-  width: 70%;             /* relative for smaller screens */
-  max-width: 800px;       /* caps size on large screens */
-  height: auto;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+    .gallery img {
+      width: 70%;
+      max-width: 800px;
+      height: auto;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-.gallery img:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0.5rem 0.75rem rgba(0,0,0,0.2);
-}
+    .gallery img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0.5rem 0.75rem rgba(0,0,0,0.2);
+    }
 
+    .gallery-item {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-  .gallery-item {
-  text-align: center;
-
-  margin-bottom: 2rem; /* small buffer if needed */
-}
-
-.caption {
-  margin-top: 1rem;    
-  font-size: 2rem;
-  font-family: serif;
-  color: #333;
-  font-weight: bold;
-}
+    .caption {
+      margin-top: 1rem;
+      font-size: 2rem;
+      font-family: serif;
+      color: #333;
+      font-weight: bold;
+    }
 
     .angled-strike {
-  position: relative;    /* relative for the pseudo-element */
-  display: inline-block; /* ensures width matches text */
-  color: inherit;        /* match h2 text color */
-  font-size: inherit;    /* match h2 font size */
-  font-family: inherit;  /* match h2 font */
-  font-weight: inherit;  /* match h2 weight */
-}
+      position: relative;
+      display: inline-block;
+      color: inherit;
+      font-size: inherit;
+      font-family: inherit;
+      font-weight: inherit;
+    }
 
-.angled-strike::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 45%;
-  width: 100%;
-  height: 0.25em;
-  background-color: red;
-  transform: rotate(-12deg);
-  transform-origin: center;
-}
+    .angled-strike::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 45%;
+      width: 100%;
+      height: 0.25em;
+      background-color: red;
+      transform: rotate(-12deg);
+      transform-origin: center;
+    }
 
-.footer {
-  text-align: left;
-  max-width: 90%;
-  margin: 3rem auto 2rem auto;  /* top, sides auto, bottom */
-  padding: 2rem;
-  background-color: rgba(240, 240, 240, 0.8); /* light gray with slight transparency */
-  border: 2px solid #ccc;         /* subtle border */
-  border-radius: 1rem;            /* rounded corners */
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); /* soft shadow for depth */
-  font-size: 1rem;
-  font-family: serif;
-  color: #333;
-  line-height: 1.5;
-}
+    .footer {
+      text-align: left;
+      max-width: 90%;
+      margin: 3rem auto 2rem auto;
+      padding: 2rem;
+      background-color: rgba(240, 240, 240, 0.8);
+      border: 2px solid #ccc;
+      border-radius: 1rem;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+      font-size: 1rem;
+      font-family: serif;
+      color: #333;
+      line-height: 1.5;
+    }
 
+    #closeModal {
+      position: absolute;
+      top: 2vh;
+      right: 2vw;
+      font-size: 3rem;
+      background: none;
+      border: 2px solid white;
+      color: white;
+      cursor: pointer;
+      padding: 0.2em 0.5em;
+      border-radius: 0.25rem;
+      transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
 
-  #closeModal {
-  position: absolute;
-  top: 2vh;
-  right: 2vw;
-  font-size: 3rem;
-  background: none;
-  border: 2px solid white;
-  color: white;
-  cursor: pointer;
-  padding: 0.2em 0.5em;
-  border-radius: 0.25rem;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-}
+    #closeModal:hover,
+    #closeModal:focus {
+      background-color: white;
+      color: red;
+      transform: scale(1.2);
+      box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+      outline: none;
+    }
 
-/* Hover and focus styles */
-#closeModal:hover,
-#closeModal:focus {
-  background-color: white;
-  color: red;
-  transform: scale(1.2);
-  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
-  outline: none;
-}
+    #backToTop {
+      display: none;
+      position: fixed;
+      bottom: 2vh;
+      right: 4vw;
+      z-index: 99;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      background-color: white;
+      color: #333;
+      border: 2px solid #333;
+      border-radius: 50%;
+      padding: clamp(0.5rem, 2vw, 1rem);
+      cursor: pointer;
+      box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
+      transition: opacity 0.3s ease, transform 0.2s ease;
+    }
 
-#backToTop {
-  display: none;
-  position: fixed;
-  bottom: 2vh;                 /* scales with screen height */
-  right: 4vw;                  /* moves it slightly left for phones */
-  z-index: 99;
-  font-size: clamp(1.5rem, 4vw, 2.5rem); /* scales with screen size */
-  background-color: white;     /* matches your site background */
-  color: #333;                 /* same as your body text */
-  border: 2px solid #333;      /* gives it a subtle outline */
-  border-radius: 50%;
-  padding: clamp(0.5rem, 2vw, 1rem);
-  cursor: pointer;
-  box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
-  transition: opacity 0.3s ease, transform 0.2s ease;
-}
-
-  #backToTop:hover {
-    background-color: #333;
-    color: white; /* inverts on hover for clear feedback */
-    transform: scale(1.1);
-  }
-    
+    #backToTop:hover {
+      background-color: #333;
+      color: white;
+      transform: scale(1.1);
+    }
   </style>
-  </head>
+</head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 5</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 <script src="scripts/panzoom.min.js"></script>
@@ -284,7 +278,10 @@
     
 <!-- Click zoom  -->
 
-<script>
+  <!-- Gallery modal & Panzoom initialization -->
+  <script>
+    if (!window.Panzoom) alert("Panzoom failed to load!");
+
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
     const closeBtn = document.getElementById('closeModal');
@@ -295,7 +292,6 @@
         e.preventDefault();
         modal.style.display = 'flex';
         modalImg.src = link.href;
-
         document.body.style.overflow = 'hidden';
 
         if (panzoomInstance) panzoomInstance.destroy();
@@ -325,10 +321,7 @@
     closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-
-  
-</script>
+  </script>
   
 
 <!-- BACK TO TOP ARROW  -->  
