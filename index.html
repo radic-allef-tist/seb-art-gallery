@@ -267,50 +267,54 @@ const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 
-let panzoomInstance = Panzoom(modalImg, {
+const toggleBodyScroll = disable => {
+  document.body.style.overflow = disable ? 'hidden' : '';
+};
+
+// Initialize Panzoom once
+const panzoomInstance = Panzoom(modalImg, {
   maxScale: 10,
-  contain: 'outside',
+  minScale: 1,
+  contain: 'invert',     // allows full drag when zoomed
   cursor: 'grab',
   animate: true
 });
 
-// Wheel zoom for PC
-modal.addEventListener('wheel', e => {
-  if (!modal.contains(e.target)) return;
-  e.preventDefault();
-  panzoomInstance.zoomWithWheel(e);
-}, { passive: false });
-
-// Click-to-zoom at cursor
-modalImg.addEventListener('click', e => {
-  const scale = panzoomInstance.getScale();
-  if (scale < 5) {
-    panzoomInstance.zoom(2, { animate: true, x: e.offsetX, y: e.offsetY });
-  } else {
-    panzoomInstance.reset();
-  }
-});
-
-// Open modal on image click
+// Open modal
 document.querySelectorAll('.gallery a').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
     modalImg.src = a.href;
     panzoomInstance.reset();
-    panzoomInstance = Panzoom(modalImg, { maxScale: 10, contain: 'outside', cursor: 'grab', animate: true });
-    document.body.style.overflow = 'hidden';
+    toggleBodyScroll(true);
   });
 });
 
 // Close modal
 const closeModal = () => {
   modal.style.display = 'none';
-  document.body.style.overflow = '';
+  toggleBodyScroll(false);
 };
 closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+modal.addEventListener('click', e => { 
+  if (e.target === modal) closeModal(); 
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// PC Scroll-to-zoom (like Google Maps)
+modal.addEventListener('wheel', e => {
+  if (!modal.contains(e.target)) return;
+  e.preventDefault();
+  panzoomInstance.zoomWithWheel(e);
+}, { passive: false });
+
+// Optional click-to-zoom at cursor
+modalImg.addEventListener('click', e => {
+  const scale = panzoomInstance.getScale();
+  const zoomAmount = scale < 5 ? 1.5 : 1; // zoom in a bit if below max
+  panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
+});
   
 </script>
   
