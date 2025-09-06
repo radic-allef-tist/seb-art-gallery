@@ -151,7 +151,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 7</h1>
+  <h1>Stupid, Evil, or Both TEST Z</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -320,8 +320,9 @@
     });
 
     const closeModal = () => {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    isZoomed = false; // reset zoom state
     };
 
     closeBtn.addEventListener('click', closeModal);
