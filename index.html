@@ -271,14 +271,8 @@ const toggleBodyScroll = disable => {
   document.body.style.overflow = disable ? 'hidden' : '';
 };
 
-// Initialize Panzoom once
-const panzoomInstance = Panzoom(modalImg, {
-  maxScale: 10,
-  minScale: 1,
-  contain: 'invert',     // allows full drag when zoomed
-  cursor: 'grab',
-  animate: true
-});
+// Panzoom instance (initialized once)
+let panzoomInstance;
 
 // Open modal
 document.querySelectorAll('.gallery a').forEach(a => {
@@ -286,8 +280,41 @@ document.querySelectorAll('.gallery a').forEach(a => {
     e.preventDefault();
     modal.style.display = 'flex';
     modalImg.src = a.href;
-    panzoomInstance.reset();
+
     toggleBodyScroll(true);
+
+    // Destroy previous instance if it exists
+    if (panzoomInstance) panzoomInstance.destroy();
+
+    // Initialize Panzoom fresh each time
+    panzoomInstance = Panzoom(modalImg, {
+      maxScale: 10,
+      minScale: 1,
+      contain: 'invert', // allows free pan
+      cursor: 'grab',
+      animate: true
+    });
+
+    // Mousewheel zoom centered at cursor
+    modal.addEventListener('wheel', e => {
+      if (!modal.contains(e.target)) return;
+      e.preventDefault();
+      const rect = modalImg.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      const scaleChange = Math.exp(e.deltaY * -0.0025); // adjust for sensitivity
+      panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
+    }, { passive: false });
+
+    // Click-to-zoom at cursor
+    modalImg.addEventListener('click', e => {
+      const scale = panzoomInstance.getScale();
+      const zoomAmount = scale < 5 ? 1.5 : 1;
+      panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
+    });
+
+    // Pointer drag for panning
+    panzoomInstance.pan(0,0); // reset pan
   });
 });
 
@@ -297,24 +324,10 @@ const closeModal = () => {
   toggleBodyScroll(false);
 };
 closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { 
-  if (e.target === modal) closeModal(); 
+modal.addEventListener('click', e => {
+  if (e.target === modal) closeModal();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// PC Scroll-to-zoom (like Google Maps)
-modal.addEventListener('wheel', e => {
-  if (!modal.contains(e.target)) return;
-  e.preventDefault();
-  panzoomInstance.zoomWithWheel(e);
-}, { passive: false });
-
-// Optional click-to-zoom at cursor
-modalImg.addEventListener('click', e => {
-  const scale = panzoomInstance.getScale();
-  const zoomAmount = scale < 5 ? 1.5 : 1; // zoom in a bit if below max
-  panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
-});
   
 </script>
   
