@@ -152,7 +152,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST X</h1>
+  <h1>Stupid, Evil, or Both TEST L</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -281,79 +281,83 @@
 
  </div>
 
-  <!-- Include Panzoom library -->
-<script src="https://cdn.jsdelivr.net/npm/panzoom@9.4.0/dist/panzoom.min.js"></script>
+<!-- Include Panzoom library -->
+<script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
 
-    
-<!-- Panzoom modal -->
-  
+<!-- Panzoom script -->
+
 <script>
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 let panzoomInstance;
 
-// Open modal
+// Function to open modal
+function openModal(imgSrc) {
+  modal.style.display = 'flex';
+  modalImg.src = imgSrc;
+  document.body.style.overflow = 'hidden';
+
+  // Destroy previous instance
+  if (panzoomInstance) panzoomInstance.destroy();
+
+  // Initialize Panzoom
+  panzoomInstance = Panzoom(modalImg, {
+    maxScale: 10,
+    minScale: 1,
+    contain: 'invert',
+    cursor: 'grab',
+    animate: true
+  });
+  panzoomInstance.pan(0, 0);
+
+  // Desktop: click or scroll to zoom
+  const isDesktop = window.matchMedia('(pointer: fine)').matches;
+  if (isDesktop) {
+    modalImg.style.cursor = 'zoom-in';
+
+    // Click to zoom
+    const clickHandler = e => {
+      e.preventDefault();
+      const scale = panzoomInstance.getScale();
+      if (scale < 5) {
+        panzoomInstance.zoom(scale * 1.5, { x: e.offsetX, y: e.offsetY, animate: true });
+        modalImg.style.cursor = 'grab';
+      } else {
+        panzoomInstance.zoom(1, { animate: true });
+        panzoomInstance.pan(0, 0);
+        modalImg.style.cursor = 'zoom-in';
+      }
+    };
+    modalImg.addEventListener('click', clickHandler, { once: true });
+
+    // Scroll to zoom
+    modalImg.addEventListener('wheel', e => {
+      e.preventDefault();
+      const rect = modalImg.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
+    });
+
+    // Drag cursor
+    modalImg.addEventListener('mousedown', () => {
+      if (panzoomInstance.getScale() > 1) modalImg.style.cursor = 'grabbing';
+    });
+    modalImg.addEventListener('mouseup', () => {
+      if (panzoomInstance.getScale() > 1) modalImg.style.cursor = 'grab';
+    });
+  } else {
+    // Mobile: pinch to zoom handled automatically
+    modalImg.style.cursor = 'auto';
+  }
+}
+
+// Gallery images
 document.querySelectorAll('.gallery a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    modal.style.display = 'flex';
-    modalImg.src = link.href;
-    document.body.style.overflow = 'hidden';
-
-    // Destroy previous instance if exists
-    if (panzoomInstance) panzoomInstance.destroy();
-
-    // Initialize Panzoom
-    panzoomInstance = Panzoom(modalImg, {
-      maxScale: 10,
-      minScale: 1,
-      contain: 'invert',
-      cursor: 'grab',
-      animate: true
-    });
-
-    panzoomInstance.pan(0, 0);
-
-    // Desktop: click or scroll to zoom
-    const isDesktop = window.matchMedia('(pointer: fine)').matches;
-
-    if (isDesktop) {
-      modalImg.style.cursor = 'zoom-in';
-
-      modalImg.addEventListener('click', e => {
-        e.preventDefault();
-        const currentScale = panzoomInstance.getScale();
-        if (currentScale < 5) {
-          panzoomInstance.zoom(currentScale * 1.5, { x: e.offsetX, y: e.offsetY, animate: true });
-          modalImg.style.cursor = 'grab';
-        } else {
-          panzoomInstance.zoom(1, { animate: true });
-          panzoomInstance.pan(0, 0);
-          modalImg.style.cursor = 'zoom-in';
-        }
-      });
-
-      // Scroll to zoom
-      modalImg.addEventListener('wheel', e => {
-        e.preventDefault();
-        const rect = modalImg.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
-        const offsetY = e.clientY - rect.top;
-        panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
-      });
-
-      // Change cursor while dragging
-      modalImg.addEventListener('mousedown', () => {
-        if (panzoomInstance.getScale() > 1) modalImg.style.cursor = 'grabbing';
-      });
-      modalImg.addEventListener('mouseup', () => {
-        if (panzoomInstance.getScale() > 1) modalImg.style.cursor = 'grab';
-      });
-    } else {
-      // Mobile: pinch to zoom handled automatically by Panzoom
-      modalImg.style.cursor = 'auto';
-    }
+    openModal(link.href);
   });
 });
 
