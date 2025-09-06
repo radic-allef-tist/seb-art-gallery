@@ -227,6 +227,7 @@
   <img id="modalImage" src="" style="max-width:90%; max-height:90%; cursor:grab; border-radius:0.5rem;">
   <button id="closeModal" style="position:absolute; top:2vh; right:2vw; font-size:2rem; background:none; border:none; color:white; cursor:pointer;">✕</button>
 </div>
+
   
 <div class="footer">
  
@@ -252,29 +253,32 @@ let panzoomInstance;
 document.querySelectorAll('.gallery a').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
-    
-    // Show modal and lock page scroll
+
     modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    
+    document.body.style.overflow = 'hidden'; // lock page scroll
     modalImg.src = a.href;
 
-    // Destroy previous panzoom instance if any
+    // Destroy previous instance
     if (panzoomInstance) panzoomInstance.destroy();
 
+    // Initialize Panzoom with easing
     panzoomInstance = Panzoom(modalImg, {
-      maxScale: 10,        // allows deep zoom
+      maxScale: 20,
+      minScale: 0.5,
       contain: 'outside',
-      animate: true
+      animate: true,
+      duration: 250, // smooth animation duration
+      cursor: 'grab',
+      step: 0.1
     });
 
-    // Mouse wheel zoom (desktop)
+    // Mouse wheel zoom
     modalImg.parentElement.addEventListener('wheel', function(event) {
-      event.preventDefault(); // prevent page scroll
+      event.preventDefault();
       panzoomInstance.zoomWithWheel(event);
-    });
+    }, { passive: false });
 
-    // Click-to-zoom (desktop)
+    // Click-to-zoom
     modalImg.addEventListener('click', function(e) {
       e.preventDefault();
       const rect = modalImg.getBoundingClientRect();
@@ -283,33 +287,51 @@ document.querySelectorAll('.gallery a').forEach(a => {
       panzoomInstance.zoomIn({ animate: true, focal: { x: offsetX, y: offsetY } });
     });
 
-    // Touch gestures (mobile)
-    modalImg.parentElement.addEventListener('touchstart', function(event) {
-      event.stopPropagation(); // prevent page scroll
-    }, { passive: false });
-    
-    modalImg.parentElement.addEventListener('touchmove', function(event) {
-      event.stopPropagation(); // prevent page scroll while pinching
-    }, { passive: false });
+    // Double-click/double-tap zoom
+    let lastTap = 0;
+    modalImg.addEventListener('dblclick', e => {
+      const rect = modalImg.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      if (panzoomInstance.getScale() < 5) {
+        panzoomInstance.zoomIn({ animate: true, focal: { x: offsetX, y: offsetY } });
+      } else {
+        panzoomInstance.reset({ animate: true });
+      }
+    });
+
+    // Touch gestures
+    modalImg.parentElement.addEventListener('touchstart', e => e.stopPropagation(), { passive: false });
+    modalImg.parentElement.addEventListener('touchmove', e => e.stopPropagation(), { passive: false });
   });
 });
 
-// Close modal function
+// Close modal
 const closeModal = () => {
   modal.style.display = 'none';
-  document.body.style.overflow = 'auto'; // restore scroll
+  document.body.style.overflow = 'auto';
   if (panzoomInstance) panzoomInstance.destroy();
 };
 
-// Close on button
 closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-// Close on clicking outside image
-modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
+// Grab cursor feedback
+modalImg.addEventListener('mousedown', () => modalImg.style.cursor = 'grabbing');
+modalImg.addEventListener('mouseup', () => modalImg.style.cursor = 'grab');
+modalImg.addEventListener('mouseleave', () => modalImg.style.cursor = 'grab');
+
+// Keyboard support
+document.addEventListener('keydown', e => {
+  if (modal.style.display === 'flex') {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowUp') panzoomInstance.pan(0, 20, { relative: true });
+    if (e.key === 'ArrowDown') panzoomInstance.pan(0, -20, { relative: true });
+    if (e.key === 'ArrowLeft') panzoomInstance.pan(20, 0, { relative: true });
+    if (e.key === 'ArrowRight') panzoomInstance.pan(-20, 0, { relative: true });
+  }
 });
 </script>
-
 
 
 <!-- BACK TO TOP ARROW  -->  
