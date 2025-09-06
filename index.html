@@ -146,7 +146,7 @@
 </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 1</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
@@ -243,7 +243,7 @@
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
   <img id="modalImage" src="" 
-       style="max-width:90%; max-height:90%; cursor:grab; border-radius:0.5rem;">
+       style="max-width:90%; max-height:90%; cursor:zoom-in; border-radius:0.5rem;">
   
   <!-- Bigger X button -->
   <button id="closeModal" 
@@ -285,20 +285,30 @@ const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 
+let scale = 1;
+let isDragging = false;
+let startX, startY;
+let imgX = 0, imgY = 0;
+
+// Helper to update cursor based on zoom
+function updateCursor() {
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+}
+
+// Open modal
 document.querySelectorAll('.gallery a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
     modalImg.src = link.href;
-    document.body.style.overflow = 'hidden';
-    modalImg.style.transform = 'scale(1)'; // reset zoom
-  });
-});
 
-// Simple click-to-zoom toggle (2x)
-modalImg.addEventListener('click', () => {
-  const currentScale = modalImg.style.transform.replace('scale(','').replace(')','');
-  modalImg.style.transform = currentScale === '2' ? 'scale(1)' : 'scale(2)';
+    scale = 1;
+    imgX = 0;
+    imgY = 0;
+    modalImg.style.transform = `translate(0px, 0px) scale(1)`;
+    updateCursor();
+    document.body.style.overflow = 'hidden';
+  });
 });
 
 // Close modal
@@ -307,11 +317,69 @@ const closeModal = () => {
   document.body.style.overflow = '';
 };
 closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Scroll to zoom
+modalImg.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+
+  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
+  const newScale = Math.min(Math.max(1, scale * zoomFactor), 10);
+
+  // Adjust image position to zoom at cursor
+  imgX = offsetX - ((offsetX - imgX) * newScale / scale);
+  imgY = offsetY - ((offsetY - imgY) * newScale / scale);
+
+  scale = newScale;
+  modalImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
+  updateCursor();
 });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+
+// Dragging
+modalImg.addEventListener('mousedown', e => {
+  if (scale <= 1) return; // Only drag when zoomed
+  isDragging = true;
+  startX = e.clientX - imgX;
+  startY = e.clientY - imgY;
+  modalImg.style.cursor = 'grabbing';
+});
+
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  imgX = e.clientX - startX;
+  imgY = e.clientY - startY;
+  modalImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
+});
+
+window.addEventListener('mouseup', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  updateCursor();
+});
+
+// Click to zoom in/out at cursor
+modalImg.addEventListener('click', e => {
+  if (scale === 1) {
+    const rect = modalImg.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    scale = 2; // initial zoom
+    imgX = offsetX - offsetX * scale;
+    imgY = offsetY - offsetY * scale;
+    modalImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
+    updateCursor();
+  } else {
+    scale = 1;
+    imgX = 0;
+    imgY = 0;
+    modalImg.style.transform = `translate(0px,0px) scale(1)`;
+    updateCursor();
+  }
 });
 </script>
   
