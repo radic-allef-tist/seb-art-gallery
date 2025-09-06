@@ -269,30 +269,39 @@ const closeBtn = document.getElementById('closeModal');
 
 let panzoomInstance;
 
-// Open modal on gallery image click
+// Disable/enable background scroll
+const toggleBodyScroll = disable => {
+  document.body.style.overflow = disable ? 'hidden' : '';
+};
+
+// Open modal when clicking gallery images
 document.querySelectorAll('.gallery a').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
     modalImg.src = a.href;
 
-    // Destroy previous instance if exists
+    toggleBodyScroll(true); // lock background scroll
+
+    // Destroy previous Panzoom instance
     if (panzoomInstance) panzoomInstance.destroy();
 
+    // Initialize Panzoom on the image
     panzoomInstance = Panzoom(modalImg, {
-      maxScale: 10,          // zoom in as much as user wants
+      maxScale: 10,
       contain: 'outside',
-      animate: true,
-      cursor: 'grab'
+      cursor: 'grab',
+      animate: true
     });
 
-    // Enable mouse wheel zoom
-    modalImg.parentElement.addEventListener('wheel', e => {
-      e.preventDefault();       // prevent main page scrolling
+    // Mousewheel zoom for PC
+    modal.addEventListener('wheel', e => {
+      if (!modal.contains(e.target)) return;
+      e.preventDefault();
       panzoomInstance.zoomWithWheel(e);
-    });
+    }, { passive: false });
 
-    // Enable click-to-zoom at cursor position
+    // Click-to-zoom
     modalImg.addEventListener('click', e => {
       const scale = panzoomInstance.getScale();
       if (scale < 5) {
@@ -307,14 +316,13 @@ document.querySelectorAll('.gallery a').forEach(a => {
 // Close modal
 const closeModal = () => {
   modal.style.display = 'none';
+  toggleBodyScroll(false); // unlock scroll
 };
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
 
-// Escape key support
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+// Escape key closes modal
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
 </script>
   
 
