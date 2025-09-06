@@ -94,7 +94,28 @@
   margin-left: auto;
   margin-right: auto;
 }
-    
+
+
+#backToTop {
+  display: none;
+  position: fixed;
+  bottom: 2vw;           /* scales with screen width */
+  right: 2vw;
+  z-index: 99;
+  font-size: 2vw;        /* scales text/icon with screen size */
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 1vw 1.2vw;    /* scales button size */
+  cursor: pointer;
+  box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+}
+
+#backToTop:hover {
+  background-color: #555;
+}
     
   </style>
   </head>
@@ -206,5 +227,26 @@
 
     
 </div>
+
+<button id="backToTop" title="Go to top">↑</button>
+
+<script>
+  // Show/hide button on scroll
+  window.onscroll = function() {
+    let btn = document.getElementById("backToTop");
+    if (document.documentElement.scrollTop > 300) {
+      btn.style.display = "block";
+    } else {
+      btn.style.display = "none";
+    }
+  };
+
+  // Scroll smoothly to top when clicked
+  document.getElementById("backToTop").onclick = function() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+</script>
+
+  
 </body>
 </html>
