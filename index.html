@@ -271,8 +271,13 @@ const toggleBodyScroll = disable => {
   document.body.style.overflow = disable ? 'hidden' : '';
 };
 
-// Panzoom instance (initialized once)
 let panzoomInstance;
+let isDragging = false;
+let lastX = 0, lastY = 0;
+let velocityX = 0, velocityY = 0;
+let momentumFrame;
+const decay = 0.90;      // inertia decay rate
+const maxVelocity = 50;  // max pan speed
 
 // Open modal
 document.querySelectorAll('.gallery a').forEach(a => {
@@ -283,38 +288,29 @@ document.querySelectorAll('.gallery a').forEach(a => {
 
     toggleBodyScroll(true);
 
-    // Destroy previous instance if it exists
     if (panzoomInstance) panzoomInstance.destroy();
 
-    // Initialize Panzoom fresh each time
     panzoomInstance = Panzoom(modalImg, {
       maxScale: 10,
       minScale: 1,
-      contain: 'invert', // allows free pan
+      contain: 'invert',
       cursor: 'grab',
       animate: true
     });
 
-    // Mousewheel zoom centered at cursor
-    modal.addEventListener('wheel', e => {
-      if (!modal.contains(e.target)) return;
-      e.preventDefault();
-      const rect = modalImg.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const scaleChange = Math.exp(e.deltaY * -0.0025); // adjust for sensitivity
-      panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
-    }, { passive: false });
+    panzoomInstance.reset();
 
-    // Click-to-zoom at cursor
-    modalImg.addEventListener('click', e => {
-      const scale = panzoomInstance.getScale();
-      const zoomAmount = scale < 5 ? 1.5 : 1;
-      panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
-    });
+    // Scroll-wheel zoom
+    modal.addEventListener('wheel', wheelZoomHandler, { passive: false });
+
+    // Click-to-zoom
+    modalImg.addEventListener('click', clickZoomHandler);
 
     // Pointer drag for panning
-    panzoomInstance.pan(0,0); // reset pan
+    modalImg.addEventListener('pointerdown', pointerDownHandler);
+    modalImg.addEventListener('pointermove', pointerMoveHandler);
+    modalImg.addEventListener('pointerup', pointerUpHandler);
+    modalImg.addEventListener('pointerleave', pointerUpHandler);
   });
 });
 
@@ -322,13 +318,71 @@ document.querySelectorAll('.gallery a').forEach(a => {
 const closeModal = () => {
   modal.style.display = 'none';
   toggleBodyScroll(false);
+
+  // Remove event listeners when closing
+  modal.removeEventListener('wheel', wheelZoomHandler);
+  modalImg.removeEventListener('click', clickZoomHandler);
+  modalImg.removeEventListener('pointerdown', pointerDownHandler);
+  modalImg.removeEventListener('pointermove', pointerMoveHandler);
+  modalImg.removeEventListener('pointerup', pointerUpHandler);
+  modalImg.removeEventListener('pointerleave', pointerUpHandler);
 };
 closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
-});
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  
+
+// ----- Handlers -----
+
+function wheelZoomHandler(e) {
+  if (!modal.contains(e.target)) return;
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+  const scaleChange = Math.exp(e.deltaY * -0.0025); // adjust sensitivity
+  panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
+}
+
+function clickZoomHandler(e) {
+  const scale = panzoomInstance.getScale();
+  const zoomAmount = scale < 5 ? 1.5 : 1;
+  panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
+}
+
+// ----- Drag & inertia -----
+function pointerDownHandler(e) {
+  isDragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  panzoomInstance.setOptions({ animate: false });
+  if (momentumFrame) cancelAnimationFrame(momentumFrame);
+}
+
+function pointerMoveHandler(e) {
+  if (!isDragging) return;
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  panzoomInstance.pan(dx, dy);
+  velocityX = Math.max(Math.min(dx, maxVelocity), -maxVelocity);
+  velocityY = Math.max(Math.min(dy, maxVelocity), -maxVelocity);
+  lastX = e.clientX;
+  lastY = e.clientY;
+}
+
+function pointerUpHandler(e) {
+  if (!isDragging) return;
+  isDragging = false;
+  panzoomInstance.setOptions({ animate: true });
+
+  const step = () => {
+    if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
+    panzoomInstance.pan(velocityX, velocityY);
+    velocityX *= decay;
+    velocityY *= decay;
+    momentumFrame = requestAnimationFrame(step);
+  };
+  step();
+}
 </script>
   
 
