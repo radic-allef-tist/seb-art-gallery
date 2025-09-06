@@ -146,10 +146,9 @@
 </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 4</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
- <script src="scripts/panzoom.min.js"></script>
   
 <div class="gallery">
 
@@ -276,54 +275,45 @@
  </div>
 
     
-<!-- Find Panzoom  -->
 
-  <script src="scripts/panzoom.min.js"></script>
 
-  <!-- Gallery modal & Panzoom initialization -->
+ 
+
+  <!-- Gallery modal  -->
   <script>
-    if (!window.Panzoom) alert("Panzoom failed to load!");
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImage');
+const closeBtn = document.getElementById('closeModal');
 
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const closeBtn = document.getElementById('closeModal');
-    let panzoomInstance;
+document.querySelectorAll('.gallery a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    modal.style.display = 'flex';
+    modalImg.src = link.href;
+    document.body.style.overflow = 'hidden';
+    modalImg.style.transform = 'scale(1)'; // reset zoom
+  });
+});
 
-    document.querySelectorAll('.gallery a').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        modal.style.display = 'flex';
-        modalImg.src = link.href;
-        document.body.style.overflow = 'hidden';
+// Simple click-to-zoom toggle (2x)
+modalImg.addEventListener('click', () => {
+  const currentScale = modalImg.style.transform.replace('scale(','').replace(')','');
+  modalImg.style.transform = currentScale === '2' ? 'scale(1)' : 'scale(2)';
+});
 
-        if (panzoomInstance) panzoomInstance.destroy();
-        panzoomInstance = Panzoom(modalImg, { maxScale: 10, minScale: 1, contain: 'invert', cursor: 'grab', animate: true });
-        panzoomInstance.pan(0,0);
-
-        modalImg.onwheel = e => {
-          e.preventDefault();
-          const rect = modalImg.getBoundingClientRect();
-          const offsetX = e.clientX - rect.left;
-          const offsetY = e.clientY - rect.top;
-          panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
-        };
-
-        modalImg.onclick = e => {
-          const scale = panzoomInstance.getScale();
-          panzoomInstance.zoom(scale < 5 ? scale * 1.5 : scale, { x: e.offsetX, y: e.offsetY, animate: true });
-        };
-      });
-    });
-
-    const closeModal = () => {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  </script>
+// Close modal
+const closeModal = () => {
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+};
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => {
+  if (e.target === modal) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
   
 
 <!-- BACK TO TOP ARROW  -->  
