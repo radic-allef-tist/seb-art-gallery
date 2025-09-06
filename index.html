@@ -230,6 +230,7 @@
     
 </div>
 
+
 <button id="backToTop" title="Go to top" aria-label="Back to top">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
        fill="none" stroke="currentColor" stroke-width="3" 
@@ -246,17 +247,16 @@
   window.addEventListener("scroll", () => {
     const scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop;
-    if (scrollTop > 300) {
-      backToTopBtn.style.display = "block";
-    } else {
-      backToTopBtn.style.display = "none";
-    }
+    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
   });
 
-  // Smooth scroll to top
-  backToTopBtn.addEventListener("click", () => {
+  // Smooth scroll to top on click or touch
+  const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  };
+
+  backToTopBtn.addEventListener("click", scrollToTop);
+  backToTopBtn.addEventListener("touchstart", scrollToTop);
 </script>
 
   
