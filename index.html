@@ -126,7 +126,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST</h1>
+  <h1>Stupid, Evil, or Both TEST2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -271,94 +271,33 @@ const toggleBodyScroll = disable => {
   document.body.style.overflow = disable ? 'hidden' : '';
 };
 
-let panzoomInstance;
+// Initialize Panzoom once
+const panzoomInstance = Panzoom(modalImg, {
+  maxScale: 10,
+  minScale: 1,
+  contain: 'invert',
+  cursor: 'grab',
+  animate: true
+});
+
+// Variables for drag inertia
 let isDragging = false;
 let lastX = 0, lastY = 0;
 let velocityX = 0, velocityY = 0;
 let momentumFrame;
-const decay = 0.90;      // inertia decay rate
-const maxVelocity = 50;  // max pan speed
-
-// Open modal
-document.querySelectorAll('.gallery a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    modal.style.display = 'flex';
-    modalImg.src = a.href;
-
-    toggleBodyScroll(true);
-
-    if (panzoomInstance) panzoomInstance.destroy();
-
-    panzoomInstance = Panzoom(modalImg, {
-      maxScale: 10,
-      minScale: 1,
-      contain: 'invert',
-      cursor: 'grab',
-      animate: true
-    });
-
-    panzoomInstance.reset();
-
-    // Scroll-wheel zoom
-    modal.addEventListener('wheel', wheelZoomHandler, { passive: false });
-
-    // Click-to-zoom
-    modalImg.addEventListener('click', clickZoomHandler);
-
-    // Pointer drag for panning
-    modalImg.addEventListener('pointerdown', pointerDownHandler);
-    modalImg.addEventListener('pointermove', pointerMoveHandler);
-    modalImg.addEventListener('pointerup', pointerUpHandler);
-    modalImg.addEventListener('pointerleave', pointerUpHandler);
-  });
-});
-
-// Close modal
-const closeModal = () => {
-  modal.style.display = 'none';
-  toggleBodyScroll(false);
-
-  // Remove event listeners when closing
-  modal.removeEventListener('wheel', wheelZoomHandler);
-  modalImg.removeEventListener('click', clickZoomHandler);
-  modalImg.removeEventListener('pointerdown', pointerDownHandler);
-  modalImg.removeEventListener('pointermove', pointerMoveHandler);
-  modalImg.removeEventListener('pointerup', pointerUpHandler);
-  modalImg.removeEventListener('pointerleave', pointerUpHandler);
-};
-closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// ----- Handlers -----
-
-function wheelZoomHandler(e) {
-  if (!modal.contains(e.target)) return;
-  e.preventDefault();
-  const rect = modalImg.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const offsetY = e.clientY - rect.top;
-  const scaleChange = Math.exp(e.deltaY * -0.0025); // adjust sensitivity
-  panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
-}
-
-function clickZoomHandler(e) {
-  const scale = panzoomInstance.getScale();
-  const zoomAmount = scale < 5 ? 1.5 : 1;
-  panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
-}
+const decay = 0.90;
+const maxVelocity = 50;
 
 // ----- Drag & inertia -----
-function pointerDownHandler(e) {
+modalImg.addEventListener('pointerdown', e => {
   isDragging = true;
   lastX = e.clientX;
   lastY = e.clientY;
   panzoomInstance.setOptions({ animate: false });
   if (momentumFrame) cancelAnimationFrame(momentumFrame);
-}
+});
 
-function pointerMoveHandler(e) {
+modalImg.addEventListener('pointermove', e => {
   if (!isDragging) return;
   const dx = e.clientX - lastX;
   const dy = e.clientY - lastY;
@@ -367,13 +306,11 @@ function pointerMoveHandler(e) {
   velocityY = Math.max(Math.min(dy, maxVelocity), -maxVelocity);
   lastX = e.clientX;
   lastY = e.clientY;
-}
+});
 
-function pointerUpHandler(e) {
-  if (!isDragging) return;
+modalImg.addEventListener('pointerup', e => {
   isDragging = false;
   panzoomInstance.setOptions({ animate: true });
-
   const step = () => {
     if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
     panzoomInstance.pan(velocityX, velocityY);
@@ -382,7 +319,46 @@ function pointerUpHandler(e) {
     momentumFrame = requestAnimationFrame(step);
   };
   step();
-}
+});
+modalImg.addEventListener('pointerleave', e => { if (isDragging) modalImg.dispatchEvent(new PointerEvent('pointerup')); });
+
+// ----- Scroll-wheel zoom -----
+modal.addEventListener('wheel', e => {
+  if (!modal.contains(e.target)) return;
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+  const scaleChange = Math.exp(e.deltaY * -0.0025);
+  panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
+}, { passive: false });
+
+// ----- Click-to-zoom -----
+modalImg.addEventListener('click', e => {
+  const scale = panzoomInstance.getScale();
+  const zoomAmount = scale < 5 ? 1.5 : 1;
+  panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
+});
+
+// ----- Open modal -----
+document.querySelectorAll('.gallery a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    modal.style.display = 'flex';
+    modalImg.src = a.href;
+    panzoomInstance.reset();
+    toggleBodyScroll(true);
+  });
+});
+
+// ----- Close modal -----
+const closeModal = () => {
+  modal.style.display = 'none';
+  toggleBodyScroll(false);
+};
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
   
 
