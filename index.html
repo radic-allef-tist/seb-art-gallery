@@ -3,318 +3,371 @@
   <meta charset="UTF-8">
   <title>Stupid, Evil, or Both: Artwork Gallery</title>
 
+ 
   <style>
     body { font-family: serif; background: #f9f9f9; margin: 0; padding: 20px; text-align: center; }
-
-    h1 {
-      font-size: clamp(2rem, 5vw, 4rem);
-      font-weight: bold;
-      margin-bottom: 2vh;
-      line-height: 1.2;
-    }
+    
+   h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-family: serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2vh;  /* increases vertical space relative to screen height */
+  line-height: 1.2;
+}
 
     h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: bold;
-      margin-bottom: 12vh;
-      line-height: 1.2;
-    }
-
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12vh;  /* increases vertical space relative to screen height */
+  line-height: 1.2;
+}
+    
     .gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 6vh;
-      align-items: center;
-      max-width: 90%;
-      margin: 0 auto;
-    }
+  display: flex;
+  flex-direction: column;
+  gap: 6vh;           /* vertical spacing between each gallery-item */
+  align-items: center;
+  max-width: 90%;
+  margin: 0 auto;
+}
 
-    .gallery img {
-      width: 70%;
-      max-width: 800px;
-      height: auto;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+.gallery img {
+  width: 70%;             /* relative for smaller screens */
+  max-width: 800px;       /* caps size on large screens */
+  height: auto;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-    .gallery img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0.5rem 0.75rem rgba(0,0,0,0.2);
-    }
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0.5rem 0.75rem rgba(0,0,0,0.2);
+}
 
-    .gallery-item { text-align: center; margin-bottom: 2rem; }
 
-    .caption {
-      margin-top: 1rem;
-      font-size: 2rem;
-      color: #333;
-      font-weight: bold;
-    }
+  .gallery-item {
+  text-align: center;
+
+  margin-bottom: 2rem; /* small buffer if needed */
+}
+
+.caption {
+  margin-top: 1rem;    
+  font-size: 2rem;
+  font-family: serif;
+  color: #333;
+  font-weight: bold;
+}
 
     .angled-strike {
-      position: relative;
-      display: inline-block;
-      color: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-    }
+  position: relative;    /* relative for the pseudo-element */
+  display: inline-block; /* ensures width matches text */
+  color: inherit;        /* match h2 text color */
+  font-size: inherit;    /* match h2 font size */
+  font-family: inherit;  /* match h2 font */
+  font-weight: inherit;  /* match h2 weight */
+}
 
-    .angled-strike::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 45%;
-      width: 100%;
-      height: 0.25em;
-      background-color: red;
-      transform: rotate(-12deg);
-      transform-origin: center;
-    }
+.angled-strike::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 45%;
+  width: 100%;
+  height: 0.25em;
+  background-color: red;
+  transform: rotate(-12deg);
+  transform-origin: center;
+}
 
-    .footer {
-      text-align: left;
-      max-width: 90%;
-      margin: 3rem auto 2rem auto;
-      padding: 2rem;
-      background-color: rgba(240, 240, 240, 0.8);
-      border: 2px solid #ccc;
-      border-radius: 1rem;
-      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-      font-size: 1rem;
-      color: #333;
-      line-height: 1.5;
-    }
+.footer {
+  text-align: left;
+  max-width: 90%;
+  margin: 3rem auto 2rem auto;  /* top, sides auto, bottom */
+  padding: 2rem;
+  background-color: rgba(240, 240, 240, 0.8); /* light gray with slight transparency */
+  border: 2px solid #ccc;         /* subtle border */
+  border-radius: 1rem;            /* rounded corners */
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); /* soft shadow for depth */
+  font-size: 1rem;
+  font-family: serif;
+  color: #333;
+  line-height: 1.5;
+}
 
-    #backToTop {
-      display: none;
-      position: fixed;
-      bottom: 2vh;
-      right: 4vw;
-      z-index: 99;
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      background-color: white;
-      color: #333;
-      border: 2px solid #333;
-      border-radius: 50%;
-      padding: clamp(0.5rem, 2vw, 1rem);
-      cursor: pointer;
-      box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
-      transition: opacity 0.3s ease, transform 0.2s ease;
-    }
+#backToTop {
+  display: none;
+  position: fixed;
+  bottom: 2vh;                 /* scales with screen height */
+  right: 4vw;                  /* moves it slightly left for phones */
+  z-index: 99;
+  font-size: clamp(1.5rem, 4vw, 2.5rem); /* scales with screen size */
+  background-color: white;     /* matches your site background */
+  color: #333;                 /* same as your body text */
+  border: 2px solid #333;      /* gives it a subtle outline */
+  border-radius: 50%;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  cursor: pointer;
+  box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
 
-    #backToTop:hover {
-      background-color: #333;
-      color: white;
-      transform: scale(1.1);
-    }
-
-    /* Modal styling */
-    #imageModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    #imageModal img {
-      max-width: 90%;
-      max-height: 90%;
-      cursor: grab;
-      border-radius: 0.5rem;
-      touch-action: none;
-    }
-
-    #closeModal {
-      position: absolute;
-      top: 2vh;
-      right: 2vw;
-      font-size: 3rem;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      padding: 0.2em 0.5em;
-      border-radius: 0.25rem;
-      transition: transform 0.2s ease;
-    }
+  #backToTop:hover {
+    background-color: #333;
+    color: white; /* inverts on hover for clear feedback */
+    transform: scale(1.1);
+  }
+    
   </style>
-</head>
-
+  </head>
+  
 <body>
-  <h1>Stupid, Evil, or Both</h1>
+  <h1>Stupid, Evil, or Both TEST4</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
-  <div class="gallery">
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg" alt="Full Cover Art">
-      </a>
-      <div class="caption">FULL COVER ART</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg" alt="Our Vote">
-      </a>
-      <div class="caption">OUR VOTE</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/TRUMP_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/TRUMP_Watermarked.jpg" alt="Donald J. Trump">
-      </a>
-      <div class="caption">DONALD J. TRUMP</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg" alt="Capitalism">
-      </a>
-      <div class="caption">CAPITALISM</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/TAXES_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/TAXES_Watermarked.jpg" alt="Taxes">
-      </a>
-      <div class="caption">TAXES</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg" alt="Healthcare">
-      </a>
-      <div class="caption">HEALTHCARE</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/EDUCATION_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/EDUCATION_Watermarked.jpg" alt="Education">
-      </a>
-      <div class="caption">EDUCATION</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg" alt="The Environment">
-      </a>
-      <div class="caption">THE ENVIRONMENT</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg" alt="Bigotry">
-      </a>
-      <div class="caption">BIGOTRY</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/JUSTICE_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/JUSTICE_Watermarked.jpg" alt="Justice">
-      </a>
-      <div class="caption">JUSTICE</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/RELIGION_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/RELIGION_Watermarked.jpg" alt="Religion">
-      </a>
-      <div class="caption">RELIGION</div>
-    </div>
-    <div class="gallery-item">
-      <a href="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg">
-        <img src="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg" alt="Final Rant">
-      </a>
-      <div class="caption">FINAL RANT</div>
-    </div>
+
+  
+<div class="gallery">
+
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/FULL_COVER_ART_Watermarked.jpg" alt="Full Cover Art">
+    </a>
+    <div class="caption">FULL COVER ART</div>
   </div>
 
-  <!-- Modal -->
-  <div id="imageModal">
-    <img id="modalImage" src="">
-    <button id="closeModal">✕</button>
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/OUR_VOTE_Watermarked.jpg" alt="Our Vote">
+    </a>
+    <div class="caption">OUR VOTE</div>
   </div>
 
-  <div class="footer">
-    <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. If not, that's okay too.</p>
-    <p>I'm not an artist. It took me an unreasonable amount of time to draw this shit. Look — I know it's garbage-tier work, but it got the message across, yeah?</p>
-    <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p>
-    <p>If you read my book, you'd know how much I want to leave this shithole state, and I definitely need all the help I can get.</p>
-    <p>Contact me: @radic-allef-tist.bsky.social and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so </i>toxic). I don't know how this stuff works, but we can work a deal out.</p>
-    <p>Thanks again to everyone for the support. Stay strong out there.</p>
-    <p> -Radic</p>
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/TRUMP_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/TRUMP_Watermarked.jpg" alt="Donald J. Trump">
+    </a>
+    <div class="caption">DONALD J. TRUMP</div>
   </div>
 
-  <script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
-  <script>
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const closeBtn = document.getElementById('closeModal');
-    let panzoomInstance;
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/CAPITALISM_Watermarked.jpg" alt="Capitalism">
+    </a>
+    <div class="caption">CAPITALISM</div>
+  </div>
 
-    const toggleBodyScroll = disable => {
-      document.body.style.overflow = disable ? 'hidden' : '';
-    };
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/TAXES_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/TAXES_Watermarked.jpg" alt="Taxes">
+    </a>
+    <div class="caption">TAXES</div>
+  </div>
 
-    document.querySelectorAll('.gallery a').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        modal.style.display = 'flex';
-        modalImg.src = a.href;
-        toggleBodyScroll(true);
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/HEALTHCARE_Watermarked.jpg" alt="Healthcare">
+    </a>
+    <div class="caption">HEALTHCARE</div>
+  </div>
 
-        if (panzoomInstance) panzoomInstance.destroy();
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/EDUCATION_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/EDUCATION_Watermarked.jpg" alt="Education">
+    </a>
+    <div class="caption">EDUCATION</div>
+  </div>
 
-        panzoomInstance = Panzoom(modalImg, {
-          maxScale: 10,
-          minScale: 1,
-          contain: 'invert',
-          cursor: 'grab',
-          animate: true
-        });
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/ENVIRONMENT_Watermarked.jpg" alt="The Environment">
+    </a>
+    <div class="caption">THE ENVIRONMENT</div>
+  </div>
 
-        panzoomInstance.reset();
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/BIGOTRY_Watermarked.jpg" alt="Bigotry">
+    </a>
+    <div class="caption">BIGOTRY</div>
+  </div>
 
-        // Scroll zoom
-        modalImg.onwheel = e => {
-          e.preventDefault();
-          const rect = modalImg.getBoundingClientRect();
-          const offsetX = e.clientX - rect.left;
-          const offsetY = e.clientY - rect.top;
-          const scaleChange = Math.exp(-e.deltaY * 0.0025);
-          panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
-        };
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/JUSTICE_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/JUSTICE_Watermarked.jpg" alt="Justice">
+    </a>
+    <div class="caption">JUSTICE</div>
+  </div>
 
-        // Click-to-zoom
-        modalImg.onclick = e => {
-          const scale = panzoomInstance.getScale();
-          const zoomAmount = scale < 5 ? 1.5 : 1;
-          panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
-        };
-      });
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/RELIGION_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/RELIGION_Watermarked.jpg" alt="Religion">
+    </a>
+    <div class="caption">RELIGION</div>
+  </div>
+
+  <div class="gallery-item">
+    <a href="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg">
+      <img src="Watermarked_JPEGS/FINAL_RANT_Watermarked.jpg" alt="Final Rant">
+    </a>
+    <div class="caption">FINAL RANT</div>
+  </div>
+
+</div>
+
+<!-- Modal container (hidden by default) -->
+<div id="imageModal" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
+  <img id="modalImage" src="" 
+       style="max-width:90%; max-height:90%; cursor:grab; border-radius:0.5rem;">
+  
+  <!-- Bigger X button -->
+  <button id="closeModal" 
+          style="
+            position:absolute; 
+            top:2vh; 
+            right:2vw; 
+            font-size:3rem; 
+            background:none; 
+            border:none; 
+            color:white; 
+            cursor:pointer;
+            padding:0.2em 0.5em; 
+            border-radius:0.25rem;
+            transition: transform 0.2s ease;
+          ">✕</button>
+</div>
+
+  <!-- Include Panzoom library -->
+<script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
+
+  
+<div class="footer">
+ 
+  <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. If not, that's okay too.</p> 
+  <p>I'm not an artist. It took me an unreasonable amount of time to draw this shit. Look — I know it's garbage-tier work, but it got the message across, yeah?</p> 
+  <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
+  <p>If you read my book, you'd know how much I want to leave this shithole state, and I definitely need all the help I can get.</p>
+  <p>Contact me: @radic-allef-tist.bsky.social and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so </i>toxic). I don't know how this stuff works, but we can work a deal out.</p>
+  <p>Thanks again to everyone for the support. Stay strong out there.</p>
+  <p> -Radic</p>
+
+</div>
+
+  
+<!-- Click zoom  -->
+
+<script>
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImage');
+const closeBtn = document.getElementById('closeModal');
+
+const toggleBodyScroll = disable => {
+  document.body.style.overflow = disable ? 'hidden' : '';
+};
+
+// Panzoom instance (initialized once)
+let panzoomInstance;
+
+// Open modal
+document.querySelectorAll('.gallery a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    modal.style.display = 'flex';
+    modalImg.src = a.href;
+
+    toggleBodyScroll(true);
+
+    // Destroy previous instance if it exists
+    if (panzoomInstance) panzoomInstance.destroy();
+
+    // Initialize Panzoom fresh each time
+    panzoomInstance = Panzoom(modalImg, {
+      maxScale: 10,
+      minScale: 1,
+      contain: 'invert', // allows free pan
+      cursor: 'grab',
+      animate: true
     });
 
-    const closeModal = () => {
-      modal.style.display = 'none';
-      toggleBodyScroll(false);
-    };
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    // Mousewheel zoom centered at cursor
+    modal.addEventListener('wheel', e => {
+      if (!modal.contains(e.target)) return;
+      e.preventDefault();
+      const rect = modalImg.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      const scaleChange = Math.exp(e.deltaY * -0.0025); // adjust for sensitivity
+      panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
+    }, { passive: false });
 
-    // Back to top
-    const backToTopBtn = document.getElementById("backToTop");
-    window.addEventListener("scroll", () => {
-      backToTopBtn.style.display = (document.documentElement.scrollTop || document.body.scrollTop) > 300 ? "block" : "none";
+    // Click-to-zoom at cursor
+    modalImg.addEventListener('click', e => {
+      const scale = panzoomInstance.getScale();
+      const zoomAmount = scale < 5 ? 1.5 : 1;
+      panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
     });
-    const scrollToTop = () => { window.scrollTo({ top: 0, behavior: "smooth" }); };
-    backToTopBtn.addEventListener("click", scrollToTop);
-    backToTopBtn.addEventListener("touchstart", scrollToTop);
-  </script>
 
-  <button id="backToTop" title="Go to top" aria-label="Back to top">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
-         fill="none" stroke="currentColor" stroke-width="3" 
-         stroke-linecap="round" stroke-linejoin="round"
-         style="width: 1.5em; height: 1.5em;">
-      <polyline points="18 15 12 9 6 15" />
-    </svg>
-  </button>
+    // Pointer drag for panning
+    panzoomInstance.pan(0,0); // reset pan
+  });
+});
 
+// Close modal
+const closeModal = () => {
+  modal.style.display = 'none';
+  toggleBodyScroll(false);
+};
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => {
+  if (e.target === modal) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  
+</script>
+  
+
+<!-- BACK TO TOP ARROW  -->  
+  
+
+<button id="backToTop" title="Go to top" aria-label="Back to top">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="3" 
+       stroke-linecap="round" stroke-linejoin="round"
+       style="width: 1.5em; height: 1.5em;">
+    <polyline points="18 15 12 9 6 15" />
+  </svg>
+</button>
+
+
+
+
+<script>
+  const backToTopBtn = document.getElementById("backToTop");
+
+  // Show/hide on scroll
+  window.addEventListener("scroll", () => {
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
+  });
+
+  // Smooth scroll to top on click or touch
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  backToTopBtn.addEventListener("click", scrollToTop);
+  backToTopBtn.addEventListener("touchstart", scrollToTop);
+</script>
+
+  
+  
 </body>
 </html>
