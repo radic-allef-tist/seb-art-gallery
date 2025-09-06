@@ -267,62 +267,51 @@ const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 
-let panzoomInstance;
+let panzoomInstance = Panzoom(modalImg, {
+  maxScale: 10,
+  contain: 'outside',
+  cursor: 'grab',
+  animate: true
+});
 
-// Disable/enable background scroll
-const toggleBodyScroll = disable => {
-  document.body.style.overflow = disable ? 'hidden' : '';
-};
+// Wheel zoom for PC
+modal.addEventListener('wheel', e => {
+  if (!modal.contains(e.target)) return;
+  e.preventDefault();
+  panzoomInstance.zoomWithWheel(e);
+}, { passive: false });
 
-// Open modal when clicking gallery images
+// Click-to-zoom at cursor
+modalImg.addEventListener('click', e => {
+  const scale = panzoomInstance.getScale();
+  if (scale < 5) {
+    panzoomInstance.zoom(2, { animate: true, x: e.offsetX, y: e.offsetY });
+  } else {
+    panzoomInstance.reset();
+  }
+});
+
+// Open modal on image click
 document.querySelectorAll('.gallery a').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
     modalImg.src = a.href;
-
-    toggleBodyScroll(true); // lock background scroll
-
-    // Destroy previous Panzoom instance
-    if (panzoomInstance) panzoomInstance.destroy();
-
-    // Initialize Panzoom on the image
-    panzoomInstance = Panzoom(modalImg, {
-      maxScale: 10,
-      contain: 'outside',
-      cursor: 'grab',
-      animate: true
-    });
-
-    // Mousewheel zoom for PC
-    modal.addEventListener('wheel', e => {
-      if (!modal.contains(e.target)) return;
-      e.preventDefault();
-      panzoomInstance.zoomWithWheel(e);
-    }, { passive: false });
-
-    // Click-to-zoom
-    modalImg.addEventListener('click', e => {
-      const scale = panzoomInstance.getScale();
-      if (scale < 5) {
-        panzoomInstance.zoomIn({ x: e.offsetX, y: e.offsetY });
-      } else {
-        panzoomInstance.reset();
-      }
-    });
+    panzoomInstance.reset();
+    panzoomInstance = Panzoom(modalImg, { maxScale: 10, contain: 'outside', cursor: 'grab', animate: true });
+    document.body.style.overflow = 'hidden';
   });
 });
 
 // Close modal
 const closeModal = () => {
   modal.style.display = 'none';
-  toggleBodyScroll(false); // unlock scroll
+  document.body.style.overflow = '';
 };
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
-
-// Escape key closes modal
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+  
 </script>
   
 
