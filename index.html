@@ -151,7 +151,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Z</h1>
+  <h1>Stupid, Evil, or Both TEST Q</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -284,86 +284,136 @@
 <script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
 
     
-<!-- Click zoom  -->
-
+<!-- Panzoom modal -->
+  
 <script>
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const closeBtn = document.getElementById('closeModal');
-    let panzoomInstance;
+/* ---- Elements & state ---- */
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImage');
+const closeBtn = document.getElementById('closeModal');
 
-    document.querySelectorAll('.gallery a').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        modal.style.display = 'flex';
-        modalImg.src = link.href;
-
-        document.body.style.overflow = 'hidden';
-
-        if (panzoomInstance) panzoomInstance.destroy();
-        panzoomInstance = Panzoom(modalImg, { maxScale: 10, minScale: 1, contain: 'invert', cursor: 'grab', animate: true });
-        panzoomInstance.pan(0,0);
-
-        modalImg.onwheel = e => {
-          e.preventDefault();
-          const rect = modalImg.getBoundingClientRect();
-          const offsetX = e.clientX - rect.left;
-          const offsetY = e.clientY - rect.top;
-          panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
-        };
-
-        modalImg.onclick = e => {
-          const scale = panzoomInstance.getScale();
-          panzoomInstance.zoom(scale < 5 ? scale * 1.5 : scale, { x: e.offsetX, y: e.offsetY, animate: true });
-        };
-      });
-    });
-
-    const closeModal = () => {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-    isZoomed = false; // reset zoom state
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-
-</script>
-
-<script>
-const isDesktop = window.matchMedia('(pointer: fine)').matches;
+let panzoomInstance = null;
 let isZoomed = false;
+const isDesktop = window.matchMedia('(pointer: fine)').matches;
 
+/* ---- Helper: init Panzoom for the current image ---- */
+function initPanzoom() {
+  // destroy any previous instance
+  if (panzoomInstance) {
+    try { panzoomInstance.destroy(); } catch (e) { /* ignore */ }
+    panzoomInstance = null;
+  }
+
+  // Create a new instance bound to the image
+  panzoomInstance = Panzoom(modalImg, {
+    maxScale: 5,        // tweak as desired
+    minScale: 1,
+    contain: 'invert',
+    cursor: 'grab',
+    animate: true
+  });
+
+  // Reset pan/zoom state for new image
+  try { panzoomInstance.reset(); } catch (e) { /* ignore if method not present */ }
+  isZoomed = false;
+  modalImg.style.cursor = 'pointer';
+}
+
+/* ---- Open modal when a gallery link is clicked ---- */
+document.querySelectorAll('.gallery a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Set image src first
+    // Wait for the image to finish loading before initializing Panzoom
+    modalImg.src = link.href;
+
+    // If image already loaded from cache, init immediately
+    if (modalImg.complete && modalImg.naturalWidth !== 0) {
+      initPanzoom();
+    } else {
+      // Use onload to initialize panzoom only once per load
+      const onLoadHandler = () => {
+        initPanzoom();
+        modalImg.removeEventListener('load', onLoadHandler);
+      };
+      modalImg.addEventListener('load', onLoadHandler);
+    }
+  });
+});
+
+/* ---- Desktop: double-click to zoom (zoomToPoint) + grab-to-pan ---- */
 if (isDesktop) {
   modalImg.addEventListener('dblclick', e => {
     e.preventDefault();
-
     if (!panzoomInstance) return;
 
+    // Use zoomToPoint to zoom to an absolute scale at clientX/Y
     if (!isZoomed) {
-      // Zoom in to 2x where user double-clicked
-      panzoomInstance.zoom(2, { x: e.offsetX, y: e.offsetY, animate: true });
+      panzoomInstance.zoomToPoint
+        ? panzoomInstance.zoomToPoint(2, { clientX: e.clientX, clientY: e.clientY }, { animate: true })
+        : panzoomInstance.zoom(2, { x: e.offsetX, y: e.offsetY, animate: true }); // fallback
       modalImg.style.cursor = 'grab';
       isZoomed = true;
     } else {
-      // Zoom back out & reset position
-      panzoomInstance.zoom(1, { animate: true });
-      panzoomInstance.pan(0, 0);
-      modalImg.style.cursor = 'grab';
+      // zoom back out and reset pan
+      if (panzoomInstance.zoomToPoint) {
+        panzoomInstance.zoomToPoint(1, { clientX: e.clientX, clientY: e.clientY }, { animate: true });
+      } else {
+        panzoomInstance.zoom(1, { animate: true });
+      }
+      try { panzoomInstance.pan(0, 0); } catch (err) {}
+      modalImg.style.cursor = 'pointer';
       isZoomed = false;
     }
   });
 
-  // Change cursor while dragging
-  modalImg.addEventListener('mousedown', () => {
-    if (isZoomed) modalImg.style.cursor = 'grabbing';
-  });
-  modalImg.addEventListener('mouseup', () => {
-    if (isZoomed) modalImg.style.cursor = 'grab';
+  // Cursor feedback when dragging
+  modalImg.addEventListener('mousedown', () => { if (isZoomed) modalImg.style.cursor = 'grabbing'; });
+  modalImg.addEventListener('mouseup',   () => { if (isZoomed) modalImg.style.cursor = 'grab'; });
+}
+
+/* ---- Wheel zoom (desktop): preserve your previous wheel behavior, with passive:false ---- */
+modalImg.addEventListener('wheel', e => {
+  if (!panzoomInstance) return;
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+
+  // Prefer library helper if available, otherwise use zoom() with focal options
+  if (typeof panzoomInstance.zoomWithWheel === 'function') {
+    panzoomInstance.zoomWithWheel(e);
+  } else {
+    panzoomInstance.zoom(
+      Math.exp(e.deltaY * -0.0025),
+      { x: offsetX, y: offsetY }
+    );
+  }
+}, { passive: false });
+
+/* ---- Click-to-zoom for non-desktop (mobile) ---- */
+if (!isDesktop) {
+  modalImg.addEventListener('click', e => {
+    if (!panzoomInstance) return;
+    const scale = panzoomInstance.getScale ? panzoomInstance.getScale() : 1;
+    panzoomInstance.zoom(scale < 4 ? scale * 1.5 : scale, { x: e.offsetX, y: e.offsetY, animate: true });
   });
 }
+
+/* ---- Close modal (preserves your existing behavior) ---- */
+function closeModal() {
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  // reset zoom state for next open
+  isZoomed = false;
+  try { if (panzoomInstance) panzoomInstance.reset(); } catch (e) {}
+}
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
   
 
