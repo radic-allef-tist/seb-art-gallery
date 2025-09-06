@@ -151,7 +151,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 7</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -329,7 +329,40 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 
-  
+</script>
+
+<script>
+const isDesktop = window.matchMedia('(pointer: fine)').matches;
+let isZoomed = false;
+
+if (isDesktop) {
+  modalImg.addEventListener('dblclick', e => {
+    e.preventDefault();
+
+    if (!panzoomInstance) return;
+
+    if (!isZoomed) {
+      // Zoom in to 2x where user double-clicked
+      panzoomInstance.zoom(2, { x: e.offsetX, y: e.offsetY, animate: true });
+      modalImg.style.cursor = 'grab';
+      isZoomed = true;
+    } else {
+      // Zoom back out & reset position
+      panzoomInstance.zoom(1, { animate: true });
+      panzoomInstance.pan(0, 0);
+      modalImg.style.cursor = 'grab';
+      isZoomed = false;
+    }
+  });
+
+  // Change cursor while dragging
+  modalImg.addEventListener('mousedown', () => {
+    if (isZoomed) modalImg.style.cursor = 'grabbing';
+  });
+  modalImg.addEventListener('mouseup', () => {
+    if (isZoomed) modalImg.style.cursor = 'grab';
+  });
+}
 </script>
   
 
