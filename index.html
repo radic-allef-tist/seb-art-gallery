@@ -151,7 +151,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST X</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -287,91 +287,47 @@
 <!-- Click zoom  -->
 
 <script>
-const modal = document.getElementById('imageModal');
-const modalImg = document.getElementById('modalImage');
-const closeBtn = document.getElementById('closeModal');
-let panzoomInstance;
-let isZoomed = false;
-const isDesktop = window.matchMedia('(pointer: fine)').matches;
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeModal');
+    let panzoomInstance;
 
-// Initialize Panzoom once
-panzoomInstance = Panzoom(modalImg, {
-  maxScale: 10,
-  minScale: 1,
-  contain: 'invert',
-  cursor: 'grab',
-  animate: true
-});
+    document.querySelectorAll('.gallery a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        modal.style.display = 'flex';
+        modalImg.src = link.href;
 
-// Reset pan/zoom when modal image changes
-function openModal(src) {
-  modal.style.display = 'flex';
-  modalImg.src = src;
-  document.body.style.overflow = 'hidden';
-  panzoomInstance.reset();    // resets scale and pan
-  isZoomed = false;
-  modalImg.style.cursor = 'pointer';
-}
+        document.body.style.overflow = 'hidden';
 
-// Open modal on gallery click
-document.querySelectorAll('.gallery a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    openModal(link.href);
-  });
-});
+        if (panzoomInstance) panzoomInstance.destroy();
+        panzoomInstance = Panzoom(modalImg, { maxScale: 10, minScale: 1, contain: 'invert', cursor: 'grab', animate: true });
+        panzoomInstance.pan(0,0);
 
-// Desktop double-click zoom + grab/pan
-if (isDesktop) {
-  modalImg.addEventListener('dblclick', e => {
-    e.preventDefault();
-    const scale = panzoomInstance.getScale();
-    if (!isZoomed) {
-      panzoomInstance.zoom(2, { x: e.offsetX, y: e.offsetY, animate: true });
-      modalImg.style.cursor = 'grab';
-      isZoomed = true;
-    } else {
-      panzoomInstance.zoom(1, { animate: true });
-      panzoomInstance.pan(0, 0);
-      modalImg.style.cursor = 'pointer';
-      isZoomed = false;
-    }
-  });
+        modalImg.onwheel = e => {
+          e.preventDefault();
+          const rect = modalImg.getBoundingClientRect();
+          const offsetX = e.clientX - rect.left;
+          const offsetY = e.clientY - rect.top;
+          panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
+        };
 
-  modalImg.addEventListener('mousedown', () => {
-    if (isZoomed) modalImg.style.cursor = 'grabbing';
-  });
-  modalImg.addEventListener('mouseup', () => {
-    if (isZoomed) modalImg.style.cursor = 'grab';
-  });
-}
+        modalImg.onclick = e => {
+          const scale = panzoomInstance.getScale();
+          panzoomInstance.zoom(scale < 5 ? scale * 1.5 : scale, { x: e.offsetX, y: e.offsetY, animate: true });
+        };
+      });
+    });
 
-// Scroll wheel zoom (desktop)
-modalImg.addEventListener('wheel', e => {
-  e.preventDefault();
-  const rect = modalImg.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const offsetY = e.clientY - rect.top;
-  panzoomInstance.zoom(Math.exp(e.deltaY * -0.0025), { x: offsetX, y: offsetY });
-}, { passive: false });
+    const closeModal = () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
 
-// Click-to-zoom (mobile only)
-if (!isDesktop) {
-  modalImg.addEventListener('click', e => {
-    const scale = panzoomInstance.getScale();
-    panzoomInstance.zoom(scale < 5 ? scale * 1.5 : scale, { x: e.offsetX, y: e.offsetY, animate: true });
-  });
-}
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// Close modal
-function closeModal() {
-  modal.style.display = 'none';
-  document.body.style.overflow = '';
-  panzoomInstance.reset();
-}
-closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   
 </script>
