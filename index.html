@@ -126,7 +126,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST2</h1>
+  <h1>Stupid, Evil, or Both TEST3</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -266,10 +266,7 @@
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
-
-const toggleBodyScroll = disable => {
-  document.body.style.overflow = disable ? 'hidden' : '';
-};
+const toggleBodyScroll = disable => document.body.style.overflow = disable ? 'hidden' : '';
 
 // Initialize Panzoom once
 const panzoomInstance = Panzoom(modalImg, {
@@ -280,35 +277,30 @@ const panzoomInstance = Panzoom(modalImg, {
   animate: true
 });
 
-// Variables for drag inertia
-let isDragging = false;
-let lastX = 0, lastY = 0;
-let velocityX = 0, velocityY = 0;
-let momentumFrame;
-const decay = 0.90;
-const maxVelocity = 50;
+// Drag & inertia variables
+let isDragging = false, lastX = 0, lastY = 0, velocityX = 0, velocityY = 0, momentumFrame;
+const decay = 0.90, maxVelocity = 50;
 
-// ----- Drag & inertia -----
-modalImg.addEventListener('pointerdown', e => {
+// --- Event Handlers ---
+function pointerDown(e) {
   isDragging = true;
-  lastX = e.clientX;
-  lastY = e.clientY;
+  lastX = e.clientX; lastY = e.clientY;
   panzoomInstance.setOptions({ animate: false });
   if (momentumFrame) cancelAnimationFrame(momentumFrame);
-});
+}
 
-modalImg.addEventListener('pointermove', e => {
+function pointerMove(e) {
   if (!isDragging) return;
   const dx = e.clientX - lastX;
   const dy = e.clientY - lastY;
   panzoomInstance.pan(dx, dy);
   velocityX = Math.max(Math.min(dx, maxVelocity), -maxVelocity);
   velocityY = Math.max(Math.min(dy, maxVelocity), -maxVelocity);
-  lastX = e.clientX;
-  lastY = e.clientY;
-});
+  lastX = e.clientX; lastY = e.clientY;
+}
 
-modalImg.addEventListener('pointerup', e => {
+function pointerUp() {
+  if (!isDragging) return;
   isDragging = false;
   panzoomInstance.setOptions({ animate: true });
   const step = () => {
@@ -319,11 +311,9 @@ modalImg.addEventListener('pointerup', e => {
     momentumFrame = requestAnimationFrame(step);
   };
   step();
-});
-modalImg.addEventListener('pointerleave', e => { if (isDragging) modalImg.dispatchEvent(new PointerEvent('pointerup')); });
+}
 
-// ----- Scroll-wheel zoom -----
-modal.addEventListener('wheel', e => {
+function wheelZoom(e) {
   if (!modal.contains(e.target)) return;
   e.preventDefault();
   const rect = modalImg.getBoundingClientRect();
@@ -331,19 +321,26 @@ modal.addEventListener('wheel', e => {
   const offsetY = e.clientY - rect.top;
   const scaleChange = Math.exp(e.deltaY * -0.0025);
   panzoomInstance.zoom(scaleChange, { x: offsetX, y: offsetY });
-}, { passive: false });
+}
 
-// ----- Click-to-zoom -----
-modalImg.addEventListener('click', e => {
+function clickZoom(e) {
   const scale = panzoomInstance.getScale();
   const zoomAmount = scale < 5 ? 1.5 : 1;
   panzoomInstance.zoom(scale + zoomAmount, { x: e.offsetX, y: e.offsetY, animate: true });
-});
+}
 
-// ----- Open modal -----
+// --- Attach once globally ---
+modalImg.addEventListener('pointerdown', pointerDown);
+modalImg.addEventListener('pointermove', pointerMove);
+modalImg.addEventListener('pointerup', pointerUp);
+modalImg.addEventListener('pointerleave', pointerUp);
+modalImg.addEventListener('click', clickZoom);
+modal.addEventListener('wheel', wheelZoom, { passive: false });
+
+// --- Open modal ---
 document.querySelectorAll('.gallery a').forEach(a => {
   a.addEventListener('click', e => {
-    e.preventDefault();
+    e.preventDefault(); // <--- THIS is critical to prevent default navigation
     modal.style.display = 'flex';
     modalImg.src = a.href;
     panzoomInstance.reset();
@@ -351,7 +348,7 @@ document.querySelectorAll('.gallery a').forEach(a => {
   });
 });
 
-// ----- Close modal -----
+// --- Close modal ---
 const closeModal = () => {
   modal.style.display = 'none';
   toggleBodyScroll(false);
@@ -359,6 +356,8 @@ const closeModal = () => {
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  
 </script>
   
 
