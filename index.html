@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 9</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -308,6 +308,13 @@ let initialDistance = 0;
 let initialScale = 1;
 let lastTouchX = 0;
 let lastTouchY = 0;
+let pinchMidX = 0;
+let pinchMidY = 0;
+
+function updateTransform() {
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+}
 
 // --- Open modal ---
 document.querySelectorAll('.gallery a').forEach(link => {
@@ -320,8 +327,7 @@ document.querySelectorAll('.gallery a').forEach(link => {
     scale = 1;
     originX = 0;
     originY = 0;
-    modalImg.style.transform = `translate(0px,0px) scale(1)`;
-    modalImg.style.cursor = 'zoom-in';
+    updateTransform();
   });
 });
 
@@ -337,8 +343,7 @@ modalImg.addEventListener('click', e => {
     originY = offsetY - (offsetY - originY) * (newScale / scale);
     scale = newScale;
 
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-    modalImg.style.cursor = 'grab';
+    updateTransform();
   }
 });
 
@@ -350,20 +355,20 @@ modal.addEventListener('wheel', e => {
   const offsetY = e.clientY - rect.top;
 
   const zoomFactor = Math.exp(-e.deltaY * 0.0025);
-  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
+  let newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
 
-  if (newScale === 1) {
+  if (newScale <= 1.01) {
+    scale = 1;
     originX = 0;
     originY = 0;
   } else {
     originX = offsetX - ((offsetX - originX) * newScale) / scale;
     originY = offsetY - ((offsetY - originY) * newScale) / scale;
+    scale = newScale;
   }
 
-  scale = newScale;
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-});
+  updateTransform();
+}, { passive: false });
 
 // --- Desktop dragging ---
 modalImg.addEventListener('mousedown', e => {
@@ -379,7 +384,7 @@ window.addEventListener('mousemove', e => {
   if (!isDragging) return;
   originX = e.clientX - startX;
   originY = e.clientY - startY;
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  updateTransform();
 });
 
 window.addEventListener('mouseup', () => {
@@ -390,22 +395,14 @@ window.addEventListener('mouseup', () => {
 });
 
 // --- Mobile pinch & drag ---
-let pinchMidX = 0;
-let pinchMidY = 0;
-
 modal.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
     lastTouchX = e.touches[0].clientX;
     lastTouchY = e.touches[0].clientY;
   } else if (e.touches.length === 2) {
     const [t1, t2] = e.touches;
-    initialDistance = Math.hypot(
-      t1.clientX - t2.clientX,
-      t1.clientY - t2.clientY
-    );
+    initialDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     initialScale = scale;
-
-    // Save pinch midpoint (in screen coordinates)
     pinchMidX = (t1.clientX + t2.clientX) / 2;
     pinchMidY = (t1.clientY + t2.clientY) / 2;
   }
@@ -420,37 +417,35 @@ modal.addEventListener('touchmove', e => {
     originY += touch.clientY - lastTouchY;
     lastTouchX = touch.clientX;
     lastTouchY = touch.clientY;
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+    updateTransform();
 
   } else if (e.touches.length === 2) {
     e.preventDefault();
 
     const [t1, t2] = e.touches;
-    const currentDistance = Math.hypot(
-      t1.clientX - t2.clientX,
-      t1.clientY - t2.clientY
-    );
-
+    const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     let newScale = initialScale * (currentDistance / initialDistance);
     newScale = Math.min(Math.max(newScale, 1), 10);
 
-    // Find current midpoint of pinch
     const currentMidX = (t1.clientX + t2.clientX) / 2;
     const currentMidY = (t1.clientY + t2.clientY) / 2;
-
-    // Calculate how far midpoint moved since start
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-    // Adjust origin based on scale AND midpoint shift
-    originX = (originX + dx) * (newScale / scale);
-    originY = (originY + dy) * (newScale / scale);
+    if (newScale <= 1.01) {
+      scale = 1;
+      originX = 0;
+      originY = 0;
+    } else {
+      originX = (originX + dx) * (newScale / scale);
+      originY = (originY + dy) * (newScale / scale);
+      scale = newScale;
+    }
 
-    scale = newScale;
     pinchMidX = currentMidX;
     pinchMidY = currentMidY;
 
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+    updateTransform();
   }
 }, { passive: false });
 
@@ -461,14 +456,12 @@ const closeModal = () => {
   scale = 1;
   originX = 0;
   originY = 0;
-  modalImg.style.transform = `translate(0px,0px) scale(1)`;
-  modalImg.style.cursor = 'zoom-in';
+  updateTransform();
 };
 
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  
 </script>
 
 
