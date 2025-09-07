@@ -164,7 +164,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 3</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -514,40 +514,38 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </button>
 
 <script>
-  const backToTopBtn = document.getElementById("backToTop");
+const backToTopBtn = document.getElementById("backToTop");
 
-  // Show/hide button on scroll
-  window.addEventListener("scroll", () => {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
-  });
+// Show/hide on scroll
+window.addEventListener("scroll", () => {
+  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
+});
 
-  // Reset hover styles (used after press/touch)
-  const resetHoverStyles = () => {
-    backToTopBtn.style.backgroundColor = "white";
-    backToTopBtn.style.color = "#333";
-    backToTopBtn.style.transform = "scale(1)";
-  };
+// Smooth scroll function
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
-  // Scroll to top and reset hover
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    resetHoverStyles();
-  };
+// Handle press/tap on both desktop & touch
+const handlePress = (e) => {
+  e.preventDefault();       // Prevent default touch behavior
+  scrollToTop();
 
-  // Unified handler for both click and touch
-  const handleBackToTop = (e) => {
-    e.preventDefault();
-    scrollToTop();
-  };
+  // Reset hover/active states immediately
+  backToTopBtn.classList.remove("hover");
+  backToTopBtn.blur();      // removes focus/active effect
+};
 
-  // Attach unified handler
-  backToTopBtn.addEventListener("click", handleBackToTop);
-  backToTopBtn.addEventListener("touchstart", handleBackToTop);
+// Desktop click
+backToTopBtn.addEventListener("click", handlePress);
 
-  // Optional: reset hover if touch ends outside button
-  backToTopBtn.addEventListener("touchend", resetHoverStyles);
-  backToTopBtn.addEventListener("touchcancel", resetHoverStyles);
+// Touch devices
+backToTopBtn.addEventListener("touchstart", handlePress);
+backToTopBtn.addEventListener("touchend", () => {
+  backToTopBtn.classList.remove("hover");
+  backToTopBtn.blur();
+});
 </script>
 
   
