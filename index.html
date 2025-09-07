@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 5</h1>
+  <h1>Stupid, Evil, or Both TEST 6</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -306,6 +306,8 @@ let isDragging = false;
 // Mobile pinch variables
 let initialDistance = 0;
 let initialScale = 1;
+let lastTouchX = 0;
+let lastTouchY = 0;
 
 // --- Open modal ---
 document.querySelectorAll('.gallery a').forEach(link => {
@@ -318,14 +320,14 @@ document.querySelectorAll('.gallery a').forEach(link => {
     scale = 1;
     originX = 0;
     originY = 0;
-    modalImg.style.transform = `translate(0px, 0px) scale(1)`;
+    modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
   });
 });
 
 // --- Desktop click-to-zoom ---
 modalImg.addEventListener('click', e => {
-  if (scale === 1 && e.pointerType !== 'touch') {
+  if (scale === 1 && !e.touches) {
     const rect = modalImg.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
@@ -335,7 +337,7 @@ modalImg.addEventListener('click', e => {
     originY = offsetY - (offsetY - originY) * (newScale / scale);
     scale = newScale;
 
-    modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
     modalImg.style.cursor = 'grab';
   }
 });
@@ -359,7 +361,7 @@ modal.addEventListener('wheel', e => {
   }
 
   scale = newScale;
-  modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
 });
 
@@ -377,7 +379,7 @@ window.addEventListener('mousemove', e => {
   if (!isDragging) return;
   originX = e.clientX - startX;
   originY = e.clientY - startY;
-  modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
 });
 
 window.addEventListener('mouseup', () => {
@@ -387,10 +389,12 @@ window.addEventListener('mouseup', () => {
   }
 });
 
-// --- Mobile pinch zoom ---
+// --- Mobile pinch & drag ---
 modalImg.addEventListener('touchstart', e => {
-  if (e.touches.length === 2) {
-    e.preventDefault();
+  if (e.touches.length === 1) {
+    lastTouchX = e.touches[0].clientX;
+    lastTouchY = e.touches[0].clientY;
+  } else if (e.touches.length === 2) {
     initialDistance = Math.hypot(
       e.touches[0].clientX - e.touches[1].clientX,
       e.touches[0].clientY - e.touches[1].clientY
@@ -400,7 +404,15 @@ modalImg.addEventListener('touchstart', e => {
 }, { passive: false });
 
 modalImg.addEventListener('touchmove', e => {
-  if (e.touches.length === 2) {
+  if (e.touches.length === 1 && scale > 1) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    originX += touch.clientX - lastTouchX;
+    originY += touch.clientY - lastTouchY;
+    lastTouchX = touch.clientX;
+    lastTouchY = touch.clientY;
+    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  } else if (e.touches.length === 2) {
     e.preventDefault();
     const currentDistance = Math.hypot(
       e.touches[0].clientX - e.touches[1].clientX,
@@ -409,7 +421,7 @@ modalImg.addEventListener('touchmove', e => {
     let newScale = initialScale * (currentDistance / initialDistance);
     newScale = Math.min(Math.max(newScale, 1), 10);
     scale = newScale;
-    modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   }
 }, { passive: false });
 
@@ -420,14 +432,13 @@ const closeModal = () => {
   scale = 1;
   originX = 0;
   originY = 0;
-  modalImg.style.transform = `translate(0px, 0px) scale(1)`;
+  modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
 };
 
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
   
 </script>
 
