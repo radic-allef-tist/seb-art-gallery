@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 3</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -336,9 +336,8 @@ window.addEventListener('touchstart', () => { usingMouse = false; });
 const isDesktop = () => usingMouse;
     // --- Desktop click-to-zoom ---
   
-if (isDesktop()) {
-
   modalImg.addEventListener('click', e => {
+    if (!isDesktop()) return;  // skip on touch
     if (scale === 1 && !e.touches) {
       const rect = modalImg.getBoundingClientRect();
       const offsetX = e.clientX - rect.left;
@@ -356,6 +355,7 @@ if (isDesktop()) {
 
   // --- Desktop scroll-to-zoom ---
   modal.addEventListener('wheel', e => {
+    if (!isDesktop()) return;  // skip on touch
     e.preventDefault();
     const rect = modalImg.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -379,6 +379,7 @@ if (isDesktop()) {
 
   // --- Desktop dragging ---
   modalImg.addEventListener('mousedown', e => {
+    if (!isDesktop()) return;  // skip on touch
     if (scale <= 1) return;
     isDragging = true;
     startX = e.clientX - originX;
@@ -388,6 +389,7 @@ if (isDesktop()) {
   });
 
   window.addEventListener('mousemove', e => {
+    if (!isDesktop()) return;  // skip on touch
     if (!isDragging) return;
     originX = e.clientX - startX;
     originY = e.clientY - startY;
@@ -395,12 +397,13 @@ if (isDesktop()) {
   });
 
   window.addEventListener('mouseup', () => {
+    if (!isDesktop()) return;  // skip on touch
     if (isDragging) {
       isDragging = false;
       modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
     }
   });
-}
+
 
 // --- Mobile pinch & drag ---
 let pinchMidX = 0;
