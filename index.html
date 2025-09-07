@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST X</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -406,6 +406,7 @@ const isDesktop = () => usingMouse;
 
 
 // --- Mobile pinch & drag ---
+let lastPinchTime = 0;
 let pinchMidX = 0;
 let pinchMidY = 0;
 
@@ -429,6 +430,8 @@ modal.addEventListener('touchstart', e => {
 
 modal.addEventListener('touchmove', e => {
   if (e.touches.length === 1) {
+    if (Date.now() - lastPinchTime < 50) return; // tiny buffer after pinch
+
     // One-finger drag
     e.preventDefault();
     const touch = e.touches[0];
@@ -458,16 +461,17 @@ modal.addEventListener('touchmove', e => {
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-   // <-- NEW stable version
-  originX += dx;
-  originY += dy;
-  scale = newScale;
+    // Adjust origin based on scale AND midpoint shift
+    originX = (originX + dx) * (newScale / scale);
+    originY = (originY + dy) * (newScale / scale);
 
-  pinchMidX = currentMidX;
-  pinchMidY = currentMidY;
+    scale = newScale;
+    pinchMidX = currentMidX;
+    pinchMidY = currentMidY;
 
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-}
+    lastPinchTime = Date.now(); // mark the pinch
+    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  }
 }, { passive: false });
 
 // --- Close modal ---
