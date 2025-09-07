@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 9</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -500,11 +500,10 @@ modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   
-</script>
-
-  
+</script> 
 
 <!-- BACK TO TOP ARROW -->
+  
 <button id="backToTop" title="Go to top" aria-label="Back to top">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
        fill="none" stroke="currentColor" stroke-width="3"
@@ -515,58 +514,77 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </button>
 
 <script>
-  
   const backToTopBtn = document.getElementById("backToTop");
+  let scrollCheck = null;
 
-  // --- Show/hide button on scroll ---
+  // Show/hide button on scroll and reset pressed when at the very top
   window.addEventListener("scroll", () => {
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
 
-    // If we're back at the very top, reset any pressed effects
     if (scrollTop === 0) {
-      backToTopBtn.classList.remove("pressed");
-      backToTopBtn.style.backgroundColor = "";
-      backToTopBtn.style.color = "";
-      backToTopBtn.style.transform = "";
+      resetButtonEffects();
     }
   });
 
-  // --- Helper: reset pressed effects manually ---
+  // --- Helper to remove pressed visuals ---
   const resetButtonEffects = () => {
     backToTopBtn.classList.remove("pressed");
+    // if you used inline styles anywhere, clear them here as well:
     backToTopBtn.style.backgroundColor = "";
     backToTopBtn.style.color = "";
     backToTopBtn.style.transform = "";
   };
 
-  // --- Smooth scroll to top ---
+  // --- Smooth scroll to top (keeps checking and clears pressed when done) ---
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Check every few ms until we're at the top, then reset button effects
-    const scrollCheck = setInterval(() => {
+    // clear any previous check
+    if (scrollCheck) {
+      clearInterval(scrollCheck);
+      scrollCheck = null;
+    }
+
+    // Safety: when we reach top, ensure visual state is reset
+    scrollCheck = setInterval(() => {
       if ((window.scrollY || document.documentElement.scrollTop) === 0) {
         resetButtonEffects();
         clearInterval(scrollCheck);
+        scrollCheck = null;
       }
-    }, 20);
+    }, 50);
   };
 
-  // --- Desktop: click to scroll ---
-  backToTopBtn.addEventListener("click", scrollToTop);
-
-  // --- Mobile: press feedback + scroll ---
-  backToTopBtn.addEventListener("touchstart", () => {
-    backToTopBtn.classList.add("pressed"); // visually shows "hover" state
+  // --- Desktop click (normal behavior) ---
+  backToTopBtn.addEventListener("click", (e) => {
+    e.preventDefault();
     scrollToTop();
   });
 
-  backToTopBtn.addEventListener("touchend", resetButtonEffects);
-  
-</script>
+  // --- Mobile: treat touchstart (even a long press) like a tap ---
+  backToTopBtn.addEventListener("touchstart", (e) => {
+    // prevent default long-press behavior / synthetic click
+    e.preventDefault();
 
+    // show pressed feedback immediately
+    backToTopBtn.classList.add("pressed");
+
+    // start scrolling right away
+    scrollToTop();
+
+    // remove pressed visual quickly so holding doesn't "stick"
+    // adjust the ms here if you want the pressed visual to last longer
+    setTimeout(resetButtonEffects, 120);
+  });
+
+  // ensure cleanup on end/cancel (safety)
+  backToTopBtn.addEventListener("touchend", resetButtonEffects);
+  backToTopBtn.addEventListener("touchcancel", resetButtonEffects);
+
+  // prevent context menu on long press (optional but helpful on some devices)
+  backToTopBtn.addEventListener("contextmenu", (e) => e.preventDefault());
+</script>
   
   
 </body>
