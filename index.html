@@ -102,19 +102,20 @@
 
 
   #closeModal {
-  position: absolute;
+  position: fixed;  /* <-- changed from absolute */
   top: 2vh;
   right: 2vw;
+  z-index: 1100;   /* higher than modal content */
   font-size: 3rem;
-  background: rgba(0, 0, 0, 0.6); /* <-- NEW: subtle dark backdrop */
+  background: rgba(0,0,0,0.6);
   border: 2px solid white;
   color: white;
   cursor: pointer;
   padding: 0.2em 0.5em;
   border-radius: 0.25rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.7); /* <-- NEW: keeps text legible */
-  box-shadow: 0 0 8px rgba(0,0,0,0.3); /* <-- NEW: gives a soft glow */
-  transition: transform 0.2s ease, background-color 0.2s ease, 
+  text-shadow: 0 0 6px rgba(0,0,0,0.7);
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease,
               color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -154,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
