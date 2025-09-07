@@ -131,31 +131,42 @@
 #backToTop {
   display: none;
   position: fixed;
-  bottom: 2vh;                 /* scales with screen height */
-  right: 4vw;                  /* moves it slightly left for phones */
+  bottom: 2vh;
+  right: 4vw;
   z-index: 99;
-  font-size: clamp(1.5rem, 4vw, 2.5rem); /* scales with screen size */
-  background-color: white;     /* matches your site background */
-  color: #333;                 /* same as your body text */
-  border: 2px solid #333;      /* gives it a subtle outline */
-  border-radius: 50%;
-  padding: clamp(0.5rem, 2vw, 1rem);
+
+  width: clamp(2.5rem, 6vw, 4rem);
+  height: clamp(2.5rem, 6vw, 4rem);
+  border-radius: 50%;          /* keeps it circular */
+  background-color: white;
+  color: #333;
+  border: 2px solid #333;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
   cursor: pointer;
   box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
   transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
-  #backToTop:hover {
-    background-color: #333;
-    color: white; /* inverts on hover for clear feedback */
-    transform: scale(1.1);
-  }
+#backToTop:hover {
+  background-color: #333;
+  color: white;
+  transform: scale(1.1);
+}
+
+#backToTop svg {
+  width: 50%;  /* scales nicely inside the circle */
+  height: 50%;
+}
     
   </style>
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST X</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
