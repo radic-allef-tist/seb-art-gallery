@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 8</h1>
+  <h1>Stupid, Evil, or Both TEST 9</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -411,9 +411,10 @@ modal.addEventListener('touchstart', e => {
 }, { passive: false });
 
 modal.addEventListener('touchmove', e => {
+  e.preventDefault();
+  
   if (e.touches.length === 1 && scale > 1) {
     // One-finger drag
-    e.preventDefault();
     const touch = e.touches[0];
     originX += touch.clientX - lastTouchX;
     originY += touch.clientY - lastTouchY;
@@ -423,7 +424,6 @@ modal.addEventListener('touchmove', e => {
 
   } else if (e.touches.length === 2) {
     // Two-finger pinch
-    e.preventDefault();
     const [t1, t2] = e.touches;
     const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     let newScale = initialScale * (currentDistance / initialDistance);
@@ -434,12 +434,11 @@ modal.addEventListener('touchmove', e => {
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-    // Update origin and scale — no recentering here at all
-    originX = (originX + dx) * (newScale / scale);
-    originY = (originY + dy) * (newScale / scale);
-    scale = newScale;
+    // Only scale around pinch midpoint; do NOT recenter
+    originX = originX + dx;
+    originY = originY + dy;
 
-    // Update pinch midpoint
+    scale = newScale;
     pinchMidX = currentMidX;
     pinchMidY = currentMidY;
 
@@ -449,8 +448,7 @@ modal.addEventListener('touchmove', e => {
 
 // --- Touchend recenter ---
 modal.addEventListener('touchend', e => {
-  // Only recenter if fully zoomed out
-  if (Math.abs(scale - 1) < 0.001) { // tiny tolerance for floating-point
+  if (scale <= 1.005) {
     scale = 1;
     originX = 0;
     originY = 0;
