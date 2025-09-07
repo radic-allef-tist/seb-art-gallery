@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -458,16 +458,16 @@ modal.addEventListener('touchmove', e => {
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-    // Adjust origin based on scale AND midpoint shift
-    originX = originX * (newScale / scale) + dx;
-    originY = originY * (newScale / scale) + dy;
+   // <-- NEW stable version
+  originX += dx;
+  originY += dy;
+  scale = newScale;
 
-    scale = newScale;
-    pinchMidX = currentMidX;
-    pinchMidY = currentMidY;
+  pinchMidX = currentMidX;
+  pinchMidY = currentMidY;
 
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-  }
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+}
 }, { passive: false });
 
 // --- Close modal ---
