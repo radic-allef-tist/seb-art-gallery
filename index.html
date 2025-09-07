@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Z</h1>
+  <h1>Stupid, Evil, or Both TEST V</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -318,27 +318,48 @@ let initialScale = 1;
 let lastTouchX = 0;
 let lastTouchY = 0;
 
-// --- Open modal with full-res images ---
+// --- Open modal with full-res images safely ---
 document.querySelectorAll('.gallery a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
 
-    // Convert thumbnail path to full-res path
-    const thumbPath = link.getAttribute('href'); // e.g., Watermarked_WebP_Thumbnails/FULL_COVER_ART_Watermarked_Thumbnail.webp
+    const thumbPath = link.getAttribute('href');
     const fullResPath = thumbPath
-      .replace('Watermarked_WebP_Thumbnails', 'Watermarked_WebP') // switch folder
-      .replace('_Thumbnail', ''); // remove "_Thumbnail" if full-res doesn't have it
+      .replace('Watermarked_WebP_Thumbnails', 'Watermarked_WebP')
+      .replace('_Thumbnail', '');
 
-    modalImg.src = fullResPath; // set modal image to full-res
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-
-    // Reset zoom/pan
+    // Reset modal immediately
+    modalImg.style.transform = `translate(0px,0px) scale(1)`;
+    modalImg.style.cursor = 'zoom-in';
     scale = 1;
     originX = 0;
     originY = 0;
-    modalImg.style.transform = `translate(0px,0px) scale(1)`;
-    modalImg.style.cursor = 'zoom-in';
+
+    // Optional: show modal immediately but with loader/spinner
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Clear previous src to cancel ongoing load
+    modalImg.src = '';
+
+    // Create a temporary image to preload
+    const imgLoader = new Image();
+    imgLoader.src = fullResPath;
+    imgLoader.onload = () => {
+      // Only set modalImg src when fully loaded
+      modalImg.src = fullResPath;
+    };
+
+    // If the modal is closed before image loads, cancel the load
+    const cancelLoad = () => {
+      imgLoader.onload = null;
+      imgLoader.src = ''; // stops loading
+      modal.removeEventListener('click', cancelLoad);
+      closeBtn.removeEventListener('click', cancelLoad);
+    };
+
+    modal.addEventListener('click', cancelLoad);
+    closeBtn.addEventListener('click', cancelLoad);
   });
 });
 
