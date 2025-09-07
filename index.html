@@ -102,7 +102,7 @@
   top: 2vh;
   right: 2vw;
   font-size: 3rem;
-  background: rgba(0, 0, 0, 0.4); /* <-- NEW: subtle dark backdrop */
+  background: rgba(0, 0, 0, 0.6); /* <-- NEW: subtle dark backdrop */
   border: 2px solid white;
   color: white;
   cursor: pointer;
@@ -149,7 +149,7 @@
 </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 7</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 8</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
@@ -242,27 +242,59 @@
 </div>
 
 <!-- Modal container (hidden by default) -->
-<div id="imageModal" 
-     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+<div id="imageModal"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
-  <img id="modalImage" src="" 
-       style="max-width:90%; max-height:90%; cursor:zoom-in; border-radius:0.5rem;">
   
-  <!-- Bigger X button -->
-  <button id="closeModal" 
-          style="
-            position:absolute; 
-            top:2vh; 
-            right:2vw; 
-            font-size:3rem; 
-            background:none; 
-            border:none; 
-            color:white; 
-            cursor:pointer;
-            padding:0.2em 0.5em; 
-            border-radius:0.25rem;
-            transition: transform 0.2s ease;
-          ">✕</button>
+  <img id="modalImage" src=""
+       style="max-width:90%; max-height:90%; cursor:zoom-in; border-radius:0.5rem; touch-action: none;">
+
+<!-- Close button -->
+<button id="closeModal"
+        style="
+          position:absolute;
+          top:2vh;
+          right:2vw;
+          font-size:3rem;
+          background:rgba(0,0,0,0.5);
+          border:none;
+          color:white;
+          cursor:pointer;
+          padding:0.3em 0.6em;
+          border-radius:0.25rem;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+        ">✕</button>
+
+<!-- Reset button -->
+<button id="resetImage"
+        style="
+          position:absolute;
+          top:6vh;
+          right:2vw;
+          font-size:2rem;
+          background:rgba(0,0,0,0.5);
+          border:none;
+          color:white;
+          cursor:pointer;
+          padding:0.3em 0.6em;
+          border-radius:0.25rem;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+        ">⟲</button>
+
+<style>
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  #closeModal {
+    font-size: 4rem;
+    padding: 0.5em 0.8em;
+  }
+  #resetImage {
+    font-size: 3rem;
+    padding: 0.5em 0.8em;
+  }
+}
+</style>
+  
 </div>
 
 <div class="footer">
@@ -281,114 +313,114 @@
   <!-- Gallery modal  -->
   <script>
   const modal = document.getElementById('imageModal');
-  const modalImg = document.getElementById('modalImage');
-  const closeBtn = document.getElementById('closeModal');
+const modalImg = document.getElementById('modalImage');
+const closeBtn = document.getElementById('closeModal');
+const resetBtn = document.getElementById('resetImage');
+let scale = 1;
+let posX = 0;
+let posY = 0;
+let isDragging = false;
+let startX = 0;
+let startY = 0;
 
-  let scale = 1;
-  let isDragging = false;
-  let startX = 0;
-  let startY = 0;
-  let originX = 0;
-  let originY = 0;
+// Open modal and apply initial zoom
+document.querySelectorAll('.gallery a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    modal.style.display = 'flex';
+    modalImg.src = link.href;
+    document.body.style.overflow = 'hidden';
 
-  document.querySelectorAll('.gallery a').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      modal.style.display = 'flex';
-      modalImg.src = link.href;
-      document.body.style.overflow = 'hidden';
-
-      // Reset zoom & position
-      scale = 1;
-      originX = 0;
-      originY = 0;
-      modalImg.style.transform = `translate(0px, 0px) scale(1)`;
-      modalImg.style.cursor = 'zoom-in';
-    });
+    scale = 2; // initial zoom
+    posX = 0;
+    posY = 0;
+    updateTransform();
+    modalImg.style.cursor = 'grab';
   });
+});
 
-  // First click inside modal = zoom in (only if scale is 1)
-  modalImg.addEventListener('click', e => {
-    if (scale === 1) {
-      const rect = modalImg.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
+// Close modal
+const closeModal = () => {
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+};
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-      const newScale = 2;
-      originX = offsetX - (offsetX - originX) * (newScale / scale);
-      originY = offsetY - (offsetY - originY) * (newScale / scale);
-      scale = newScale;
+// Reset image
+resetBtn.addEventListener('click', () => {
+  scale = 1;
+  posX = 0;
+  posY = 0;
+  updateTransform();
+  modalImg.style.cursor = 'zoom-in';
+});
 
-      modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
-      modalImg.style.cursor = 'grab';
-    }
-  });
+// Update transform
+function updateTransform() {
+  modalImg.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+}
 
-  // Scroll to zoom centered on cursor
-modal.addEventListener('wheel', e => {
+// Mouse / touch events
+modalImg.addEventListener('mousedown', e => {
+  if (scale <= 1) return;
+  isDragging = true;
+  startX = e.clientX - posX;
+  startY = e.clientY - posY;
+  modalImg.style.cursor = 'grabbing';
+});
+modalImg.addEventListener('mouseup', e => {
+  isDragging = false;
+  modalImg.style.cursor = 'grab';
+});
+modalImg.addEventListener('mouseleave', e => {
+  isDragging = false;
+  if (scale > 1) modalImg.style.cursor = 'grab';
+  else modalImg.style.cursor = 'zoom-in';
+});
+modalImg.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  posX = e.clientX - startX;
+  posY = e.clientY - startY;
+  updateTransform();
+});
+
+// Touch drag
+modalImg.addEventListener('touchstart', e => {
+  if (scale <= 1) return;
+  isDragging = true;
+  startX = e.touches[0].clientX - posX;
+  startY = e.touches[0].clientY - posY;
+});
+modalImg.addEventListener('touchend', e => { isDragging = false; });
+modalImg.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  posX = e.touches[0].clientX - startX;
+  posY = e.touches[0].clientY - startY;
+  updateTransform();
+});
+
+// Scroll zoom
+modalImg.addEventListener('wheel', e => {
   e.preventDefault();
   const rect = modalImg.getBoundingClientRect();
   const offsetX = e.clientX - rect.left;
   const offsetY = e.clientY - rect.top;
 
-  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
-  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
+  const delta = e.deltaY < 0 ? 1.1 : 0.9;
+  const newScale = Math.min(Math.max(scale * delta, 1), 10);
 
-  if (newScale === 1) {
-    // Reset position if fully zoomed out
-    originX = 0;
-    originY = 0;
-  } else {
-    // Calculate relative zoom position
-    originX = offsetX - ((offsetX - originX) * newScale) / scale;
-    originY = offsetY - ((offsetY - originY) * newScale) / scale;
-  }
-
+  // Zoom relative to cursor
+  posX -= (offsetX - posX) / scale * (newScale - scale);
+  posY -= (offsetY - posY) / scale * (newScale - scale);
   scale = newScale;
-  modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+  updateTransform();
+
+  // Update cursor
   modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
 });
-
-  // Dragging (mousedown → mousemove → mouseup)
-  modalImg.addEventListener('mousedown', e => {
-    if (scale <= 1) return;
-    isDragging = true;
-    startX = e.clientX - originX;
-    startY = e.clientY - originY;
-    modalImg.style.cursor = 'grabbing';
-
-    // Prevent image click event (so it doesn't re-zoom when we drag)
-    e.preventDefault();
-  });
-
-  window.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    originX = e.clientX - startX;
-    originY = e.clientY - startY;
-    modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-    }
-  });
-
-  // Close modal
-  const closeModal = () => {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-    scale = 1;
-    originX = 0;
-    originY = 0;
-    modalImg.style.transform = `translate(0px, 0px) scale(1)`;
-    modalImg.style.cursor = 'zoom-in';
-  };
-
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    
 </script>
   
 
