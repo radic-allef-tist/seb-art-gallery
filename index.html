@@ -98,27 +98,30 @@
     }
 
     #closeModal {
-      position: absolute;
-      top: 2vh;
-      right: 2vw;
-      font-size: 3rem;
-      background: none;
-      border: 2px solid white;
-      color: white;
-      cursor: pointer;
-      padding: 0.2em 0.5em;
-      border-radius: 0.25rem;
-      transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-    }
+  position: absolute;
+  top: 2vh;
+  right: 2vw;
+  font-size: 3rem;
+  background: rgba(0, 0, 0, 0.4); /* <-- NEW: subtle dark backdrop */
+  border: 2px solid white;
+  color: white;
+  cursor: pointer;
+  padding: 0.2em 0.5em;
+  border-radius: 0.25rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.7); /* <-- NEW: keeps text legible */
+  box-shadow: 0 0 8px rgba(0,0,0,0.3); /* <-- NEW: gives a soft glow */
+  transition: transform 0.2s ease, background-color 0.2s ease, 
+              color 0.2s ease, box-shadow 0.2s ease;
+}
 
-    #closeModal:hover,
-    #closeModal:focus {
-      background-color: white;
-      color: red;
-      transform: scale(1.2);
-      box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
-      outline: none;
-    }
+#closeModal:hover,
+#closeModal:focus {
+  background-color: white;
+  color: red;
+  transform: scale(1.2);
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+  outline: none;
+}
 
     #backToTop {
       display: none;
@@ -146,7 +149,7 @@
 </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 6</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 7</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
