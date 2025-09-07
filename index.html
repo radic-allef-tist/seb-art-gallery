@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 6</h1>
+  <h1>Stupid, Evil, or Both TEST 7</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -515,58 +515,39 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </button>
 
 <script>
-  const backToTopBtn = document.getElementById("backToTop");
+const backToTopBtn = document.getElementById("backToTop");
 
 // Show/hide on scroll
 window.addEventListener("scroll", () => {
   const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
   backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
-
-  // Remove pressed state if user scrolls back to top
-  if (scrollTop <= 0) {
+  // Remove pressed effect when scrolling back down
+  if(scrollTop > 300 === false){
     backToTopBtn.classList.remove("pressed");
   }
 });
 
-// Smooth scroll to top
+// Scroll function
 const scrollToTop = () => {
-  const start = window.scrollY;
-  if (start === 0) return;
-
-  backToTopBtn.classList.add("pressed"); // show immediate feedback
-
-  const duration = 400; // scroll duration in ms
-  const startTime = performance.now();
-
-  const step = (currentTime) => {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    window.scrollTo(0, start * (1 - progress));
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    } else {
-      backToTopBtn.classList.remove("pressed"); // remove when done
-    }
-  };
-
-  requestAnimationFrame(step);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  // Remove pressed effect after starting scroll
+  backToTopBtn.classList.remove("pressed");
 };
 
-// Desktop click
-backToTopBtn.addEventListener("click", scrollToTop);
+// Desktop hover stays via CSS :hover
 
-// Mobile / pointer devices
-backToTopBtn.addEventListener("pointerdown", e => {
+// Mobile / touch feedback
+backToTopBtn.addEventListener("touchstart", () => {
   backToTopBtn.classList.add("pressed");
+  scrollToTop();
 });
 
-backToTopBtn.addEventListener("pointerup", e => {
+backToTopBtn.addEventListener("touchend", () => {
   backToTopBtn.classList.remove("pressed");
 });
 
-backToTopBtn.addEventListener("pointercancel", e => {
-  backToTopBtn.classList.remove("pressed");
-});
+// Also fire on click for desktop
+backToTopBtn.addEventListener("click", scrollToTop);
   
 </script>
 
