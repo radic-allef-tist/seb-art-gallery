@@ -135,9 +135,9 @@
   right: 4vw;
   z-index: 99;
 
-  width: clamp(2.5rem, 6vw, 4rem);
-  height: clamp(2.5rem, 6vw, 4rem);
-  border-radius: 50%;          /* keeps it circular */
+  width: clamp(3.5rem, 10vw, 5rem);   /* bigger minimum for mobile */
+  height: clamp(3.5rem, 10vw, 5rem);
+  border-radius: 50%;
   background-color: white;
   color: #333;
   border: 2px solid #333;
@@ -145,7 +145,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   cursor: pointer;
   box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
   transition: opacity 0.3s ease, transform 0.2s ease;
@@ -158,15 +158,15 @@
 }
 
 #backToTop svg {
-  width: 50%;  /* scales nicely inside the circle */
-  height: 50%;
+  width: 70%;   /* slightly bigger inside the button */
+  height: 70%;
 }
     
   </style>
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
