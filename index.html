@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST G</h1>
+  <h1>Stupid, Evil, or Both TEST S</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -306,8 +306,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const preloadAll = () => {
     document.querySelectorAll('.gallery a').forEach(link => {
       const fullResPath = link.getAttribute('href')
-        .replace('Watermarked_WebP_Thumbnails', 'Watermarked_WebP')
-        .replace('_Thumbnail', '');
+        .replace('Watermarked_WebP_Thumbnails', 'Watermarked_JPEGS')
+        .replace('_Thumbnail', '')
+        .replace('.webp', '.jpeg'); // convert to JPEG
+
       const img = new Image();
       img.decoding = "async";
       img.loading = "eager";
@@ -321,158 +323,108 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(preloadAll, 2000);
   }
 });
-  
 
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 
-let scale = 1;
-let originX = 0;
-let originY = 0;
-let startX = 0;
-let startY = 0;
-let isDragging = false;
+let scale = 1, originX = 0, originY = 0, startX = 0, startY = 0, isDragging = false;
+let initialDistance = 0, initialScale = 1, lastTouchX = 0, lastTouchY = 0;
 
-// Mobile pinch variables
-let initialDistance = 0;
-let initialScale = 1;
-let lastTouchX = 0;
-let lastTouchY = 0;
-
-// --- Open modal with full-res images safely ---
+// --- Open modal with full-res JPEGs safely ---
 document.querySelectorAll('.gallery a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
 
     const thumbPath = link.getAttribute('href');
     const fullResPath = thumbPath
-      .replace('Watermarked_WebP_Thumbnails', 'Watermarked_WebP')
-      .replace('_Thumbnail', '');
+      .replace('Watermarked_WebP_Thumbnails', 'Watermarked_JPEGS')
+      .replace('_Thumbnail', '')
+      .replace('.webp', '.jpeg');
 
     // Reset modal immediately
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
-    scale = 1;
-    originX = 0;
-    originY = 0;
+    scale = 1; originX = 0; originY = 0;
 
-    // Optional: show modal immediately but with loader/spinner
+    // Show modal immediately
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
     // Clear previous src to cancel ongoing load
     modalImg.src = '';
 
-    // Create a temporary image to preload
+    // Preload full-res image
     const imgLoader = new Image();
     imgLoader.src = fullResPath;
-    imgLoader.onload = () => {
-      // Only set modalImg src when fully loaded
-      modalImg.src = fullResPath;
-    };
+    imgLoader.onload = () => { modalImg.src = fullResPath; };
 
-    // If the modal is closed before image loads, cancel the load
-    const cancelLoad = () => {
-      imgLoader.onload = null;
-      imgLoader.src = ''; // stops loading
-      modal.removeEventListener('click', cancelLoad);
-      closeBtn.removeEventListener('click', cancelLoad);
-    };
-
+    // Cancel loading if modal closes early
+    const cancelLoad = () => { imgLoader.onload = null; imgLoader.src = ''; };
     modal.addEventListener('click', cancelLoad);
     closeBtn.addEventListener('click', cancelLoad);
   });
 });
 
-// --------------------
-// Detect actual input type
-// --------------------
+// --- Detect input type ---
 let usingMouse = false;
-
-// If the user moves a mouse, we assume desktop behavior
 window.addEventListener('mousemove', () => { usingMouse = true; });
-
-// If the user touches the screen, we assume touch input
 window.addEventListener('touchstart', () => { usingMouse = false; });
-
-// Helper function to check if desktop interactions should run
 const isDesktop = () => usingMouse;
-    // --- Desktop click-to-zoom ---
-  
-  modalImg.addEventListener('click', e => {
-    if (!isDesktop()) return;  // skip on touch
-    if (scale === 1 && !e.touches) {
-      const rect = modalImg.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const newScale = 2;
 
-      originX = offsetX - (offsetX - originX) * (newScale / scale);
-      originY = offsetY - (offsetY - originY) * (newScale / scale);
-      scale = newScale;
+// --- Desktop click-to-zoom ---
+modalImg.addEventListener('click', e => {
+  if (!isDesktop() || scale !== 1) return;
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+  const newScale = 2;
+  originX = offsetX - (offsetX - originX) * (newScale / scale);
+  originY = offsetY - (offsetY - originY) * (newScale / scale);
+  scale = newScale;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  modalImg.style.cursor = 'grab';
+});
 
-      modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-      modalImg.style.cursor = 'grab';
-    }
-  });
+// --- Desktop scroll-to-zoom ---
+modal.addEventListener('wheel', e => {
+  if (!isDesktop()) return;
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
+  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
+  originX = newScale === 1 ? 0 : offsetX - ((offsetX - originX) * newScale) / scale;
+  originY = newScale === 1 ? 0 : offsetY - ((offsetY - originY) * newScale) / scale;
+  scale = newScale;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+});
 
-  // --- Desktop scroll-to-zoom ---
-  modal.addEventListener('wheel', e => {
-    if (!isDesktop()) return;  // skip on touch
-    e.preventDefault();
-    const rect = modalImg.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-
-    const zoomFactor = Math.exp(-e.deltaY * 0.0025);
-    const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
-
-    if (newScale === 1) {
-      originX = 0;
-      originY = 0;
-    } else {
-      originX = offsetX - ((offsetX - originX) * newScale) / scale;
-      originY = offsetY - ((offsetY - originY) * newScale) / scale;
-    }
-
-    scale = newScale;
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-    modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-  });
-
-  // --- Desktop dragging ---
-  modalImg.addEventListener('mousedown', e => {
-    if (!isDesktop()) return;  // skip on touch
-    if (scale <= 1) return;
-    isDragging = true;
-    startX = e.clientX - originX;
-    startY = e.clientY - originY;
-    modalImg.style.cursor = 'grabbing';
-    e.preventDefault();
-  });
-
-  window.addEventListener('mousemove', e => {
-    if (!isDesktop()) return;  // skip on touch
-    if (!isDragging) return;
-    originX = e.clientX - startX;
-    originY = e.clientY - startY;
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (!isDesktop()) return;  // skip on touch
-    if (isDragging) {
-      isDragging = false;
-      modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-    }
-  });
-
+// --- Desktop dragging ---
+modalImg.addEventListener('mousedown', e => {
+  if (!isDesktop() || scale <= 1) return;
+  isDragging = true;
+  startX = e.clientX - originX;
+  startY = e.clientY - originY;
+  modalImg.style.cursor = 'grabbing';
+  e.preventDefault();
+});
+window.addEventListener('mousemove', e => {
+  if (!isDesktop() || !isDragging) return;
+  originX = e.clientX - startX;
+  originY = e.clientY - startY;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+});
+window.addEventListener('mouseup', () => {
+  if (!isDesktop() || !isDragging) return;
+  isDragging = false;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+});
 
 // --- Mobile pinch & drag ---
-let lastPinchTime = 0;
-let pinchMidX = 0;
-let pinchMidY = 0;
+let lastPinchTime = 0, pinchMidX = 0, pinchMidY = 0;
 
 modal.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
@@ -480,23 +432,16 @@ modal.addEventListener('touchstart', e => {
     lastTouchY = e.touches[0].clientY;
   } else if (e.touches.length === 2) {
     const [t1, t2] = e.touches;
-    initialDistance = Math.hypot(
-      t1.clientX - t2.clientX,
-      t1.clientY - t2.clientY
-    );
+    initialDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     initialScale = scale;
-
-    // Save pinch midpoint (in screen coordinates)
-    pinchMidX = (t1.clientX + t2.clientX) / 2;
-    pinchMidY = (t1.clientY + t2.clientY) / 2;
+    pinchMidX = (t1.clientX + t2.clientX)/2;
+    pinchMidY = (t1.clientY + t2.clientY)/2;
   }
 }, { passive: false });
 
 modal.addEventListener('touchmove', e => {
   if (e.touches.length === 1) {
-    if (Date.now() - lastPinchTime < 50) return; // tiny buffer after pinch
-
-    // One-finger drag
+    if (Date.now() - lastPinchTime < 50) return;
     e.preventDefault();
     const touch = e.touches[0];
     originX += touch.clientX - lastTouchX;
@@ -504,36 +449,22 @@ modal.addEventListener('touchmove', e => {
     lastTouchX = touch.clientX;
     lastTouchY = touch.clientY;
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-
   } else if (e.touches.length === 2) {
     e.preventDefault();
-
     const [t1, t2] = e.touches;
-    const currentDistance = Math.hypot(
-      t1.clientX - t2.clientX,
-      t1.clientY - t2.clientY
-    );
-
+    const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     let newScale = initialScale * (currentDistance / initialDistance);
     newScale = Math.min(Math.max(newScale, 1), 10);
-
-    // Find current midpoint of pinch
-    const currentMidX = (t1.clientX + t2.clientX) / 2;
-    const currentMidY = (t1.clientY + t2.clientY) / 2;
-
-    // Calculate how far midpoint moved since start
+    const currentMidX = (t1.clientX + t2.clientX)/2;
+    const currentMidY = (t1.clientY + t2.clientY)/2;
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
-
-    // Adjust origin based on scale AND midpoint shift
     originX = (originX + dx) * (newScale / scale);
     originY = (originY + dy) * (newScale / scale);
-
     scale = newScale;
     pinchMidX = currentMidX;
     pinchMidY = currentMidY;
-
-    lastPinchTime = Date.now(); // mark the pinch
+    lastPinchTime = Date.now();
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   }
 }, { passive: false });
@@ -542,9 +473,7 @@ modal.addEventListener('touchmove', e => {
 const closeModal = () => {
   modal.style.display = 'none';
   document.body.style.overflow = '';
-  scale = 1;
-  originX = 0;
-  originY = 0;
+  scale = 1; originX = 0; originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
 };
@@ -552,9 +481,7 @@ const closeModal = () => {
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  
-</script> 
+</script>
 
 <!-- BACK TO TOP ARROW -->
   
