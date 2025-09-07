@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 7</h1>
+  <h1>Stupid, Evil, or Both TEST 8</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -515,39 +515,55 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </button>
 
 <script>
-const backToTopBtn = document.getElementById("backToTop");
+>
+  const backToTopBtn = document.getElementById("backToTop");
 
-// Show/hide on scroll
-window.addEventListener("scroll", () => {
-  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-  backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
-  // Remove pressed effect when scrolling back down
-  if(scrollTop > 300 === false){
+  // --- Show/hide button on scroll ---
+  window.addEventListener("scroll", () => {
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
+
+    // If we're back at the very top, reset any pressed effects
+    if (scrollTop === 0) {
+      backToTopBtn.classList.remove("pressed");
+      backToTopBtn.style.backgroundColor = "";
+      backToTopBtn.style.color = "";
+      backToTopBtn.style.transform = "";
+    }
+  });
+
+  // --- Helper: reset pressed effects manually ---
+  const resetButtonEffects = () => {
     backToTopBtn.classList.remove("pressed");
-  }
-});
+    backToTopBtn.style.backgroundColor = "";
+    backToTopBtn.style.color = "";
+    backToTopBtn.style.transform = "";
+  };
 
-// Scroll function
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  // Remove pressed effect after starting scroll
-  backToTopBtn.classList.remove("pressed");
-};
+  // --- Smooth scroll to top ---
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-// Desktop hover stays via CSS :hover
+    // Check every few ms until we're at the top, then reset button effects
+    const scrollCheck = setInterval(() => {
+      if ((window.scrollY || document.documentElement.scrollTop) === 0) {
+        resetButtonEffects();
+        clearInterval(scrollCheck);
+      }
+    }, 20);
+  };
 
-// Mobile / touch feedback
-backToTopBtn.addEventListener("touchstart", () => {
-  backToTopBtn.classList.add("pressed");
-  scrollToTop();
-});
+  // --- Desktop: click to scroll ---
+  backToTopBtn.addEventListener("click", scrollToTop);
 
-backToTopBtn.addEventListener("touchend", () => {
-  backToTopBtn.classList.remove("pressed");
-});
+  // --- Mobile: press feedback + scroll ---
+  backToTopBtn.addEventListener("touchstart", () => {
+    backToTopBtn.classList.add("pressed"); // visually shows "hover" state
+    scrollToTop();
+  });
 
-// Also fire on click for desktop
-backToTopBtn.addEventListener("click", scrollToTop);
+  backToTopBtn.addEventListener("touchend", resetButtonEffects);
   
 </script>
 
