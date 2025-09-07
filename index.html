@@ -146,7 +146,7 @@
 </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 4</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 5</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
@@ -304,14 +304,14 @@
     });
   });
 
-  // First click inside modal = zoom in
+  // First click inside modal = zoom in (only if scale is 1)
   modalImg.addEventListener('click', e => {
     if (scale === 1) {
       const rect = modalImg.getBoundingClientRect();
       const offsetX = e.clientX - rect.left;
       const offsetY = e.clientY - rect.top;
 
-      const newScale = 2; // fixed zoom on first click
+      const newScale = 2;
       originX = offsetX - (offsetX - originX) * (newScale / scale);
       originY = offsetY - (offsetY - originY) * (newScale / scale);
       scale = newScale;
@@ -339,13 +339,16 @@
     modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
   });
 
-  // Click & hold to drag
+  // Dragging (mousedown → mousemove → mouseup)
   modalImg.addEventListener('mousedown', e => {
     if (scale <= 1) return;
     isDragging = true;
     startX = e.clientX - originX;
     startY = e.clientY - originY;
     modalImg.style.cursor = 'grabbing';
+
+    // Prevent image click event (so it doesn't re-zoom when we drag)
+    e.preventDefault();
   });
 
   window.addEventListener('mousemove', e => {
