@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 7</h1>
+  <h1>Stupid, Evil, or Both TEST 8</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -450,7 +450,7 @@ modal.addEventListener('touchmove', e => {
 // --- Touchend recenter ---
 modal.addEventListener('touchend', e => {
   // Only recenter if fully zoomed out
-  if (scale <= 1.005) {
+  if (Math.abs(scale - 1) < 0.001) { // tiny tolerance for floating-point
     scale = 1;
     originX = 0;
     originY = 0;
