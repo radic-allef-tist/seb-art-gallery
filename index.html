@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Q</h1>
+  <h1>Stupid, Evil, or Both TEST X</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -281,8 +281,6 @@
   </div>
 
 </div>
-
-  
 <!-- Modal container (hidden by default) -->
 <div id="imageModal" 
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
@@ -340,33 +338,19 @@ let initialScale = 1;
 let lastTouchX = 0;
 let lastTouchY = 0;
 
-// --- Open modal with lazy-loaded full-res ---
+// --- Open modal ---
 document.querySelectorAll('.gallery a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-
-    // Show modal immediately
     modal.style.display = 'flex';
+    modalImg.src = link.href;
     document.body.style.overflow = 'hidden';
 
-    // Reset transform state
     scale = 1;
     originX = 0;
     originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
-
-    // Load full-res image lazily
-    const fullSrc = link.dataset.full || link.href; // fallback to href if data-full not set
-    modalImg.style.opacity = 0; // hide until loaded
-
-    const fullImg = new Image();
-    fullImg.src = fullSrc;
-    fullImg.onload = () => {
-      modalImg.src = fullSrc;
-      modalImg.style.transition = 'opacity 0.2s';
-      modalImg.style.opacity = 1; // fade in full-res
-    };
   });
 });
 
