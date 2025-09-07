@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 4</h1>
+  <h1>Stupid, Evil, or Both TEST V</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -439,33 +439,36 @@ modal.addEventListener('touchmove', e => {
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
 
   } else if (e.touches.length === 2) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const [t1, t2] = e.touches;
-  const currentDistance = Math.hypot(
-    t1.clientX - t2.clientX,
-    t1.clientY - t2.clientY
-  );
+    const [t1, t2] = e.touches;
+    const currentDistance = Math.hypot(
+      t1.clientX - t2.clientX,
+      t1.clientY - t2.clientY
+    );
 
-  let newScale = initialScale * (currentDistance / initialDistance);
-  newScale = Math.min(Math.max(newScale, 1), 10);
+    let newScale = initialScale * (currentDistance / initialDistance);
+    newScale = Math.min(Math.max(newScale, 1), 10);
 
-  const currentMidX = (t1.clientX + t2.clientX) / 2;
-  const currentMidY = (t1.clientY + t2.clientY) / 2;
+    // Find current midpoint of pinch
+    const currentMidX = (t1.clientX + t2.clientX) / 2;
+    const currentMidY = (t1.clientY + t2.clientY) / 2;
 
-  const dx = currentMidX - pinchMidX;
-  const dy = currentMidY - pinchMidY;
+    // Calculate how far midpoint moved since start
+    const dx = currentMidX - pinchMidX;
+    const dy = currentMidY - pinchMidY;
 
-  // minimal change here
-  originX = originX * (newScale / scale) + dx;
-  originY = originY * (newScale / scale) + dy;
+    // Adjust origin based on scale AND midpoint shift
+    originX = (originX + dx) * (newScale / scale);
+    originY = (originY + dy) * (newScale / scale);
 
-  scale = newScale;
-  pinchMidX = currentMidX;
-  pinchMidY = currentMidY;
+    scale = newScale;
+    pinchMidX = currentMidX;
+    pinchMidY = currentMidY;
 
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-}
+    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  }
+}, { passive: false });
 
 // --- Close modal ---
 const closeModal = () => {
@@ -484,7 +487,6 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
   
 </script>
-
 
   
 
