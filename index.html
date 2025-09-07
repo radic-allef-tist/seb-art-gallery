@@ -4,100 +4,104 @@
   <meta charset="UTF-8">
   <title>Stupid, Evil, or Both: Artwork Gallery</title>
 
+ 
   <style>
     body { font-family: serif; background: #f9f9f9; margin: 0; padding: 20px; text-align: center; }
-
-    h1 {
-      font-size: clamp(2rem, 5vw, 4rem);
-      font-family: serif;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 2vh;
-      line-height: 1.2;
-    }
+    
+   h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-family: serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2vh;  /* increases vertical space relative to screen height */
+  line-height: 1.2;
+}
 
     h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-family: serif;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 12vh;
-      line-height: 1.2;
-    }
-
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12vh;  /* increases vertical space relative to screen height */
+  line-height: 1.2;
+}
+    
     .gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 6vh;
-      align-items: center;
-      max-width: 90%;
-      margin: 0 auto;
-    }
+  display: flex;
+  flex-direction: column;
+  gap: 6vh;           /* vertical spacing between each gallery-item */
+  align-items: center;
+  max-width: 90%;
+  margin: 0 auto;
+}
 
-    .gallery img {
-      width: 70%;
-      max-width: 800px;
-      height: auto;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+.gallery img {
+  width: 70%;             /* relative for smaller screens */
+  max-width: 800px;       /* caps size on large screens */
+  height: auto;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-    .gallery img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0.5rem 0.75rem rgba(0,0,0,0.2);
-    }
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0.5rem 0.75rem rgba(0,0,0,0.2);
+}
 
-    .gallery-item {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
 
-    .caption {
-      margin-top: 1rem;
-      font-size: 2rem;
-      font-family: serif;
-      color: #333;
-      font-weight: bold;
-    }
+  .gallery-item {
+  text-align: center;
+
+  margin-bottom: 2rem; /* small buffer if needed */
+}
+
+.caption {
+  margin-top: 1rem;    
+  font-size: 2rem;
+  font-family: serif;
+  color: #333;
+  font-weight: bold;
+}
 
     .angled-strike {
-      position: relative;
-      display: inline-block;
-      color: inherit;
-      font-size: inherit;
-      font-family: inherit;
-      font-weight: inherit;
-    }
+  position: relative;    /* relative for the pseudo-element */
+  display: inline-block; /* ensures width matches text */
+  color: inherit;        /* match h2 text color */
+  font-size: inherit;    /* match h2 font size */
+  font-family: inherit;  /* match h2 font */
+  font-weight: inherit;  /* match h2 weight */
+}
 
-    .angled-strike::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 45%;
-      width: 100%;
-      height: 0.25em;
-      background-color: red;
-      transform: rotate(-12deg);
-      transform-origin: center;
-    }
+.angled-strike::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 45%;
+  width: 100%;
+  height: 0.25em;
+  background-color: red;
+  transform: rotate(-12deg);
+  transform-origin: center;
+}
 
-    .footer {
-      text-align: left;
-      max-width: 90%;
-      margin: 3rem auto 2rem auto;
-      padding: 2rem;
-      background-color: rgba(240, 240, 240, 0.8);
-      border: 2px solid #ccc;
-      border-radius: 1rem;
-      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-      font-size: 1rem;
-      font-family: serif;
-      color: #333;
-      line-height: 1.5;
-    }
+.footer {
+  text-align: left;
+  max-width: 90%;
+  margin: 3rem auto 2rem auto;  /* top, sides auto, bottom */
+  padding: 2rem;
+  background-color: rgba(240, 240, 240, 0.8); /* light gray with slight transparency */
+  border: 2px solid #ccc;         /* subtle border */
+  border-radius: 1rem;            /* rounded corners */
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); /* soft shadow for depth */
+  font-size: 1rem;
+  font-family: serif;
+  color: #333;
+  line-height: 1.5;
+}
 
-    #closeModal {
+
+  #closeModal {
   position: absolute;
   top: 2vh;
   right: 2vw;
@@ -123,34 +127,36 @@
   outline: none;
 }
 
-    #backToTop {
-      display: none;
-      position: fixed;
-      bottom: 2vh;
-      right: 4vw;
-      z-index: 99;
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      background-color: white;
-      color: #333;
-      border: 2px solid #333;
-      border-radius: 50%;
-      padding: clamp(0.5rem, 2vw, 1rem);
-      cursor: pointer;
-      box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
-      transition: opacity 0.3s ease, transform 0.2s ease;
-    }
+#backToTop {
+  display: none;
+  position: fixed;
+  bottom: 2vh;                 /* scales with screen height */
+  right: 4vw;                  /* moves it slightly left for phones */
+  z-index: 99;
+  font-size: clamp(1.5rem, 4vw, 2.5rem); /* scales with screen size */
+  background-color: white;     /* matches your site background */
+  color: #333;                 /* same as your body text */
+  border: 2px solid #333;      /* gives it a subtle outline */
+  border-radius: 50%;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  cursor: pointer;
+  box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
 
-    #backToTop:hover {
-      background-color: #333;
-      color: white;
-      transform: scale(1.1);
-    }
+  #backToTop:hover {
+    background-color: #333;
+    color: white; /* inverts on hover for clear feedback */
+    transform: scale(1.1);
+  }
+    
   </style>
-</head>
+  </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE X</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
+
 
   
 <div class="gallery">
@@ -241,62 +247,28 @@
 
 </div>
 
-<!-- Modal container -->
-<div id="imageModal"
-     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+<!-- Modal container (hidden by default) -->
+<div id="imageModal" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
+  <img id="modalImage" src="" 
+       style="max-width:90%; max-height:90%; cursor:grab; border-radius:0.5rem;">
   
-  <img id="modalImage" src=""
-       style="max-width:90%; max-height:90%; cursor:zoom-in; border-radius:0.5rem; touch-action:auto;">
-
-  <!-- Close button -->
-  <button id="closeModal"
+  <!-- Bigger X button -->
+  <button id="closeModal" 
           style="
-            position:absolute;
-            top:2vh;
-            right:2vw;
-            font-size:3rem;
-            background:rgba(0,0,0,0.5);
-            border:none;
-            color:white;
+            position:absolute; 
+            top:2vh; 
+            right:2vw; 
+            font-size:3rem; 
+            background:none; 
+            border:none; 
+            color:white; 
             cursor:pointer;
-            padding:0.3em 0.6em;
+            padding:0.2em 0.5em; 
             border-radius:0.25rem;
-            transition: transform 0.2s ease, background-color 0.2s ease;
+            transition: transform 0.2s ease;
           ">✕</button>
-
-  <!-- Reset button -->
-  <button id="resetImage"
-          style="
-            position:absolute;
-            top:6vh;
-            right:2vw;
-            font-size:3rem;
-            background:rgba(0,0,0,0.5);
-            border:none;
-            color:white;
-            cursor:pointer;
-            padding:0.3em 0.6em;
-            border-radius:0.25rem;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-          ">⟲</button>
-
-  <style>
-    /* Hover effects */
-    #closeModal:hover, #closeModal:focus,
-    #resetImage:hover, #resetImage:focus {
-      background-color: white;
-      color: red;
-      transform: scale(1.2);
-      outline: none;
-    }
-
-    /* Mobile tweaks */
-    @media (max-width: 768px) {
-      #closeModal { font-size:4rem; padding:0.5em 0.8em; }
-      #resetImage { font-size:4rem; padding:0.5em 0.8em; top:7vh; }
-    }
-  </style>
 </div>
 
 <div class="footer">
@@ -309,103 +281,126 @@
   <p>Thanks again to everyone for the support. Stay strong out there.</p>
   <p> -Radic</p>
 
- </div> 
+ </div>
 
+    
+<!-- Image Modal Code -->
 
-  <!-- Gallery modal  -->
-  <script>
-const modal = document.getElementById('imageModal');
-const modalImg = document.getElementById('modalImage');
-const closeBtn = document.getElementById('closeModal');
-const resetBtn = document.getElementById('resetImage');
+<script>
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const closeBtn = document.getElementById('closeModal');
 
-let scale = 1;
-let startX = 0, startY = 0;
-let translateX = 0, translateY = 0;
-let isDragging = false;
+  let scale = 1;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let originX = 0;
+  let originY = 0;
 
-// Open modal on gallery click
-document.querySelectorAll('.gallery a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    modal.style.display = 'flex';
-    modalImg.src = link.href;
-    document.body.style.overflow = 'hidden';
+  document.querySelectorAll('.gallery a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      modal.style.display = 'flex';
+      modalImg.src = link.href;
+      document.body.style.overflow = 'hidden';
 
-    // Reset transforms
-    scale = 2; // initial zoom 2x
-    translateX = 0;
-    translateY = 0;
-    modalImg.style.transform = `scale(${scale}) translate(0px, 0px)`;
-    modalImg.style.cursor = 'grab';
+      // Reset zoom & position
+      scale = 1;
+      originX = 0;
+      originY = 0;
+      modalImg.style.transform = `translate(0px, 0px) scale(1)`;
+      modalImg.style.cursor = 'zoom-in';
+    });
   });
-});
 
-// Close modal
-const closeModal = () => {
-  modal.style.display = 'none';
-  document.body.style.overflow = '';
-};
-closeBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+  // First click inside modal = zoom in (only if scale is 1)
+  modalImg.addEventListener('click', e => {
+    if (scale === 1) {
+      const rect = modalImg.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
 
-// Reset image
-resetBtn.addEventListener('click', () => {
-  scale = 1;
-  translateX = 0;
-  translateY = 0;
-  modalImg.style.transform = `scale(${scale}) translate(0px, 0px)`;
-  modalImg.style.cursor = 'zoom-in';
-});
+      const newScale = 2;
+      originX = offsetX - (offsetX - originX) * (newScale / scale);
+      originY = offsetY - (offsetY - originY) * (newScale / scale);
+      scale = newScale;
 
-// Desktop: click-and-drag + wheel zoom
-modalImg.addEventListener('mousedown', e => {
-  if(scale <= 1) return; // only drag if zoomed in
-  isDragging = true;
-  startX = e.clientX - translateX;
-  startY = e.clientY - translateY;
-  modalImg.style.cursor = 'grabbing';
-});
+      modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+      modalImg.style.cursor = 'grab';
+    }
+  });
 
-window.addEventListener('mousemove', e => {
-  if(!isDragging) return;
-  translateX = e.clientX - startX;
-  translateY = e.clientY - startY;
-  modalImg.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
-});
-
-window.addEventListener('mouseup', e => {
-  isDragging = false;
-  if(scale > 1) modalImg.style.cursor = 'grab';
-  else modalImg.style.cursor = 'zoom-in';
-});
-
-// Wheel zoom
-modalImg.addEventListener('wheel', e => {
+  // Scroll to zoom centered on cursor
+modal.addEventListener('wheel', e => {
   e.preventDefault();
   const rect = modalImg.getBoundingClientRect();
   const offsetX = e.clientX - rect.left;
   const offsetY = e.clientY - rect.top;
 
-  const delta = -e.deltaY * 0.0025;
-  const newScale = Math.min(Math.max(0.5, scale * Math.exp(delta)), 10);
+  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
+  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
 
-  // Calculate translation to zoom on cursor
-  translateX = offsetX - ((offsetX - translateX) * newScale / scale);
-  translateY = offsetY - ((offsetY - translateY) * newScale / scale);
+  if (newScale === 1) {
+    // Reset position if fully zoomed out
+    originX = 0;
+    originY = 0;
+  } else {
+    // Calculate relative zoom position
+    originX = offsetX - ((offsetX - originX) * newScale) / scale;
+    originY = offsetY - ((offsetY - originY) * newScale) / scale;
+  }
 
   scale = newScale;
-
-  // Reset position if fully zoomed out
-  if(scale <= 1) { scale = 1; translateX = 0; translateY = 0; modalImg.style.cursor='zoom-in'; }
-  else modalImg.style.cursor='grab';
-
-  modalImg.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+  modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
 });
 
-// Touch: pinch zoom handled natively by browser
+  // Dragging (mousedown → mousemove → mouseup)
+  modalImg.addEventListener('mousedown', e => {
+    if (scale <= 1) return;
+    isDragging = true;
+    startX = e.clientX - originX;
+    startY = e.clientY - originY;
+    modalImg.style.cursor = 'grabbing';
+
+    // Prevent image click event (so it doesn't re-zoom when we drag)
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    originX = e.clientX - startX;
+    originY = e.clientY - startY;
+    modalImg.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+    }
+  });
+
+  // Close modal
+  const closeModal = () => {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    scale = 1;
+    originX = 0;
+    originY = 0;
+    modalImg.style.transform = `translate(0px, 0px) scale(1)`;
+    modalImg.style.cursor = 'zoom-in';
+  };
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  
 </script>
+
+
   
 
 <!-- BACK TO TOP ARROW  -->  
