@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -249,7 +249,7 @@
 </div>
 
 <!-- Modal container (hidden by default) -->
-<!-- Modal container -->
+
 <div id="imageModal" 
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; touch-action:none;">
@@ -399,8 +399,6 @@ window.addEventListener('mouseup', () => {
 
 
 // --- Mobile pinch & drag ---
-
-let lastScale = 1; // track previous scale
 modal.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
     lastTouchX = e.touches[0].clientX;
@@ -416,6 +414,7 @@ modal.addEventListener('touchstart', e => {
 
 modal.addEventListener('touchmove', e => {
   if (e.touches.length === 1 && scale > 1) {
+    // One-finger drag
     e.preventDefault();
     const touch = e.touches[0];
     originX += touch.clientX - lastTouchX;
@@ -423,7 +422,9 @@ modal.addEventListener('touchmove', e => {
     lastTouchX = touch.clientX;
     lastTouchY = touch.clientY;
     updateTransform();
+
   } else if (e.touches.length === 2) {
+    // Two-finger pinch
     e.preventDefault();
     const [t1, t2] = e.touches;
     const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
@@ -435,10 +436,9 @@ modal.addEventListener('touchmove', e => {
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
+    // Update origin and scale based on pinch movement — no recentering
     originX = (originX + dx) * (newScale / scale);
     originY = (originY + dy) * (newScale / scale);
-
-    lastScale = scale; // remember the old scale
     scale = newScale;
 
     pinchMidX = currentMidX;
@@ -447,16 +447,6 @@ modal.addEventListener('touchmove', e => {
     updateTransform();
   }
 }, { passive: false });
-
-// --- Mobile touchend: only recenter if going from zoomed in to fully zoomed out ---
-modal.addEventListener('touchend', e => {
-  if (lastScale > 1 && scale <= 1.005) {
-    scale = 1;
-    originX = 0;
-    originY = 0;
-    updateTransform();
-  }
-});
   
 // --- Close modal ---
 const closeModal = () => {
