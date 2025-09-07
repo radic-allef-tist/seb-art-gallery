@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST V</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -459,8 +459,8 @@ modal.addEventListener('touchmove', e => {
     const dy = currentMidY - pinchMidY;
 
     // Adjust origin based on scale AND midpoint shift
-    originX = (originX + dx) * (newScale / scale);
-    originY = (originY + dy) * (newScale / scale);
+    originX = originX * (newScale / scale) + dx;
+    originY = originY * (newScale / scale) + dy;
 
     scale = newScale;
     pinchMidX = currentMidX;
