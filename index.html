@@ -134,7 +134,7 @@
   bottom: 2vh;
   right: 4vw;
   z-index: 99;
-  width: clamp(3rem, 8vw, 4rem);   /* fixed width/height for more circular consistency */
+  width: clamp(3rem, 8vw, 4rem);
   height: clamp(3rem, 8vw, 4rem);
   background-color: white;
   color: #333;
@@ -153,13 +153,18 @@
   color: white;
   transform: scale(1.1);
 }
+
+#backToTop svg {
+  width: 70%;  /* arrow fills ~70% of circle */
+  height: 70%;
+}
     
   </style>
   
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 7</h1>
+  <h1>Stupid, Evil, or Both TEST 4</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -506,10 +511,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
        fill="none" stroke="currentColor" stroke-width="3"
        stroke-linecap="round" stroke-linejoin="round"
        style="width: 70%; height: 70%;">
-    <!-- group for scaling and centering the arrow inside the circle -->
-    <g transform="scale(1.5) translate(2,2)">
-      <polyline points="18 15 12 9 6 15" />
-    </g>
+    <polyline points="18 15 12 9 6 15" />
   </svg>
 </button>
 
