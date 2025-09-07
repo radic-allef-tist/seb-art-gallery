@@ -164,7 +164,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1x</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -503,9 +503,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
   
 
-<!-- BACK TO TOP ARROW  -->  
-  
-
+<!-- BACK TO TOP ARROW -->
 <button id="backToTop" title="Go to top" aria-label="Back to top">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
        fill="none" stroke="currentColor" stroke-width="3"
@@ -515,25 +513,41 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
   </svg>
 </button>
 
-
-
 <script>
   const backToTopBtn = document.getElementById("backToTop");
 
-  // Show/hide on scroll
+  // Show/hide button on scroll
   window.addEventListener("scroll", () => {
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
   });
 
-  // Smooth scroll to top on click or touch
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  // Reset hover styles (used after press/touch)
+  const resetHoverStyles = () => {
+    backToTopBtn.style.backgroundColor = "white";
+    backToTopBtn.style.color = "#333";
+    backToTopBtn.style.transform = "scale(1)";
   };
 
-  backToTopBtn.addEventListener("click", scrollToTop);
-  backToTopBtn.addEventListener("touchstart", scrollToTop);
+  // Scroll to top and reset hover
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    resetHoverStyles();
+  };
+
+  // Unified handler for both click and touch
+  const handleBackToTop = (e) => {
+    e.preventDefault();
+    scrollToTop();
+  };
+
+  // Attach unified handler
+  backToTopBtn.addEventListener("click", handleBackToTop);
+  backToTopBtn.addEventListener("touchstart", handleBackToTop);
+
+  // Optional: reset hover if touch ends outside button
+  backToTopBtn.addEventListener("touchend", resetHoverStyles);
+  backToTopBtn.addEventListener("touchcancel", resetHoverStyles);
 </script>
 
   
