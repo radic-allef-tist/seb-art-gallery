@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST S</h1>
+  <h1>Stupid, Evil, or Both TEST X</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -308,7 +308,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const fullResPath = link.getAttribute('href')
         .replace('Watermarked_WebP_Thumbnails', 'Watermarked_JPEGS')
         .replace('_Thumbnail', '')
-        .replace('.webp', '.jpeg'); // convert to JPEG
+        .replace('.webp', '.jpg'); // convert to JPG
 
       const img = new Image();
       img.decoding = "async";
@@ -340,7 +340,7 @@ document.querySelectorAll('.gallery a').forEach(link => {
     const fullResPath = thumbPath
       .replace('Watermarked_WebP_Thumbnails', 'Watermarked_JPEGS')
       .replace('_Thumbnail', '')
-      .replace('.webp', '.jpeg');
+      .replace('.webp', '.jpg');
 
     // Reset modal immediately
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
