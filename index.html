@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -321,69 +321,86 @@ document.querySelectorAll('.gallery a').forEach(link => {
   });
 });
 
-// --- Desktop click-to-zoom ---
-modalImg.addEventListener('click', e => {
-  if (scale === 1 && !e.touches) {
+// --------------------
+// Detect actual input type
+// --------------------
+let usingMouse = false;
+
+// If the user moves a mouse, we assume desktop behavior
+window.addEventListener('mousemove', () => { usingMouse = true; });
+
+// If the user touches the screen, we assume touch input
+window.addEventListener('touchstart', () => { usingMouse = false; });
+
+// Helper function to check if desktop interactions should run
+const isDesktop = () => usingMouse;
+    // --- Desktop click-to-zoom ---
+  
+if (isDesktop()) {
+
+  modalImg.addEventListener('click', e => {
+    if (scale === 1 && !e.touches) {
+      const rect = modalImg.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      const newScale = 2;
+
+      originX = offsetX - (offsetX - originX) * (newScale / scale);
+      originY = offsetY - (offsetY - originY) * (newScale / scale);
+      scale = newScale;
+
+      modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+      modalImg.style.cursor = 'grab';
+    }
+  });
+
+  // --- Desktop scroll-to-zoom ---
+  modal.addEventListener('wheel', e => {
+    e.preventDefault();
     const rect = modalImg.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
-    const newScale = 2;
 
-    originX = offsetX - (offsetX - originX) * (newScale / scale);
-    originY = offsetY - (offsetY - originY) * (newScale / scale);
+    const zoomFactor = Math.exp(-e.deltaY * 0.0025);
+    const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
+
+    if (newScale === 1) {
+      originX = 0;
+      originY = 0;
+    } else {
+      originX = offsetX - ((offsetX - originX) * newScale) / scale;
+      originY = offsetY - ((offsetY - originY) * newScale) / scale;
+    }
+
     scale = newScale;
-
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-    modalImg.style.cursor = 'grab';
-  }
-});
-
-// --- Desktop scroll-to-zoom ---
-modal.addEventListener('wheel', e => {
-  e.preventDefault();
-  const rect = modalImg.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const offsetY = e.clientY - rect.top;
-
-  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
-  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
-
-  if (newScale === 1) {
-    originX = 0;
-    originY = 0;
-  } else {
-    originX = offsetX - ((offsetX - originX) * newScale) / scale;
-    originY = offsetY - ((offsetY - originY) * newScale) / scale;
-  }
-
-  scale = newScale;
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-});
-
-// --- Desktop dragging ---
-modalImg.addEventListener('mousedown', e => {
-  if (scale <= 1) return;
-  isDragging = true;
-  startX = e.clientX - originX;
-  startY = e.clientY - originY;
-  modalImg.style.cursor = 'grabbing';
-  e.preventDefault();
-});
-
-window.addEventListener('mousemove', e => {
-  if (!isDragging) return;
-  originX = e.clientX - startX;
-  originY = e.clientY - startY;
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-});
-
-window.addEventListener('mouseup', () => {
-  if (isDragging) {
-    isDragging = false;
     modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-  }
-});
+  });
+
+  // --- Desktop dragging ---
+  modalImg.addEventListener('mousedown', e => {
+    if (scale <= 1) return;
+    isDragging = true;
+    startX = e.clientX - originX;
+    startY = e.clientY - originY;
+    modalImg.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    originX = e.clientX - startX;
+    originY = e.clientY - startY;
+    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+    }
+  });
+}
 
 // --- Mobile pinch & drag ---
 let pinchMidX = 0;
