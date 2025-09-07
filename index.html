@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 6</h1>
+  <h1>Stupid, Evil, or Both TEST 7</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -431,17 +431,15 @@ modal.addEventListener('touchmove', e => {
 
     const currentMidX = (t1.clientX + t2.clientX) / 2;
     const currentMidY = (t1.clientY + t2.clientY) / 2;
-
-    // --- calculate movement relative to midpoint ---
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-    // Adjust origin to keep the pinch midpoint stationary
-    originX = (originX + dx) - (currentMidX - window.innerWidth/2) * (newScale/scale - 1);
-    originY = (originY + dy) - (currentMidY - window.innerHeight/2) * (newScale/scale - 1);
-
+    // Update origin and scale — no recentering here at all
+    originX = (originX + dx) * (newScale / scale);
+    originY = (originY + dy) * (newScale / scale);
     scale = newScale;
 
+    // Update pinch midpoint
     pinchMidX = currentMidX;
     pinchMidY = currentMidY;
 
