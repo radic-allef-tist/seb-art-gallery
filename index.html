@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 5</h1>
+  <h1>Stupid, Evil, or Both TEST 6</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -522,33 +522,52 @@ window.addEventListener("scroll", () => {
   const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
   backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
 
-  // Remove mobile pressed state if user scrolls back to top
-  if (scrollTop <= 300) {
+  // Remove pressed state if user scrolls back to top
+  if (scrollTop <= 0) {
     backToTopBtn.classList.remove("pressed");
   }
 });
 
-// Smooth scroll to top on click/tap
+// Smooth scroll to top
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  const start = window.scrollY;
+  if (start === 0) return;
+
+  backToTopBtn.classList.add("pressed"); // show immediate feedback
+
+  const duration = 400; // scroll duration in ms
+  const startTime = performance.now();
+
+  const step = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    window.scrollTo(0, start * (1 - progress));
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      backToTopBtn.classList.remove("pressed"); // remove when done
+    }
+  };
+
+  requestAnimationFrame(step);
 };
 
 // Desktop click
 backToTopBtn.addEventListener("click", scrollToTop);
 
-// Mobile touch
-backToTopBtn.addEventListener("touchstart", e => {
-  backToTopBtn.classList.add("pressed"); // show press feedback
-  scrollToTop();
+// Mobile / pointer devices
+backToTopBtn.addEventListener("pointerdown", e => {
+  backToTopBtn.classList.add("pressed");
 });
 
-backToTopBtn.addEventListener("touchend", e => {
-  backToTopBtn.classList.remove("pressed"); // remove feedback when user lifts finger
+backToTopBtn.addEventListener("pointerup", e => {
+  backToTopBtn.classList.remove("pressed");
 });
 
-backToTopBtn.addEventListener("touchcancel", e => {
-  backToTopBtn.classList.remove("pressed"); // safety
+backToTopBtn.addEventListener("pointercancel", e => {
+  backToTopBtn.classList.remove("pressed");
 });
+  
 </script>
 
   
