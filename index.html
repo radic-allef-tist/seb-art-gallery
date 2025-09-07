@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 3</h1>
+  <h1>Stupid, Evil, or Both TEST 5</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -422,8 +422,8 @@ modal.addEventListener('touchmove', e => {
     updateTransform();
 
   } else if (e.touches.length === 2) {
+    // Two-finger pinch
     e.preventDefault();
-
     const [t1, t2] = e.touches;
     const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     let newScale = initialScale * (currentDistance / initialDistance);
@@ -434,18 +434,12 @@ modal.addEventListener('touchmove', e => {
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-    const RECENTER_TOLERANCE = 1.005; // small allowance for floating-point error
+    // UPDATE ORIGIN AND SCALE — no recentering here
+    originX = (originX + dx) * (newScale / scale);
+    originY = (originY + dy) * (newScale / scale);
+    scale = newScale;
 
-if (newScale <= RECENTER_TOLERANCE) {
-  scale = 1;
-  originX = 0;
-  originY = 0;
-} else {
-  originX = (originX + dx) * (newScale / scale);
-  originY = (originY + dy) * (newScale / scale);
-  scale = newScale;
-}
-
+    // Update pinch midpoint
     pinchMidX = currentMidX;
     pinchMidY = currentMidY;
 
@@ -453,6 +447,17 @@ if (newScale <= RECENTER_TOLERANCE) {
   }
 }, { passive: false });
 
+// --- Touchend recenter ---
+modal.addEventListener('touchend', e => {
+  // Only recenter if fully zoomed out
+  if (scale <= 1.005) {
+    scale = 1;
+    originX = 0;
+    originY = 0;
+    updateTransform();
+  }
+});
+  
 // --- Close modal ---
 const closeModal = () => {
   modal.style.display = 'none';
@@ -466,6 +471,7 @@ const closeModal = () => {
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  
 </script>
 
 
