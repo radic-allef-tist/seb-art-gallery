@@ -149,7 +149,7 @@
 </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST SITE 8</h1>
+  <h1>Stupid, Evil, or Both TEST SITE 9</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
@@ -245,56 +245,61 @@
 <div id="imageModal"
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
-  
+
   <img id="modalImage" src=""
        style="max-width:90%; max-height:90%; cursor:zoom-in; border-radius:0.5rem; touch-action: none;">
 
-<!-- Close button -->
-<button id="closeModal"
-        style="
-          position:absolute;
-          top:2vh;
-          right:2vw;
-          font-size:3rem;
-          background:rgba(0,0,0,0.5);
-          border:none;
-          color:white;
-          cursor:pointer;
-          padding:0.3em 0.6em;
-          border-radius:0.25rem;
-          transition: transform 0.2s ease, background-color 0.2s ease;
-        ">✕</button>
+  <!-- Close button -->
+  <button id="closeModal"
+          style="
+            position:absolute;
+            top:2vh;
+            right:2vw;
+            font-size:3rem;
+            background:rgba(0,0,0,0.5);
+            border:none;
+            color:white;
+            cursor:pointer;
+            padding:0.3em 0.6em;
+            border-radius:0.25rem;
+            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          ">✕</button>
 
-<!-- Reset button -->
-<button id="resetImage"
-        style="
-          position:absolute;
-          top:6vh;
-          right:2vw;
-          font-size:2rem;
-          background:rgba(0,0,0,0.5);
-          border:none;
-          color:white;
-          cursor:pointer;
-          padding:0.3em 0.6em;
-          border-radius:0.25rem;
-          transition: transform 0.2s ease, background-color 0.2s ease;
-        ">⟲</button>
+  <!-- Reset button -->
+  <button id="resetImage"
+          style="
+            position:absolute;
+            top:6vh; /* a bit lower than the X for breathing room */
+            right:2vw; /* same horizontal position as X */
+            font-size:3rem; /* same as X */
+            background:rgba(0,0,0,0.5);
+            border:none;
+            color:white;
+            cursor:pointer;
+            padding:0.3em 0.6em;
+            border-radius:0.25rem;
+            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          ">⟲</button>
 
-<style>
-/* Mobile tweaks */
-@media (max-width: 768px) {
-  #closeModal {
-    font-size: 4rem;
-    padding: 0.5em 0.8em;
-  }
-  #resetImage {
-    font-size: 3rem;
-    padding: 0.5em 0.8em;
-  }
-}
-</style>
-  
+  <style>
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+      #closeModal, #resetImage {
+        font-size: 4rem;
+        padding: 0.5em 0.8em;
+      }
+    }
+
+    /* Hover effects same as X button */
+    #closeModal:hover, #closeModal:focus,
+    #resetImage:hover, #resetImage:focus {
+      background-color: white;
+      color: red;
+      transform: scale(1.2);
+      box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+      outline: none;
+    }
+  </style>
 </div>
 
 <div class="footer">
