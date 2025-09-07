@@ -160,7 +160,27 @@
   height: 70%;
 }
 
-  @keyframes spin {
+  #spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-family: sans-serif;
+}
+
+.loader {
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px auto;
+}
+
+@keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
@@ -170,7 +190,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST X</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -333,32 +353,23 @@
 <!-- Image Modal Code -->
 
 <script>
-  
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 const loader = document.getElementById('modalLoader');
 
-let scale = 1;
-let originX = 0;
-let originY = 0;
-let startX = 0;
-let startY = 0;
-let isDragging = false;
+let scale = 1, originX = 0, originY = 0;
+let startX = 0, startY = 0, isDragging = false;
 
 // Mobile pinch variables
-let initialDistance = 0;
-let initialScale = 1;
-let lastTouchX = 0;
-let lastTouchY = 0;
-let lastPinchTime = 0;
-let pinchMidX = 0;
-let pinchMidY = 0;
+let initialDistance = 0, initialScale = 1;
+let lastTouchX = 0, lastTouchY = 0;
+let lastPinchTime = 0, pinchMidX = 0, pinchMidY = 0;
 
-// Detect actual input type
+// Detect input type
 let usingMouse = false;
-window.addEventListener('mousemove', () => { usingMouse = true; });
-window.addEventListener('touchstart', () => { usingMouse = false; });
+window.addEventListener('mousemove', () => usingMouse = true);
+window.addEventListener('touchstart', () => usingMouse = false);
 const isDesktop = () => usingMouse;
 
 // --- Open modal with lazy-load full-res ---
@@ -366,17 +377,16 @@ document.querySelectorAll('.gallery a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
-    loader.style.display = 'flex';   // show spinner
-    modalImg.style.display = 'none'; // hide image while loading
+    loader.style.display = 'flex';       // show spinner
+    modalImg.style.display = 'none';     // hide image while loading
     document.body.style.overflow = 'hidden';
 
-    // Use full-res version (replace _Thumbnail.webp with the folder + full file)
+    // Lazy-load full-res
     const fullResSrc = link.href.replace('Watermarked_WebP_Thumbnails', 'Watermarked_WebP');
     modalImg.src = fullResSrc;
 
-    // When full-res image loads
     modalImg.onload = () => {
-      loader.style.display = 'none';   // hide spinner
+      loader.style.display = 'none';
       modalImg.style.opacity = 0;
       modalImg.style.display = 'block';
       modalImg.style.transition = 'opacity 0.4s ease';
@@ -384,9 +394,7 @@ document.querySelectorAll('.gallery a').forEach(link => {
     };
 
     // Reset zoom/position
-    scale = 1;
-    originX = 0;
-    originY = 0;
+    scale = 1; originX = 0; originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
   });
@@ -426,8 +434,7 @@ modal.addEventListener('wheel', e => {
 
 // --- Desktop dragging ---
 modalImg.addEventListener('mousedown', e => {
-  if (!isDesktop()) return;
-  if (scale <= 1) return;
+  if (!isDesktop() || scale <= 1) return;
   isDragging = true;
   startX = e.clientX - originX;
   startY = e.clientY - originY;
@@ -455,8 +462,8 @@ modal.addEventListener('touchstart', e => {
     const [t1, t2] = e.touches;
     initialDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     initialScale = scale;
-    pinchMidX = (t1.clientX + t2.clientX)/2;
-    pinchMidY = (t1.clientY + t2.clientY)/2;
+    pinchMidX = (t1.clientX + t2.clientX) / 2;
+    pinchMidY = (t1.clientY + t2.clientY) / 2;
   }
 }, { passive: false });
 
@@ -494,21 +501,18 @@ modal.addEventListener('touchmove', e => {
 const closeModal = () => {
   modal.style.display = 'none';
   document.body.style.overflow = '';
-  scale = 1;
-  originX = 0;
-  originY = 0;
+  scale = originX = originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
   modalImg.style.display = 'none';
-  loader.style.display = 'flex'; // reset loader
+  loader.style.display = 'flex';  // reset spinner
 };
 
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  
-</script> 
+</script>
 
 <!-- BACK TO TOP ARROW -->
   
