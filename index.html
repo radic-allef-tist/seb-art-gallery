@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Z</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -408,7 +408,7 @@ modal.addEventListener('touchstart', e => {
 }, { passive: false });
 
 modal.addEventListener('touchmove', e => {
-  if (e.touches.length === 1 && scale > 1) {
+  if (e.touches.length === 1) {
     // One-finger drag
     e.preventDefault();
     const touch = e.touches[0];
