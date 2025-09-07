@@ -134,20 +134,17 @@
   bottom: 2vh;
   right: 4vw;
   z-index: 99;
-
-  width: clamp(3.5rem, 10vw, 5rem);   /* bigger minimum for mobile */
-  height: clamp(3.5rem, 10vw, 5rem);
-  border-radius: 50%;
+  width: clamp(3rem, 8vw, 4rem);   /* fixed width/height for more circular consistency */
+  height: clamp(3rem, 8vw, 4rem);
   background-color: white;
   color: #333;
   border: 2px solid #333;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
@@ -156,17 +153,13 @@
   color: white;
   transform: scale(1.1);
 }
-
-#backToTop svg {
-  width: 70%;   /* slightly bigger inside the button */
-  height: 70%;
-}
     
   </style>
+  
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 7</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -509,14 +502,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
   
 
 <button id="backToTop" title="Go to top" aria-label="Back to top">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
-       fill="none" stroke="currentColor" stroke-width="3" 
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="3"
        stroke-linecap="round" stroke-linejoin="round"
-       style="width: 1.5em; height: 1.5em;">
-    <polyline points="18 15 12 9 6 15" />
+       style="width: 70%; height: 70%;">
+    <!-- group for scaling and centering the arrow inside the circle -->
+    <g transform="scale(1.5) translate(2,2)">
+      <polyline points="18 15 12 9 6 15" />
+    </g>
   </svg>
 </button>
-
 
 
 
