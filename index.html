@@ -155,7 +155,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 6</h1>
+  <h1>Stupid, Evil, or Both TEST 7</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -390,7 +390,7 @@ window.addEventListener('mouseup', () => {
 });
 
 // --- Mobile pinch & drag ---
-modalImg.addEventListener('touchstart', e => {
+modal.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
     lastTouchX = e.touches[0].clientX;
     lastTouchY = e.touches[0].clientY;
@@ -403,7 +403,7 @@ modalImg.addEventListener('touchstart', e => {
   }
 }, { passive: false });
 
-modalImg.addEventListener('touchmove', e => {
+modal.addEventListener('touchmove', e => {
   if (e.touches.length === 1 && scale > 1) {
     e.preventDefault();
     const touch = e.touches[0];
