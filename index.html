@@ -154,6 +154,12 @@
   transform: scale(1.1);
 }
 
+#backToTop.pressed {
+  background-color: #333;
+  color: white;
+  transform: scale(1.1);
+}
+
 #backToTop svg {
   width: 70%;  /* arrow fills ~70% of circle */
   height: 70%;
@@ -164,7 +170,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 3</h1>
+  <h1>Stupid, Evil, or Both TEST 4</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -514,38 +520,32 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 </button>
 
 <script>
-const backToTopBtn = document.getElementById("backToTop");
+  const backToTopBtn = document.getElementById("backToTop");
 
-// Show/hide on scroll
-window.addEventListener("scroll", () => {
-  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-  backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
-});
+  // Show/hide on scroll
+  window.addEventListener("scroll", () => {
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
+  });
 
-// Smooth scroll function
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+  // Smooth scroll to top
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-// Handle press/tap on both desktop & touch
-const handlePress = (e) => {
-  e.preventDefault();       // Prevent default touch behavior
-  scrollToTop();
+  // Click for desktop
+  backToTopBtn.addEventListener("click", scrollToTop);
 
-  // Reset hover/active states immediately
-  backToTopBtn.classList.remove("hover");
-  backToTopBtn.blur();      // removes focus/active effect
-};
+  // Touch for mobile: add pressed effect
+  backToTopBtn.addEventListener("touchstart", () => {
+    backToTopBtn.classList.add("pressed");
+  });
 
-// Desktop click
-backToTopBtn.addEventListener("click", handlePress);
-
-// Touch devices
-backToTopBtn.addEventListener("touchstart", handlePress);
-backToTopBtn.addEventListener("touchend", () => {
-  backToTopBtn.classList.remove("hover");
-  backToTopBtn.blur();
-});
+  backToTopBtn.addEventListener("touchend", () => {
+    backToTopBtn.classList.remove("pressed");
+    scrollToTop(); // scroll to top on touchend
+  });
 </script>
 
   
