@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST LG</h1>
+  <h1>Stupid, Evil, or Both TEST LF</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -363,7 +363,8 @@ let lastTouchX = 0;
 let lastTouchY = 0;
 
 // --- Open modal for WebP full res with progress ---
-let progressInterval = null; // global variable to track the interval
+let progressInterval = null; // Track progress interval
+const MIN_PROGRESS_TIME = 800; // Minimum time for progress bar in ms
 
 document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
@@ -378,40 +379,47 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
 
-    // Reset and show progress bar
+    // Reset progress bar
     progressBar.style.width = '0%';
     progressBar.parentElement.style.display = 'block';
-
-    // Hide previous image
     modalImg.style.opacity = '0';
     modalImg.src = '';
 
     // Clear any previous interval
     if (progressInterval) clearInterval(progressInterval);
 
-    // Create new Image object to track load
+    const startTime = Date.now();
     const fullImg = new Image();
     fullImg.src = img.dataset.full;
 
-    fullImg.onload = () => {
-      modalImg.src = fullImg.src;
-      modalImg.style.opacity = '1';
-      progressBar.parentElement.style.display = 'none';
-      if (progressInterval) clearInterval(progressInterval);
-    };
-
-    // Start a new fake progress interval
-    let fakeProgress = 0;
+    // Smooth fake progress
     progressInterval = setInterval(() => {
-      if (progressBar.parentElement.style.display === 'none') {
-        clearInterval(progressInterval);
-        progressInterval = null;
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95); // never go over 95% until load
+      progressBar.style.width = percent + '%';
+    }, 20);
+
+    fullImg.onload = () => {
+      const elapsed = Date.now() - startTime;
+      const remaining = MIN_PROGRESS_TIME - elapsed;
+      const finish = () => {
+        modalImg.src = fullImg.src;
+        modalImg.style.opacity = '1';
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+          progressBar.parentElement.style.display = 'none';
+        }, 100); // small delay to let user see full bar
+        if (progressInterval) {
+          clearInterval(progressInterval);
+          progressInterval = null;
+        }
+      };
+      if (remaining > 0) {
+        setTimeout(finish, remaining);
       } else {
-        fakeProgress += 3; // speed of fill
-        if (fakeProgress > 90) fakeProgress = 90; // wait for real load
-        progressBar.style.width = fakeProgress + '%';
+        finish();
       }
-    }, 50);
+    };
   });
 });
   
@@ -537,7 +545,7 @@ modal.addEventListener('touchmove', e => {
   }
 }, { passive: false });
 
-// --- Close modal ---
+// Close modal handler (clear progress too)
 const closeModal = () => {
   modal.style.display = 'none';
   document.body.style.overflow = '';
@@ -548,7 +556,7 @@ const closeModal = () => {
   modalImg.style.cursor = 'zoom-in';
   modalImg.src = '';
   progressBar.style.width = '0%';
-  progressBar.style.display = 'none';
+  progressBar.parentElement.style.display = 'none';
   if (progressInterval) {
     clearInterval(progressInterval);
     progressInterval = null;
