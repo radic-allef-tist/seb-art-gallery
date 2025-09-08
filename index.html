@@ -129,10 +129,10 @@
 }
 
 #refreshModal {
-  position: fixed;   /* same as #closeModal */
-  top: 12vh;          /* below the X button at 2vh; adjust as needed */
+  position: absolute;   /* change from fixed to absolute */
+  top: 6rem;            /* spacing below the X button */
   right: 2vw;
-  z-index: 1100;
+  z-index: 1010;        /* same z-index as X */
   font-size: 3rem;
   background: rgba(0,0,0,0.6);
   border: 2px solid white;
@@ -146,8 +146,7 @@
               color 0.2s ease, box-shadow 0.2s ease;
 }
 
-#refreshModal:hover,
-#refreshModal:focus {
+#refreshModal:hover {
   background-color: white;
   color: red;
   transform: scale(1.2);
@@ -192,7 +191,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 4</h1>
+  <h1>Stupid, Evil, or Both TEST 5</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
