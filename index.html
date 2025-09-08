@@ -140,6 +140,15 @@
     box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.5);
     outline: none;
   }
+
+  /* --- Tap feedback class for both buttons --- */
+#closeModal.tapped,
+#refreshModal.tapped {
+  background-color: white;
+  color: black;
+  transform: scale(1.2);
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+}
 /* Accessibility: show focus ring for keyboard users */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
@@ -194,7 +203,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Q</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -565,8 +574,17 @@ modal.addEventListener('touchmove', e => {
 }, { passive: false });
 
 // --------------------
-// Reset & Close handlers
+// Reset & Close handlers with tap feedback
 // --------------------
+
+// Adds a short tap flash effect for visual feedback
+function flashTap(button) {
+  if (!button) return;
+  button.classList.add('tapped');
+  setTimeout(() => button.classList.remove('tapped'), 150);
+}
+
+// Reset image zoom/position
 const resetModalImage = (e) => {
   scale = 1;
   originX = 0;
@@ -574,42 +592,50 @@ const resetModalImage = (e) => {
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
 
+  // Add tap feedback (works for both click and touch)
+  flashTap(refreshBtn);
+
   // Clear focus/hover properly on mobile
-  if (e && e.target) {
-    setTimeout(() => e.target.blur(), 0);
-  }
+  if (e && e.target) setTimeout(() => e.target.blur(), 0);
   if (document.activeElement && document.activeElement !== document.body) {
     setTimeout(() => document.activeElement.blur(), 0);
   }
 };
 
+// Close modal handler
+const closeModal = (e) => {
+  // Add tap feedback to X button
+  flashTap(closeBtn);
+
+  // Close modal after slight delay so tap animation can show
+  setTimeout(() => {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    resetModalImage();
+    modalImg.src = '';
+    progressBar.style.width = '0%';
+    progressBar.parentElement.style.display = 'none';
+    if (progressInterval) {
+      clearInterval(progressInterval);
+      progressInterval = null;
+    }
+  }, 120); // delay just enough to see the flash
+};
+
+// Attach refresh button handlers
 refreshBtn.addEventListener('click', resetModalImage);
 refreshBtn.addEventListener('touchend', resetModalImage, { passive: true });
 
-const closeModal = () => {
-  modal.style.display = 'none';
-  document.body.style.overflow = '';
-  resetModalImage();
-  modalImg.src = '';
-  progressBar.style.width = '0%';
-  progressBar.parentElement.style.display = 'none';
-  if (progressInterval) {
-    clearInterval(progressInterval);
-    progressInterval = null;
-  }
-};
+// Attach close button handlers
+closeBtn.addEventListener('click', closeModal);
+closeBtn.addEventListener('touchend', closeModal, { passive: true });
 
-closeBtn.addEventListener('click', e => {
-  resetModalImage(e);
-  closeModal();
-});
-closeBtn.addEventListener('touchend', resetModalImage, { passive: true });
-
+// Close modal on click outside or Escape
 modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
+  if (e.target === modal) closeModal(e);
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') closeModal(e);
 });
 </script>
 
