@@ -106,9 +106,9 @@
   right: 2vw;
   z-index: 1100;
   
-  width: 4.5rem;   /* bigger box */
-  height: 4.5rem;
-  font-size: 3rem; /* bigger icon */
+  width: 5rem;   /* bigger box */
+  height: 5rem;
+  font-size: 4rem; /* bigger icon */
   
   display: flex;
   justify-content: center;
@@ -128,14 +128,35 @@
 #closeModal { top: 2vh; }
 #refreshModal { top: 12vh; } /* adjust spacing as needed */
 
-#closeModal:hover, #refreshModal:hover {
-  background-color: white;
-  color: black;
-  transform: scale(1.1);
-  box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.5);
-  outline: none;
+/* Hover/focus effects ONLY on devices that actually support hover */
+@media (hover: hover) and (pointer: fine) {
+  #closeModal:hover,
+  #closeModal:focus-visible,
+  #refreshModal:hover,
+  #refreshModal:focus-visible {
+    background-color: white;
+    color: black;
+    transform: scale(1.12);
+    box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.5);
+    outline: none;
+  }
+/* Accessibility: show focus ring for keyboard users */
+:focus-visible {
+  outline: 0.18rem solid rgba(255,255,255,0.6);
+  outline-offset: 0.15rem;
 }
 
+/* Slightly larger on very small screens for easier tapping */
+@media (max-width: 480px) {
+  #closeModal, #refreshModal {
+    width: 5.6rem;
+    height: 5.6rem;
+    font-size: 2.8rem;
+    border-radius: 0.6rem;
+    border: 0.14rem solid white;
+  }
+  #refreshModal { top: 12vh; } /* bump refresh a bit on small screens */
+}
 #backToTop {
   display: none;
   position: fixed;
@@ -173,7 +194,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST Q</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -393,7 +414,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     // Smooth fake progress
     progressInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95); // never go over 95% until load
+      const percent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95);
       progressBar.style.width = percent + '%';
     }, 20);
 
@@ -406,7 +427,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
         progressBar.style.width = '100%';
         setTimeout(() => {
           progressBar.parentElement.style.display = 'none';
-        }, 100); // small delay to let user see full bar
+        }, 100);
         if (progressInterval) {
           clearInterval(progressInterval);
           progressInterval = null;
@@ -422,7 +443,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 });
   
 // --------------------
-// Detect actual input type
+// Detect input type
 // --------------------
 let usingMouse = false;
 window.addEventListener('mousemove', () => { usingMouse = true; });
@@ -542,8 +563,10 @@ modal.addEventListener('touchmove', e => {
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   }
 }, { passive: false });
-  
-// Refresh button handler
+
+// --------------------
+// Reset & Close handlers
+// --------------------
 const resetModalImage = (e) => {
   scale = 1;
   originX = 0;
@@ -551,19 +574,22 @@ const resetModalImage = (e) => {
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
 
-  // Ensure button loses focus (important for mobile hover)
-  if (e && e.target) e.target.blur();
+  // Clear focus/hover properly on mobile
+  if (e && e.target) {
+    setTimeout(() => e.target.blur(), 0);
+  }
+  if (document.activeElement && document.activeElement !== document.body) {
+    setTimeout(() => document.activeElement.blur(), 0);
+  }
 };
 
-// Attach both click & touchend to refresh
 refreshBtn.addEventListener('click', resetModalImage);
-refreshBtn.addEventListener('touchend', resetModalImage);
+refreshBtn.addEventListener('touchend', resetModalImage, { passive: true });
 
-// Close modal handler
 const closeModal = () => {
   modal.style.display = 'none';
   document.body.style.overflow = '';
-  resetModalImage(); // also resets zoom/position
+  resetModalImage();
   modalImg.src = '';
   progressBar.style.width = '0%';
   progressBar.parentElement.style.display = 'none';
@@ -573,8 +599,12 @@ const closeModal = () => {
   }
 };
 
-// Attach close behavior
-closeBtn.addEventListener('click', closeModal);
+closeBtn.addEventListener('click', e => {
+  resetModalImage(e);
+  closeModal();
+});
+closeBtn.addEventListener('touchend', resetModalImage, { passive: true });
+
 modal.addEventListener('click', e => {
   if (e.target === modal) closeModal();
 });
@@ -582,6 +612,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
 </script>
+
 
 <!-- BACK TO TOP ARROW -->
   
