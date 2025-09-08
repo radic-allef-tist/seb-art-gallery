@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST L</h1>
+  <h1>Stupid, Evil, or Both TEST LX</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -294,18 +294,13 @@
 
  </div>
 
+
+    <!-- Modal -->
+
 <div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
-  
-  <div id="modalProgressContainer" style="position:absolute; top:0; left:0; width:100%; height:4px; background:rgba(255,255,255,0.2);">
-    <div id="modalProgressBar" style="width:0%; height:100%; background:#fff; transition: width 0.1s;"></div>
-  </div>
 
-  <img id="modalImage" src="" style="max-width:90%; max-height:90%; object-fit:contain;">
-  <span id="closeModal" style="position:absolute; top:10px; right:10px; font-size:24px; cursor:pointer; color:white;">&times;</span>
-</div>
-  
-  <!-- Bigger X button -->
+  <!-- Close button inside modal -->
   <button id="closeModal" 
           style="
             position:absolute; 
@@ -319,14 +314,34 @@
             padding:0.2em 0.5em; 
             border-radius:0.25rem;
             transition: transform 0.2s ease;
+            z-index:1010;
           ">✕</button>
+
+  <!-- Progress bar container (centered & responsive) -->
+  <div id="modalProgressContainer" style="
+      position:absolute; 
+      top:50%; left:50%; transform:translate(-50%, -50%);
+      width:40vw;      /* 40% of viewport width */
+      max-width:300px; /* optional max width */
+      height:1vh;      /* 1% of viewport height */
+      max-height:8px;  /* optional max height */
+      background:rgba(255,255,255,0.2); 
+      border-radius:0.5vh; 
+      z-index:1010;">
+    <div id="modalProgressBar" style="
+      width:0%; 
+      height:100%; 
+      background:#fff; 
+      border-radius:0.5vh; 
+      transition:width 0.1s;"></div>
+  </div>
+
+  <!-- Full image -->
+  <img id="modalImage" src="" style="max-width:90%; max-height:90%; object-fit:contain; z-index:1000;">
 </div>
 
 
-
     
-<!-- Image Modal Code -->
-
 <!-- Image Modal Code -->
 <script>
 const modal = document.getElementById('imageModal');
