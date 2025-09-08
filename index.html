@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -316,6 +316,25 @@
             transition: transform 0.2s ease;
             z-index:1010;
           ">✕</button>
+
+ <!-- Refresh button inside modal -->
+<button id="refreshModal" 
+        style="
+          position:absolute; 
+          top:6vh;  /* slightly below X button at 2vh */
+          right:2vw; 
+          font-size:3rem; 
+          background:none; 
+          border:none; 
+          color:white; 
+          cursor:pointer;
+          padding:0.2em 0.5em; 
+          border-radius:0.25rem;
+          transition: transform 0.2s ease;
+          z-index:1010;
+        ">
+        &#x21bb; <!-- Unicode refresh symbol -->
+</button>
 
   <!-- Progress bar container (centered & responsive) -->
   <div id="modalProgressContainer" style="
@@ -544,6 +563,17 @@ modal.addEventListener('touchmove', e => {
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   }
 }, { passive: false });
+  
+// Refresh button
+const refreshBtn = document.getElementById('refreshModal');
+
+refreshBtn.addEventListener('click', () => {
+    scale = 1;
+    originX = 0;
+    originY = 0;
+    modalImg.style.transform = `translate(0px,0px) scale(1)`;
+    modalImg.style.cursor = 'zoom-in';
+});
 
 // Close modal handler (clear progress too)
 const closeModal = () => {
