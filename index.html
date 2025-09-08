@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST LZ</h1>
+  <h1>Stupid, Evil, or Both TEST LG</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -363,6 +363,8 @@ let lastTouchX = 0;
 let lastTouchY = 0;
 
 // --- Open modal for WebP full res with progress ---
+let progressInterval = null; // global variable to track the interval
+
 document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
@@ -378,11 +380,14 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     // Reset and show progress bar
     progressBar.style.width = '0%';
-    progressBar.parentElement.style.display = 'block'; // show container
+    progressBar.parentElement.style.display = 'block';
 
-    // Hide previous image while loading
+    // Hide previous image
     modalImg.style.opacity = '0';
-    modalImg.src = ''; // clear previous
+    modalImg.src = '';
+
+    // Clear any previous interval
+    if (progressInterval) clearInterval(progressInterval);
 
     // Create new Image object to track load
     const fullImg = new Image();
@@ -391,14 +396,16 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     fullImg.onload = () => {
       modalImg.src = fullImg.src;
       modalImg.style.opacity = '1';
-      progressBar.parentElement.style.display = 'none'; // hide progress bar
+      progressBar.parentElement.style.display = 'none';
+      if (progressInterval) clearInterval(progressInterval);
     };
 
-    // Optional: simulate progress for UX
+    // Start a new fake progress interval
     let fakeProgress = 0;
-    const interval = setInterval(() => {
+    progressInterval = setInterval(() => {
       if (progressBar.parentElement.style.display === 'none') {
-        clearInterval(interval);
+        clearInterval(progressInterval);
+        progressInterval = null;
       } else {
         fakeProgress += 3; // speed of fill
         if (fakeProgress > 90) fakeProgress = 90; // wait for real load
@@ -542,6 +549,10 @@ const closeModal = () => {
   modalImg.src = '';
   progressBar.style.width = '0%';
   progressBar.style.display = 'none';
+  if (progressInterval) {
+    clearInterval(progressInterval);
+    progressInterval = null;
+  }
 };
 
 closeBtn.addEventListener('click', closeModal);
