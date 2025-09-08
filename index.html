@@ -126,7 +126,11 @@
 }
 
 #closeModal { top: 2vh; }
-#refreshModal { top: 12vh; line-height: 1.5;} /* adjust spacing as needed */
+#refreshModal { top: 12vh;} /* adjust spacing as needed */
+
+#refreshModal::after {
+transform: translateY(-0.2em); /* lower nudges higher up */
+}
 
 /* Desktop hover effect */
 @media (hover: hover) and (pointer: fine) {
@@ -206,7 +210,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
