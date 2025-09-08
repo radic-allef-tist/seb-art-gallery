@@ -107,14 +107,17 @@
   right: 2vw;
   z-index: 1100;   /* higher than modal content */
   font-size: 3rem;
+  padding: 0.25rem;        /* scales with root font */
+  min-width: 3.5rem;
+  min-height: 3.5rem;
   background: rgba(0,0,0,0.6);
-  border: 2px solid white;
+  border: 0.1rem solid white;
   color: white;
   cursor: pointer;
   padding: 0.2em 0.5em;
   border-radius: 0.25rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.7);
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  text-shadow: 0 0 0.2rem rgba(0,0,0,0.7);
+  box-shadow: 0 0 0.3rem rgba(0,0,0,0.3);
   transition: transform 0.2s ease, background-color 0.2s ease,
               color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -130,23 +133,28 @@
 
 #refreshModal {
  position: absolute;  /* same as X */
-  top: 10vh;            /* space below the X button */
+  top: 12vh;            /* space below the X button */
   right: 2vw;
   z-index: 1100;
   font-size: 3rem;
+  padding: 0.25rem;        /* scales with root font */
+  min-width: 3.5rem;
+  min-height: 3.5rem;
   background: rgba(0,0,0,0.6);
-  border: 2px solid white;
+  border: 0.1rem solid white;
   color: white;
   cursor: pointer;
   padding: 0.2em 0.5em;
   border-radius: 0.25rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.7);
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  text-shadow: 0 0 0.2rem rgba(0,0,0,0.7);
+  box-shadow: 0 0 0.3rem rgba(0,0,0,0.3);
   transition: transform 0.2s ease, background-color 0.2s ease,
               color 0.2s ease, box-shadow 0.2s ease;
 }
 
-#refreshModal:hover {
+#refreshModal:hover,
+#refreshModal:focus,
+#refreshModal:active {
   background-color: white;
   color: black;
   transform: scale(1.2);
@@ -191,7 +199,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST X</h1>
+  <h1>Stupid, Evil, or Both TEST Z</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -569,6 +577,7 @@ refreshBtn.addEventListener('click', () => {
     originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
+   e.target.blur();  // removes focus/hover state on mobile
 });
 
 // Close modal handler (clear progress too)
