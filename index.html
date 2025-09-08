@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Q</h1>
+  <h1>Stupid, Evil, or Both TEST L</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -282,12 +282,28 @@
 
 </div>
 
-<!-- Modal container (hidden by default) -->
-<div id="imageModal" 
-     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+  <div class="footer">
+ 
+  <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. If not, that's okay too.</p> 
+  <p>I'm not an artist. It took me an unreasonable amount of time to draw this shit. Look — I know it's garbage-tier work, but it got the message across, yeah?</p> 
+  <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
+  <p>If you read my book, you'd know how much I want to leave this shithole state, and I definitely need all the help I can get.</p>
+  <p>Contact me: @radic-allef-tist.bsky.social and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so </i>toxic). I don't know how this stuff works, but we can work a deal out.</p>
+  <p>Thanks again to everyone for the support. Stay strong out there.</p>
+  <p> -Radic</p>
+
+ </div>
+
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
-  <img id="modalImage" src="" 
-       style="max-width:90%; max-height:90%; cursor:grab; border-radius:0.5rem;">
+  
+  <div id="modalProgressContainer" style="position:absolute; top:0; left:0; width:100%; height:4px; background:rgba(255,255,255,0.2);">
+    <div id="modalProgressBar" style="width:0%; height:100%; background:#fff; transition: width 0.1s;"></div>
+  </div>
+
+  <img id="modalImage" src="" style="max-width:90%; max-height:90%; object-fit:contain;">
+  <span id="closeModal" style="position:absolute; top:10px; right:10px; font-size:24px; cursor:pointer; color:white;">&times;</span>
+</div>
   
   <!-- Bigger X button -->
   <button id="closeModal" 
@@ -306,25 +322,17 @@
           ">✕</button>
 </div>
 
-<div class="footer">
- 
-  <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. If not, that's okay too.</p> 
-  <p>I'm not an artist. It took me an unreasonable amount of time to draw this shit. Look — I know it's garbage-tier work, but it got the message across, yeah?</p> 
-  <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
-  <p>If you read my book, you'd know how much I want to leave this shithole state, and I definitely need all the help I can get.</p>
-  <p>Contact me: @radic-allef-tist.bsky.social and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so </i>toxic). I don't know how this stuff works, but we can work a deal out.</p>
-  <p>Thanks again to everyone for the support. Stay strong out there.</p>
-  <p> -Radic</p>
 
- </div>
 
     
 <!-- Image Modal Code -->
 
+<!-- Image Modal Code -->
 <script>
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
+const progressBar = document.getElementById('modalProgressBar');
 
 let scale = 1;
 let originX = 0;
@@ -339,19 +347,54 @@ let initialScale = 1;
 let lastTouchX = 0;
 let lastTouchY = 0;
 
-// --- Open modal for WebP full res ---
+// --- Open modal for WebP full res with progress ---
 document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
-    modalImg.src = img.dataset.full; // <-- use the full-res WebP URL
     document.body.style.overflow = 'hidden';
 
+    // Reset zoom/position
     scale = 1;
     originX = 0;
     originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
+    modalImg.style.opacity = '0'; // hide image until loaded
+
+    // Reset and show progress bar
+    progressBar.style.width = '0%';
+    progressBar.style.display = 'block';
+
+    // Load image with progress
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', img.dataset.full, true);
+    xhr.responseType = 'blob';
+
+    xhr.onprogress = function(e) {
+      if (e.lengthComputable) {
+        const percent = (e.loaded / e.total) * 100;
+        progressBar.style.width = percent + '%';
+      }
+    };
+
+    xhr.onload = function() {
+      if (this.status === 200) {
+        const blob = this.response;
+        modalImg.src = URL.createObjectURL(blob);
+        modalImg.onload = () => {
+          modalImg.style.opacity = '1'; // fade in
+          progressBar.style.display = 'none'; // hide bar
+        }
+      }
+    };
+
+    xhr.onerror = function() {
+      console.error('Image failed to load.');
+      progressBar.style.display = 'none';
+    };
+
+    xhr.send();
   });
 });
 
@@ -359,85 +402,73 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 // Detect actual input type
 // --------------------
 let usingMouse = false;
-
-// If the user moves a mouse, we assume desktop behavior
 window.addEventListener('mousemove', () => { usingMouse = true; });
-
-// If the user touches the screen, we assume touch input
 window.addEventListener('touchstart', () => { usingMouse = false; });
-
-// Helper function to check if desktop interactions should run
 const isDesktop = () => usingMouse;
-    // --- Desktop click-to-zoom ---
-  
-  modalImg.addEventListener('click', e => {
-    if (!isDesktop()) return;  // skip on touch
-    if (scale === 1 && !e.touches) {
-      const rect = modalImg.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const newScale = 2;
 
-      originX = offsetX - (offsetX - originX) * (newScale / scale);
-      originY = offsetY - (offsetY - originY) * (newScale / scale);
-      scale = newScale;
-
-      modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-      modalImg.style.cursor = 'grab';
-    }
-  });
-
-  // --- Desktop scroll-to-zoom ---
-  modal.addEventListener('wheel', e => {
-    if (!isDesktop()) return;  // skip on touch
-    e.preventDefault();
+// --- Desktop click-to-zoom ---
+modalImg.addEventListener('click', e => {
+  if (!isDesktop()) return;
+  if (scale === 1 && !e.touches) {
     const rect = modalImg.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
-
-    const zoomFactor = Math.exp(-e.deltaY * 0.0025);
-    const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
-
-    if (newScale === 1) {
-      originX = 0;
-      originY = 0;
-    } else {
-      originX = offsetX - ((offsetX - originX) * newScale) / scale;
-      originY = offsetY - ((offsetY - originY) * newScale) / scale;
-    }
-
+    const newScale = 2;
+    originX = offsetX - (offsetX - originX) * (newScale / scale);
+    originY = offsetY - (offsetY - originY) * (newScale / scale);
     scale = newScale;
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+    modalImg.style.cursor = 'grab';
+  }
+});
+
+// --- Desktop scroll-to-zoom ---
+modal.addEventListener('wheel', e => {
+  if (!isDesktop()) return;
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
+  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
+
+  if (newScale === 1) {
+    originX = 0;
+    originY = 0;
+  } else {
+    originX = offsetX - ((offsetX - originX) * newScale) / scale;
+    originY = offsetY - ((offsetY - originY) * newScale) / scale;
+  }
+
+  scale = newScale;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+});
+
+// --- Desktop dragging ---
+modalImg.addEventListener('mousedown', e => {
+  if (!isDesktop()) return;
+  if (scale <= 1) return;
+  isDragging = true;
+  startX = e.clientX - originX;
+  startY = e.clientY - originY;
+  modalImg.style.cursor = 'grabbing';
+  e.preventDefault();
+});
+window.addEventListener('mousemove', e => {
+  if (!isDesktop()) return;
+  if (!isDragging) return;
+  originX = e.clientX - startX;
+  originY = e.clientY - startY;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+});
+window.addEventListener('mouseup', () => {
+  if (!isDesktop()) return;
+  if (isDragging) {
+    isDragging = false;
     modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-  });
-
-  // --- Desktop dragging ---
-  modalImg.addEventListener('mousedown', e => {
-    if (!isDesktop()) return;  // skip on touch
-    if (scale <= 1) return;
-    isDragging = true;
-    startX = e.clientX - originX;
-    startY = e.clientY - originY;
-    modalImg.style.cursor = 'grabbing';
-    e.preventDefault();
-  });
-
-  window.addEventListener('mousemove', e => {
-    if (!isDesktop()) return;  // skip on touch
-    if (!isDragging) return;
-    originX = e.clientX - startX;
-    originY = e.clientY - startY;
-    modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (!isDesktop()) return;  // skip on touch
-    if (isDragging) {
-      isDragging = false;
-      modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-    }
-  });
-
+  }
+});
 
 // --- Mobile pinch & drag ---
 let lastPinchTime = 0;
@@ -450,13 +481,8 @@ modal.addEventListener('touchstart', e => {
     lastTouchY = e.touches[0].clientY;
   } else if (e.touches.length === 2) {
     const [t1, t2] = e.touches;
-    initialDistance = Math.hypot(
-      t1.clientX - t2.clientX,
-      t1.clientY - t2.clientY
-    );
+    initialDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     initialScale = scale;
-
-    // Save pinch midpoint (in screen coordinates)
     pinchMidX = (t1.clientX + t2.clientX) / 2;
     pinchMidY = (t1.clientY + t2.clientY) / 2;
   }
@@ -464,9 +490,7 @@ modal.addEventListener('touchstart', e => {
 
 modal.addEventListener('touchmove', e => {
   if (e.touches.length === 1) {
-    if (Date.now() - lastPinchTime < 50) return; // tiny buffer after pinch
-
-    // One-finger drag
+    if (Date.now() - lastPinchTime < 50) return;
     e.preventDefault();
     const touch = e.touches[0];
     originX += touch.clientX - lastTouchX;
@@ -474,36 +498,24 @@ modal.addEventListener('touchmove', e => {
     lastTouchX = touch.clientX;
     lastTouchY = touch.clientY;
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-
   } else if (e.touches.length === 2) {
     e.preventDefault();
-
     const [t1, t2] = e.touches;
-    const currentDistance = Math.hypot(
-      t1.clientX - t2.clientX,
-      t1.clientY - t2.clientY
-    );
-
+    const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     let newScale = initialScale * (currentDistance / initialDistance);
     newScale = Math.min(Math.max(newScale, 1), 10);
 
-    // Find current midpoint of pinch
     const currentMidX = (t1.clientX + t2.clientX) / 2;
     const currentMidY = (t1.clientY + t2.clientY) / 2;
-
-    // Calculate how far midpoint moved since start
     const dx = currentMidX - pinchMidX;
     const dy = currentMidY - pinchMidY;
 
-    // Adjust origin based on scale AND midpoint shift
     originX = (originX + dx) * (newScale / scale);
     originY = (originY + dy) * (newScale / scale);
-
     scale = newScale;
     pinchMidX = currentMidX;
     pinchMidY = currentMidY;
-
-    lastPinchTime = Date.now(); // mark the pinch
+    lastPinchTime = Date.now();
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   }
 }, { passive: false });
@@ -517,14 +529,15 @@ const closeModal = () => {
   originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
+  modalImg.src = '';
+  progressBar.style.width = '0%';
+  progressBar.style.display = 'none';
 };
 
 closeBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  
-</script> 
+</script>
 
 <!-- BACK TO TOP ARROW -->
   
