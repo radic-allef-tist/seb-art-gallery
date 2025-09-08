@@ -102,7 +102,7 @@
 
 
   #closeModal {
-  position: fixed;  /* <-- changed from absolute */
+  position: absolute;
   top: 2vh;
   right: 2vw;
   z-index: 1100;   /* higher than modal content */
@@ -129,10 +129,10 @@
 }
 
 #refreshModal {
-  position: absolute;   /* change from fixed to absolute */
-  top: 6rem;            /* spacing below the X button */
+ position: absolute;  /* same as X */
+  top: 6vh;            /* space below the X button */
   right: 2vw;
-  z-index: 1010;        /* same z-index as X */
+  z-index: 1100;
   font-size: 3rem;
   background: rgba(0,0,0,0.6);
   border: 2px solid white;
@@ -191,7 +191,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 5</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
