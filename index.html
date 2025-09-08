@@ -129,23 +129,27 @@
 #refreshModal { top: 12vh; } /* adjust spacing as needed */
 
 /* Desktop hover effect */
-#closeModal:hover,
-#closeModal:focus,
-#refreshModal:hover,
-#refreshModal:focus {
-  background-color: white;
-  color: black;
-  transform: scale(1.2);
-  box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.5);
-  outline: none;
+@media (hover: hover) and (pointer: fine) {
+  #closeModal:hover,
+  #closeModal:focus,
+  #refreshModal:hover,
+  #refreshModal:focus {
+    background-color: white;
+    color: black;
+    transform: scale(1.2);
+    box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+    outline: none;
+  }
 }
+
     
 /* Mobile flash effect */
-.flash {
-  background-color: white !important;
+.tapped {
+  background-color: rgba(255,255,255,0.7) !important;
   color: black !important;
-  transform: scale(1.1) !important;
+  transform: scale(1.2) !important;
   box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
 /* Accessibility: show focus ring for keyboard users */
@@ -202,7 +206,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST X</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -537,36 +541,42 @@ modal.addEventListener('touchmove', e => {
 }, { passive: false });
 
 // --------------------
-// Reset & Close with mobile tap flash
+// Reset & Close with mobile tap flash and hybrid support
 // --------------------
-const isMobile = () => 'ontouchstart' in window;
 
-// Flash effect for mobile tap
-const flashButton = (btn) => {
-  if (!btn || !isMobile()) return;
-  btn.classList.add('flash');
-  setTimeout(() => btn.classList.remove('flash'), 150);
-};
+// Detect if device supports touch
+const isTouchDevice = () => ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-// Reset zoom & position
+// Tap/flash effect
+function flashButton(btn) {
+  if (!btn) return;
+  btn.classList.add('tapped');
+  setTimeout(() => btn.classList.remove('tapped'), 150);
+}
+
+// Reset image zoom/position
 const resetModalImage = (e) => {
   scale = 1;
   originX = 0;
   originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
-  if (e && e.target) flashButton(refreshBtn);
 
-  // Clear focus for mobile
+  // Flash for mobile/hybrid tap
+  if (e && e.target && isTouchDevice()) flashButton(e.target);
+
+  // Clear focus/hover properly
   if (e && e.target) setTimeout(() => e.target.blur(), 0);
   if (document.activeElement && document.activeElement !== document.body) {
     setTimeout(() => document.activeElement.blur(), 0);
   }
 };
 
-// Close modal
+// Close modal handler
 const closeModal = (e) => {
-  flashButton(closeBtn);
+  if (e && e.target && isTouchDevice()) flashButton(e.target);
+
+  // Slight delay so flash is visible
   setTimeout(() => {
     modal.style.display = 'none';
     document.body.style.overflow = '';
@@ -574,17 +584,21 @@ const closeModal = (e) => {
     modalImg.src = '';
     progressBar.style.width = '0%';
     progressBar.parentElement.style.display = 'none';
-    if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+    if (progressInterval) {
+      clearInterval(progressInterval);
+      progressInterval = null;
+    }
   }, 120);
 };
 
-// Attach event handlers
+// Attach handlers to buttons
 refreshBtn.addEventListener('click', resetModalImage);
 refreshBtn.addEventListener('touchend', resetModalImage, { passive: true });
 
 closeBtn.addEventListener('click', closeModal);
 closeBtn.addEventListener('touchend', closeModal, { passive: true });
 
+// Close modal on click outside or Escape
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(e); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(e); });
 </script>
