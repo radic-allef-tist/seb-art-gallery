@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST LP</h1>
+  <h1>Stupid, Evil, or Both TEST LZ</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -369,60 +369,45 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
-    // Reset zoom/position
+    // Reset zoom
     scale = 1;
     originX = 0;
     originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
-    modalImg.style.opacity = '0'; // hide image until loaded
 
     // Reset and show progress bar
     progressBar.style.width = '0%';
-    progressBar.style.display = 'block';
-    
-// Load image with progress
-const xhr = new XMLHttpRequest();
-xhr.open('GET', img.dataset.full, true);
-xhr.responseType = 'blob';
+    progressBar.parentElement.style.display = 'block'; // show container
 
-progressBar.style.width = '0%';
-progressBar.style.display = 'block';
-modalImg.style.opacity = '0';
+    // Hide previous image while loading
+    modalImg.style.opacity = '0';
+    modalImg.src = ''; // clear previous
 
-xhr.onprogress = function(e) {
-  if (e.lengthComputable) {
-    const percent = (e.loaded / e.total) * 100;
-    progressBar.style.width = percent + '%';
-  }
-};
+    // Create new Image object to track load
+    const fullImg = new Image();
+    fullImg.src = img.dataset.full;
 
-xhr.onload = function() {
-  if (this.status === 200) {
-    const blob = this.response;
-    modalImg.src = URL.createObjectURL(blob);
-    
-    // Ensure progress bar hides when image fully loads
-    modalImg.onload = () => {
+    fullImg.onload = () => {
+      modalImg.src = fullImg.src;
       modalImg.style.opacity = '1';
-      progressBar.style.display = 'none';
-      URL.revokeObjectURL(modalImg.src); // free memory
-    }
-  } else {
-    progressBar.style.display = 'none';
-    console.error('Image failed to load.');
-  }
-};
+      progressBar.parentElement.style.display = 'none'; // hide progress bar
+    };
 
-xhr.onerror = function() {
-  progressBar.style.display = 'none';
-  console.error('Image failed to load.');
-};
-
-xhr.send();
+    // Optional: simulate progress for UX
+    let fakeProgress = 0;
+    const interval = setInterval(() => {
+      if (progressBar.parentElement.style.display === 'none') {
+        clearInterval(interval);
+      } else {
+        fakeProgress += 3; // speed of fill
+        if (fakeProgress > 90) fakeProgress = 90; // wait for real load
+        progressBar.style.width = fakeProgress + '%';
+      }
+    }, 50);
   });
 });
-
+  
 // --------------------
 // Detect actual input type
 // --------------------
