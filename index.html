@@ -126,7 +126,7 @@
 }
 
 #closeModal { top: 2vh; }
-#refreshModal { top: 12vh; } /* adjust spacing as needed */
+#refreshModal { top: 12vh; line-height: 1;} /* adjust spacing as needed */
 
 /* Desktop hover effect */
 @media (hover: hover) and (pointer: fine) {
@@ -206,7 +206,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST X</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -591,13 +591,18 @@ const closeModal = (e) => {
   }, 120);
 };
 
-// Attach handlers to buttons
-refreshBtn.addEventListener('click', resetModalImage);
+// Refresh button
+refreshBtn.addEventListener('click', e => {
+  if (!isTouchDevice()) resetModalImage(e); // desktop click
+});
 refreshBtn.addEventListener('touchend', resetModalImage, { passive: true });
 
-closeBtn.addEventListener('click', closeModal);
+// Close button
+closeBtn.addEventListener('click', e => {
+  if (!isTouchDevice()) closeModal(e); // desktop click
+});
 closeBtn.addEventListener('touchend', closeModal, { passive: true });
-
+  
 // Close modal on click outside or Escape
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(e); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(e); });
