@@ -128,6 +128,33 @@
   outline: none;
 }
 
+#refreshModal {
+  position: fixed;   /* same as #closeModal */
+  top: 7vh;          /* below the X button at 2vh; adjust as needed */
+  right: 2vw;
+  z-index: 1100;
+  font-size: 3rem;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid white;
+  color: white;
+  cursor: pointer;
+  padding: 0.2em 0.5em;
+  border-radius: 0.25rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.7);
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease,
+              color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#refreshModal:hover,
+#refreshModal:focus {
+  background-color: white;
+  color: red;
+  transform: scale(1.2);
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+  outline: none;
+}
+
 #backToTop {
   display: none;
   position: fixed;
@@ -165,7 +192,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 3</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
