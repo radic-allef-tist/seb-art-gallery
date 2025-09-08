@@ -128,28 +128,26 @@
 #closeModal { top: 2vh; }
 #refreshModal { top: 12vh; } /* adjust spacing as needed */
 
-/* Hover/focus effects ONLY on devices that actually support hover */
-@media (hover: hover) and (pointer: fine) {
-  #closeModal:hover,
-  #closeModal:focus-visible,
-  #refreshModal:hover,
-  #refreshModal:focus-visible {
-    background-color: white;
-    color: black;
-    transform: scale(1.12);
-    box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.5);
-    outline: none;
-  }
-
-/* Tap flash effect for mobile & desktop */
-#closeModal.tapped,
-#refreshModal.tapped {
+/* Desktop hover effect */
+#closeModal:hover,
+#closeModal:focus,
+#refreshModal:hover,
+#refreshModal:focus {
+  background-color: white;
+  color: black;
+  transform: scale(1.2);
+  box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.5);
+  outline: none;
+}
+    
+/* Mobile flash effect */
+.flash {
   background-color: white !important;
   color: black !important;
-  transform: scale(1.2) !important;
+  transform: scale(1.1) !important;
   box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
 }
-}
+
 /* Accessibility: show focus ring for keyboard users */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
@@ -204,7 +202,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 2</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -370,7 +368,6 @@
 
 
     
-<!-- Image Modal Code -->
 <script>
 const modal = document.getElementById('imageModal');
 const modalImg = document.getElementById('modalImage');
@@ -378,23 +375,18 @@ const closeBtn = document.getElementById('closeModal');
 const refreshBtn = document.getElementById('refreshModal');
 const progressBar = document.getElementById('modalProgressBar');
 
-let scale = 1;
-let originX = 0;
-let originY = 0;
-let startX = 0;
-let startY = 0;
-let isDragging = false;
+let scale = 1, originX = 0, originY = 0;
+let startX = 0, startY = 0, isDragging = false;
+let initialDistance = 0, initialScale = 1;
+let lastTouchX = 0, lastTouchY = 0;
+let lastPinchTime = 0, pinchMidX = 0, pinchMidY = 0;
 
-// Mobile pinch variables
-let initialDistance = 0;
-let initialScale = 1;
-let lastTouchX = 0;
-let lastTouchY = 0;
+let progressInterval = null;
+const MIN_PROGRESS_TIME = 500;
 
-// --- Open modal for WebP full res with progress ---
-let progressInterval = null; // Track progress interval
-const MIN_PROGRESS_TIME = 500; // Minimum time for progress bar in ms
-
+// --------------------
+// Open modal with progress
+// --------------------
 document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
@@ -414,14 +406,12 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     modalImg.style.opacity = '0';
     modalImg.src = '';
 
-    // Clear any previous interval
     if (progressInterval) clearInterval(progressInterval);
 
     const startTime = Date.now();
     const fullImg = new Image();
     fullImg.src = img.dataset.full;
 
-    // Smooth fake progress
     progressInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const percent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95);
@@ -435,32 +425,25 @@ document.querySelectorAll('.gallery-img').forEach(img => {
         modalImg.src = fullImg.src;
         modalImg.style.opacity = '1';
         progressBar.style.width = '100%';
-        setTimeout(() => {
-          progressBar.parentElement.style.display = 'none';
-        }, 100);
-        if (progressInterval) {
-          clearInterval(progressInterval);
-          progressInterval = null;
-        }
+        setTimeout(() => progressBar.parentElement.style.display = 'none', 100);
+        if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
       };
-      if (remaining > 0) {
-        setTimeout(finish, remaining);
-      } else {
-        finish();
-      }
+      if (remaining > 0) setTimeout(finish, remaining); else finish();
     };
   });
 });
-  
+
 // --------------------
 // Detect input type
 // --------------------
 let usingMouse = false;
-window.addEventListener('mousemove', () => { usingMouse = true; });
-window.addEventListener('touchstart', () => { usingMouse = false; });
+window.addEventListener('mousemove', () => usingMouse = true);
+window.addEventListener('touchstart', () => usingMouse = false);
 const isDesktop = () => usingMouse;
 
-// --- Desktop click-to-zoom ---
+// --------------------
+// Desktop zoom & drag
+// --------------------
 modalImg.addEventListener('click', e => {
   if (!isDesktop()) return;
   if (scale === 1 && !e.touches) {
@@ -476,7 +459,6 @@ modalImg.addEventListener('click', e => {
   }
 });
 
-// --- Desktop scroll-to-zoom ---
 modal.addEventListener('wheel', e => {
   if (!isDesktop()) return;
   e.preventDefault();
@@ -485,24 +467,15 @@ modal.addEventListener('wheel', e => {
   const offsetY = e.clientY - rect.top;
   const zoomFactor = Math.exp(-e.deltaY * 0.0025);
   const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
-
-  if (newScale === 1) {
-    originX = 0;
-    originY = 0;
-  } else {
-    originX = offsetX - ((offsetX - originX) * newScale) / scale;
-    originY = offsetY - ((offsetY - originY) * newScale) / scale;
-  }
-
+  originX = newScale === 1 ? 0 : offsetX - ((offsetX - originX) * newScale) / scale;
+  originY = newScale === 1 ? 0 : offsetY - ((offsetY - originY) * newScale) / scale;
   scale = newScale;
   modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
 });
 
-// --- Desktop dragging ---
 modalImg.addEventListener('mousedown', e => {
-  if (!isDesktop()) return;
-  if (scale <= 1) return;
+  if (!isDesktop() || scale <= 1) return;
   isDragging = true;
   startX = e.clientX - originX;
   startY = e.clientY - originY;
@@ -510,25 +483,19 @@ modalImg.addEventListener('mousedown', e => {
   e.preventDefault();
 });
 window.addEventListener('mousemove', e => {
-  if (!isDesktop()) return;
-  if (!isDragging) return;
+  if (!isDesktop() || !isDragging) return;
   originX = e.clientX - startX;
   originY = e.clientY - startY;
   modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
 });
 window.addEventListener('mouseup', () => {
   if (!isDesktop()) return;
-  if (isDragging) {
-    isDragging = false;
-    modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-  }
+  if (isDragging) { isDragging = false; modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in'; }
 });
 
-// --- Mobile pinch & drag ---
-let lastPinchTime = 0;
-let pinchMidX = 0;
-let pinchMidY = 0;
-
+// --------------------
+// Mobile pinch & drag
+// --------------------
 modal.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
     lastTouchX = e.touches[0].clientX;
@@ -556,59 +523,50 @@ modal.addEventListener('touchmove', e => {
     e.preventDefault();
     const [t1, t2] = e.touches;
     const currentDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-    let newScale = initialScale * (currentDistance / initialDistance);
-    newScale = Math.min(Math.max(newScale, 1), 10);
-
-    const currentMidX = (t1.clientX + t2.clientX) / 2;
-    const currentMidY = (t1.clientY + t2.clientY) / 2;
-    const dx = currentMidX - pinchMidX;
-    const dy = currentMidY - pinchMidY;
-
+    let newScale = Math.min(Math.max(initialScale * (currentDistance / initialDistance), 1), 10);
+    const dx = ((t1.clientX+t2.clientX)/2) - pinchMidX;
+    const dy = ((t1.clientY+t2.clientY)/2) - pinchMidY;
     originX = (originX + dx) * (newScale / scale);
     originY = (originY + dy) * (newScale / scale);
     scale = newScale;
-    pinchMidX = currentMidX;
-    pinchMidY = currentMidY;
+    pinchMidX = (t1.clientX+t2.clientX)/2;
+    pinchMidY = (t1.clientY+t2.clientY)/2;
     lastPinchTime = Date.now();
     modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
   }
 }, { passive: false });
 
 // --------------------
-// Reset & Close handlers with tap feedback
+// Reset & Close with mobile tap flash
 // --------------------
+const isMobile = () => 'ontouchstart' in window;
 
-// Adds a short tap flash effect for visual feedback
-function flashTap(button) {
-  if (!button) return;
-  button.classList.add('tapped');
-  setTimeout(() => button.classList.remove('tapped'), 150);
-}
+// Flash effect for mobile tap
+const flashButton = (btn) => {
+  if (!btn || !isMobile()) return;
+  btn.classList.add('flash');
+  setTimeout(() => btn.classList.remove('flash'), 150);
+};
 
-// Reset image zoom/position
+// Reset zoom & position
 const resetModalImage = (e) => {
   scale = 1;
   originX = 0;
   originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
+  if (e && e.target) flashButton(refreshBtn);
 
-  // Add tap feedback (works for both click and touch)
-  flashTap(refreshBtn);
-
-  // Clear focus/hover properly on mobile
+  // Clear focus for mobile
   if (e && e.target) setTimeout(() => e.target.blur(), 0);
   if (document.activeElement && document.activeElement !== document.body) {
     setTimeout(() => document.activeElement.blur(), 0);
   }
 };
 
-// Close modal handler
+// Close modal
 const closeModal = (e) => {
-  // Add tap feedback to X button
-  flashTap(closeBtn);
-
-  // Close modal after slight delay so tap animation can show
+  flashButton(closeBtn);
   setTimeout(() => {
     modal.style.display = 'none';
     document.body.style.overflow = '';
@@ -616,28 +574,19 @@ const closeModal = (e) => {
     modalImg.src = '';
     progressBar.style.width = '0%';
     progressBar.parentElement.style.display = 'none';
-    if (progressInterval) {
-      clearInterval(progressInterval);
-      progressInterval = null;
-    }
-  }, 120); // delay just enough to see the flash
+    if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+  }, 120);
 };
 
-// Attach refresh button handlers
+// Attach event handlers
 refreshBtn.addEventListener('click', resetModalImage);
 refreshBtn.addEventListener('touchend', resetModalImage, { passive: true });
 
-// Attach close button handlers
 closeBtn.addEventListener('click', closeModal);
 closeBtn.addEventListener('touchend', closeModal, { passive: true });
 
-// Close modal on click outside or Escape
-modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal(e);
-});
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal(e);
-});
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(e); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(e); });
 </script>
 
 
