@@ -165,7 +165,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST LX</h1>
+  <h1>Stupid, Evil, or Both TEST LP</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -380,36 +380,46 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     // Reset and show progress bar
     progressBar.style.width = '0%';
     progressBar.style.display = 'block';
+    
+// Load image with progress
+const xhr = new XMLHttpRequest();
+xhr.open('GET', img.dataset.full, true);
+xhr.responseType = 'blob';
 
-    // Load image with progress
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', img.dataset.full, true);
-    xhr.responseType = 'blob';
+progressBar.style.width = '0%';
+progressBar.style.display = 'block';
+modalImg.style.opacity = '0';
 
-    xhr.onprogress = function(e) {
-      if (e.lengthComputable) {
-        const percent = (e.loaded / e.total) * 100;
-        progressBar.style.width = percent + '%';
-      }
-    };
+xhr.onprogress = function(e) {
+  if (e.lengthComputable) {
+    const percent = (e.loaded / e.total) * 100;
+    progressBar.style.width = percent + '%';
+  }
+};
 
-    xhr.onload = function() {
-      if (this.status === 200) {
-        const blob = this.response;
-        modalImg.src = URL.createObjectURL(blob);
-        modalImg.onload = () => {
-          modalImg.style.opacity = '1'; // fade in
-          progressBar.style.display = 'none'; // hide bar
-        }
-      }
-    };
-
-    xhr.onerror = function() {
-      console.error('Image failed to load.');
+xhr.onload = function() {
+  if (this.status === 200) {
+    const blob = this.response;
+    modalImg.src = URL.createObjectURL(blob);
+    
+    // Ensure progress bar hides when image fully loads
+    modalImg.onload = () => {
+      modalImg.style.opacity = '1';
       progressBar.style.display = 'none';
-    };
+      URL.revokeObjectURL(modalImg.src); // free memory
+    }
+  } else {
+    progressBar.style.display = 'none';
+    console.error('Image failed to load.');
+  }
+};
 
-    xhr.send();
+xhr.onerror = function() {
+  progressBar.style.display = 'none';
+  console.error('Image failed to load.');
+};
+
+xhr.send();
   });
 });
 
