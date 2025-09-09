@@ -207,7 +207,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST Z</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -395,6 +395,7 @@ const MIN_PROGRESS_TIME = 500;
 document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
+
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
@@ -417,32 +418,16 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     }
 
     const startTime = Date.now();
-    let fakePercent = 0;
-    let realProgress = 0;
-    let useRealProgress = false;
 
-    // --- FAKE PROGRESS LOOP ---
-    progressInterval = setInterval(() => {
-      if (!useRealProgress) {
-        const elapsed = Date.now() - startTime;
-        fakePercent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95);
-        progressBar.style.width = fakePercent + '%';
-      } else {
-        progressBar.style.width = realProgress + '%';
-      }
-    }, 20);
-
-    // --- REAL PROGRESS LOADING ---
+    // Load image via XHR
     const xhr = new XMLHttpRequest();
     xhr.open('GET', img.dataset.full, true);
     xhr.responseType = 'blob';
 
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
-        realProgress = Math.round((event.loaded / event.total) * 100);
-        if (realProgress > fakePercent) {
-          useRealProgress = true;
-        }
+        const percent = Math.round((event.loaded / event.total) * 100);
+        progressBar.style.width = percent + '%';
       }
     };
 
@@ -450,10 +435,6 @@ document.querySelectorAll('.gallery-img').forEach(img => {
       const blobUrl = URL.createObjectURL(xhr.response);
 
       const finish = () => {
-        if (progressInterval) {
-          clearInterval(progressInterval);
-          progressInterval = null;
-        }
         progressBar.style.width = '100%';
         modalImg.src = blobUrl;
         modalImg.style.opacity = '1';
@@ -462,7 +443,8 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
       const elapsed = Date.now() - startTime;
       const remaining = MIN_PROGRESS_TIME - elapsed;
-      if (!useRealProgress && remaining > 0) {
+
+      if (remaining > 0) {
         setTimeout(finish, remaining);
       } else {
         finish();
@@ -470,10 +452,9 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     };
 
     xhr.onerror = () => {
-      clearInterval(progressInterval);
-      progressBar.parentElement.style.display = 'none';
       modalImg.src = img.dataset.full;
       modalImg.style.opacity = '1';
+      progressBar.parentElement.style.display = 'none';
     };
 
     xhr.send();
