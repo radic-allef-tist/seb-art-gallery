@@ -207,7 +207,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST X</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -396,6 +396,9 @@ document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
+    // Force modal to render in a "neutral" scale regardless of page zoom
+    modal.style.transform = "scale(1)";
+    modal.style.transformOrigin = "center center";
     document.body.style.overflow = 'hidden';
 
     // Reset zoom
