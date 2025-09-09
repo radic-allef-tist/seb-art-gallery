@@ -207,7 +207,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST Z</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -365,6 +365,20 @@
       background:#fff; 
       border-radius:0.5vh; 
       transition:width 0.1s;"></div>
+
+     <div id="modalProgressMessage" style="
+      position:absolute;
+      top: calc(50% + 2vh);
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 1rem;
+      text-align: center;
+      display: none;
+      z-index: 1011;">
+      The images are kind of big...
+      </div>
+    
   </div>
 
   <!-- Full image -->
@@ -379,6 +393,7 @@ const modalImg = document.getElementById('modalImage');
 const closeBtn = document.getElementById('closeModal');
 const refreshBtn = document.getElementById('refreshModal');
 const progressBar = document.getElementById('modalProgressBar');
+
 
 let scale = 1, originX = 0, originY = 0;
 let startX = 0, startY = 0, isDragging = false;
@@ -398,28 +413,23 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-
-    // Reset zoom
-    scale = 1;
-    originX = 0;
-    originY = 0;
+    scale = 1; originX = 0; originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
-
-    // Reset progress
     progressBar.style.width = '0%';
     progressBar.parentElement.style.display = 'block';
     modalImg.style.opacity = '0';
     modalImg.src = '';
 
-    if (progressInterval) {
-      clearInterval(progressInterval);
-      progressInterval = null;
-    }
+    // Reference the message element
+    const progressMessage = document.getElementById('modalProgressMessage');
+    progressMessage.style.display = 'none';
 
-    const startTime = Date.now();
+    // Show message after 3 seconds if not loaded yet
+    const messageTimeout = setTimeout(() => {
+      progressMessage.style.display = 'block';
+    }, 3000);
 
-    // Load image via XHR
     const xhr = new XMLHttpRequest();
     xhr.open('GET', img.dataset.full, true);
     xhr.responseType = 'blob';
@@ -438,29 +448,29 @@ document.querySelectorAll('.gallery-img').forEach(img => {
         progressBar.style.width = '100%';
         modalImg.src = blobUrl;
         modalImg.style.opacity = '1';
-        setTimeout(() => progressBar.parentElement.style.display = 'none', 100);
+        setTimeout(() => {
+          progressBar.parentElement.style.display = 'none';
+          progressMessage.style.display = 'none';
+        }, 100);
+
+        clearTimeout(messageTimeout);  // prevent the message from showing after load
       };
 
-      const elapsed = Date.now() - startTime;
-      const remaining = MIN_PROGRESS_TIME - elapsed;
-
-      if (remaining > 0) {
-        setTimeout(finish, remaining);
-      } else {
-        finish();
-      }
+      finish();
     };
 
     xhr.onerror = () => {
       modalImg.src = img.dataset.full;
       modalImg.style.opacity = '1';
       progressBar.parentElement.style.display = 'none';
+      progressMessage.style.display = 'none';
+      clearTimeout(messageTimeout);
     };
 
     xhr.send();
   });
 });
-
+  
 // --------------------
 // Detect input type
 // --------------------
