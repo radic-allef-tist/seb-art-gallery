@@ -207,7 +207,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST 2</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -396,10 +396,11 @@ document.querySelectorAll('.gallery-img').forEach(img => {
   img.addEventListener('click', e => {
     e.preventDefault();
     modal.style.display = 'flex';
-    // Force modal to render in a "neutral" scale regardless of page zoom
-    modal.style.transform = "scale(1)";
-    modal.style.transformOrigin = "center center";
     document.body.style.overflow = 'hidden';
+
+    //  Force modal to render independently of page zoom
+    modal.style.willChange = "transform";
+    modal.style.transform = "translateZ(0)";
 
     // Reset zoom
     scale = 1;
@@ -584,6 +585,11 @@ const closeModal = (e) => {
   setTimeout(() => {
     modal.style.display = 'none';
     document.body.style.overflow = '';
+
+    //  Reset modal layer to avoid weird future renders
+    modal.style.willChange = "";
+    modal.style.transform = "";
+    
     resetModalImage();
     modalImg.src = '';
     progressBar.style.width = '0%';
