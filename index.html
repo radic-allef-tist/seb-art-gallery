@@ -207,7 +207,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST X</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
 
@@ -405,38 +405,82 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
 
-    // Reset progress bar
     progressBar.style.width = '0%';
-    progressBar.parentElement.style.display = 'block';
-    modalImg.style.opacity = '0';
-    modalImg.src = '';
+progressBar.parentElement.style.display = 'block';
+modalImg.style.opacity = '0';
+modalImg.src = '';
 
-    if (progressInterval) clearInterval(progressInterval);
+if (progressInterval) {
+  clearInterval(progressInterval);
+  progressInterval = null;
+}
 
-    const startTime = Date.now();
-    const fullImg = new Image();
-    fullImg.src = img.dataset.full;
+const startTime = Date.now();
+let fakePercent = 0;
+let realProgress = 0;
+let useRealProgress = false;
 
-    progressInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95);
-      progressBar.style.width = percent + '%';
-    }, 20);
+// --- FAKE PROGRESS LOOP ---
+progressInterval = setInterval(() => {
+  if (!useRealProgress) {
+    const elapsed = Date.now() - startTime;
+    fakePercent = Math.min((elapsed / MIN_PROGRESS_TIME) * 100, 95);
+    progressBar.style.width = fakePercent + '%';
+  } else {
+    // Once real progress kicks in, follow that instead
+    progressBar.style.width = realProgress + '%';
+  }
+}, 20);
 
-    fullImg.onload = () => {
-      const elapsed = Date.now() - startTime;
-      const remaining = MIN_PROGRESS_TIME - elapsed;
-      const finish = () => {
-        modalImg.src = fullImg.src;
-        modalImg.style.opacity = '1';
-        progressBar.style.width = '100%';
-        setTimeout(() => progressBar.parentElement.style.display = 'none', 100);
-        if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
-      };
-      if (remaining > 0) setTimeout(finish, remaining); else finish();
+// --- REAL PROGRESS LOADING ---
+const xhr = new XMLHttpRequest();
+xhr.open('GET', img.dataset.full, true);
+xhr.responseType = 'blob';
+
+xhr.onprogress = (event) => {
+  if (event.lengthComputable) {
+    realProgress = Math.round((event.loaded / event.total) * 100);
+    if (realProgress > fakePercent) {
+      useRealProgress = true; // Switch to real progress once we have better data
+    }
+  }
+};
+
+xhr.onload = () => {
+  const blobUrl = URL.createObjectURL(xhr.response);
+
+  const finish = () => {
+    if (progressInterval) {
+      clearInterval(progressInterval);
+      progressInterval = null;
+    }
+    progressBar.style.width = '100%';
+    modalImg.src = blobUrl;
+    modalImg.style.opacity = '1';
+    setTimeout(() => progressBar.parentElement.style.display = 'none', 100);
+  };
+
+  // If we were still faking, wait for MIN_PROGRESS_TIME to avoid flash
+  const elapsed = Date.now() - startTime;
+  const remaining = MIN_PROGRESS_TIME - elapsed;
+  if (!useRealProgress && remaining > 0) {
+    setTimeout(finish, remaining);
+  } else {
+    finish();
+  }
+};
+
+xhr.onerror = () => {
+  // Fallback in case of error
+  clearInterval(progressInterval);
+  progressBar.parentElement.style.display = 'none';
+  modalImg.src = img.dataset.full; // Load image normally
+  modalImg.style.opacity = '1';
+};
+
+xhr.send();
     };
   });
-});
 
 // --------------------
 // Detect input type
