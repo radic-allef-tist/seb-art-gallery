@@ -512,19 +512,19 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'These images are kinda big...';
       progressMessage.style.display = 'block';
-    }, 3000));
+    }, 5000));
 
     // Message after 8 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Your connection to these servers is shit...';
       progressMessage.style.display = 'block';
-    }, 10000));
+    }, 15000));
 
     // Message after 15 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Might as well keep waiting...';
       progressMessage.style.display = 'block';
-    }, 20000));
+    }, 25000));
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', img.dataset.full, true);
