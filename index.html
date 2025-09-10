@@ -266,7 +266,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST G</h1>
+  <h1>Stupid, Evil, or Both TEST 1</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
@@ -443,7 +443,7 @@
       height:100%; 
       background:#fff; 
       border-radius:0.5vh; 
-      transition:width 0.1s;"></div>
+      transition: width 0.3s ease;"></div>
 
      <div id="modalProgressMessage" style="
       position:absolute;
@@ -457,7 +457,6 @@
       white-space: nowrap;
       max-width: 90vw;
       z-index: 1011;">
-      The images are kind of big...
       </div>
     
   </div>
@@ -511,7 +510,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     // Message after 3 seconds
     messageTimeouts.push(setTimeout(() => {
-      progressMessage.textContent = 'Still loading... hang tight.';
+      progressMessage.textContent = 'These images are kinda big...';
       progressMessage.style.display = 'block';
     }, 3000));
 
@@ -519,13 +518,13 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Your connection to these servers is shit...';
       progressMessage.style.display = 'block';
-    }, 8000));
+    }, 10000));
 
     // Message after 15 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Might as well keep waiting...';
       progressMessage.style.display = 'block';
-    }, 15000));
+    }, 20000));
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', img.dataset.full, true);
