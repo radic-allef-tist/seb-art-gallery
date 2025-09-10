@@ -207,7 +207,7 @@
 .buy-print {
   display: flex;
   flex-direction: column;
-  align-items: center; /* <-- centers the button horizontally */
+  align-items: center;
   gap: 0.75rem;
   margin-left: auto;
   margin-right: auto;
@@ -218,11 +218,11 @@
 .buy-epub {
   display: flex;
   flex-direction: column;
-  align-items: center; /* <-- centers the button horizontally */
+  align-items: center; 
   gap: 0.75rem; 
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2rem;
+  margin-top: 3rem;
   margin-bottom: 4rem;
   max-width: 20rem;
 }
@@ -233,7 +233,7 @@
   border-radius: 0.5em;
   text-align: center;
   font-weight: bold;
-  width: clamp(14rem, 40%, 18rem);
+  width: clamp(14rem, 40%, 16rem);
   font-size: clamp(1.4rem, 2vw, 1.2rem);
   text-decoration: none;
   color: white;
@@ -266,7 +266,7 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both TEST 1</h1>
+  <h1>Stupid, Evil, or Both TEST G</h1>
   <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
 
   
@@ -506,10 +506,26 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     const progressMessage = document.getElementById('modalProgressMessage');
     progressMessage.style.display = 'none';
 
-    // Show message after 3 seconds if not loaded yet
-    const messageTimeout = setTimeout(() => {
+    // Track all timeouts so we can clear them if image loads
+    const messageTimeouts = [];
+
+    // Message after 3 seconds
+    messageTimeouts.push(setTimeout(() => {
+      progressMessage.textContent = 'Still loading... hang tight.';
       progressMessage.style.display = 'block';
-    }, 3000);
+    }, 3000));
+
+    // Message after 8 seconds
+    messageTimeouts.push(setTimeout(() => {
+      progressMessage.textContent = 'Your connection to these servers is shit...';
+      progressMessage.style.display = 'block';
+    }, 8000));
+
+    // Message after 15 seconds
+    messageTimeouts.push(setTimeout(() => {
+      progressMessage.textContent = 'Might as well keep waiting...';
+      progressMessage.style.display = 'block';
+    }, 15000));
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', img.dataset.full, true);
@@ -534,7 +550,8 @@ document.querySelectorAll('.gallery-img').forEach(img => {
           progressMessage.style.display = 'none';
         }, 100);
 
-        clearTimeout(messageTimeout);  // prevent the message from showing after load
+        // clear all pending messages
+        messageTimeouts.forEach(timeout => clearTimeout(timeout));
       };
 
       finish();
@@ -545,7 +562,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
       modalImg.style.opacity = '1';
       progressBar.parentElement.style.display = 'none';
       progressMessage.style.display = 'none';
-      clearTimeout(messageTimeout);
+      messageTimeouts.forEach(timeout => clearTimeout(timeout));
     };
 
     xhr.send();
