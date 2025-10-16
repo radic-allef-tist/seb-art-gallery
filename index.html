@@ -109,7 +109,7 @@ h2 {
 .footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: stretch;   /* make text and buttons columns same height */
+  align-items: center;    /* vertical centering of all three columns */
   flex-wrap: wrap;
   gap: 2rem;
   max-width: 90%;
@@ -124,34 +124,43 @@ h2 {
   line-height: 1.5;
 }
 
-.footer-text {
-  flex: 2 1 500px;      /* text takes most of the width */
-  text-align: left;
-  max-width: 60%;        /* stops text near center on PC */
+/* Left image column */
+.footer-image {
+  flex: 0 0 auto;          /* only as wide as the image */
+  display: flex;
+  align-items: center;     /* vertically center image */
 }
 
+.footer-image img {
+  max-width: 100px;        /* adjust as needed */
+  height: auto;
+  display: block;
+}
+
+/* Middle text column */
+.footer-text {
+  flex: 1 1 400px;          /* grows, shrinks, base width */
+  text-align: left;
+  max-width: 500px;         /* constrain text width */
+}
+
+/* Right buttons column */
 .footer-buttons {
-  flex: 1 1 200px;       /* buttons column */
+  flex: 0 0 auto;           /* size based on content */
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* vertically center buttons */
-  align-items: center;      /* horizontally center buttons */
-  gap: 2.5rem;              /* increased gap between buttons */
+  align-items: center;
+  justify-content: center;  /* vertical center */
+  gap: 2rem;                /* space between print & epub buttons */
 }
 
-/* Override button container margins */
+/* Buttons themselves */
 .buy-print,
 .buy-epub {
   margin: 0;
-  max-width: none;
-  align-items: center;
-}
-
-.buy-print,
-.buy-epub {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;           /* internal spacing for multiple buttons if needed */
+  align-items: center;
 }
 
 .buy-button {
@@ -168,49 +177,29 @@ h2 {
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.buy-button.print {
-  background-color: #2d6a4f;
-  border: 0.15em solid #1b4332;
-}
-
-.buy-button.epub {
-  background-color: #1d3557;
-  border: 0.15em solid #0b1e33;
-}
+.buy-button.print { background-color: #2d6a4f; border: 0.15em solid #1b4332; }
+.buy-button.epub { background-color: #1d3557; border: 0.15em solid #0b1e33; }
 
 .buy-button:hover {
   transform: scale(1.03);
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* Mobile responsiveness */
+/* --- Mobile --- */
 @media (max-width: 768px) {
   .footer-content {
-    flex-direction: column;  /* stack text and buttons */
-    align-items: stretch;    /* children fill full width */
-  }
-
-  .footer-text {
-    flex: none;             /* remove desktop flex sizing */
-    width: 100%;            /* fill container */
-    max-width: 100%;        /* override 60% desktop limit */
-    text-align: center;     /* center on mobile */
-    margin-bottom: 2rem;    /* spacing before buttons */
-  }
-
-  .footer-buttons {
-    flex: none;             /* remove desktop flex sizing */
-    width: 100%;            /* fill container */
-    display: flex;
     flex-direction: column;
-    align-items: center;    /* center buttons horizontally */
-    gap: 2.5rem;            /* space between buttons */
+    align-items: center;
+    text-align: center;
   }
 
-  .buy-print,
-  .buy-epub {
-    align-items: center;
+  .footer-image, .footer-text, .footer-buttons {
+    flex: none;
+    width: 100%;
   }
+
+  .footer-text { max-width: 100%; margin: 1rem 0; }
+  .footer-buttons { gap: 1.5rem; }
 }
     
     
@@ -328,7 +317,12 @@ h2 {
 </h1>
 
  <div class="footer">
-  <div class="footer-content">    
+  <div class="footer-content">
+    
+    <div class="footer-image">
+    <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
+  </div>
+    
     <div class="footer-text">
       <p>Hey all, if you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredicatable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
