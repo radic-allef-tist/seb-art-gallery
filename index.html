@@ -105,26 +105,35 @@ h2 {
   transform-origin: center;
 }
 
-/* --- Footer Container --- */
+/* --- Footer wrapper --- */
 .footer-wrapper {
   display: flex;
-  align-items: flex-start;   /* align top of image with top of footer box */
+  align-items: stretch;       /* ensures the image and box are same height */
   gap: 2rem;
   max-width: 90%;
   margin: 3rem auto;
-  flex-wrap: wrap;           /* allow stacking on mobile */
 }
 
 /* Footer image */
+.footer-image {
+  display: flex;
+  align-items: center;        /* vertical centering relative to box */
+}
+
 .footer-image img {
-  max-width: 180px;   /* adjust to taste */
+  max-width: 500px;
+  width: 100%
   height: auto;
   display: block;
 }
 
 /* Footer box */
 .footer-box {
-  flex: 1 1 0;          /* grow to fill remaining space */
+  flex: 1 1 0;          
+  display: flex;
+  justify-content: space-between; /* text left, buttons right */
+  align-items: center;           /* vertical centering of columns */
+  gap: 2rem;
   padding: 2rem;
   background-color: #fff;
   border: 2px solid #ccc;
@@ -133,10 +142,6 @@ h2 {
   color: #333;
   font-size: 1.3rem;
   line-height: 1.5;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;   /* top align text and buttons */
-  gap: 2rem;
 }
 
 /* Text column inside footer box */
@@ -151,9 +156,9 @@ h2 {
   flex: 1 1 200px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertically center buttons relative to text */
-  align-items: center;     /* horizontally center buttons */
-  gap: 2rem;               /* more space between buttons */
+  justify-content: center;  /* vertical centering inside footer box */
+  align-items: center;      /* horizontal centering of buttons */
+  gap: 2rem;
 }
 
 .buy-print,
