@@ -116,8 +116,8 @@ h2 {
 /* --- Footer Box --- */
 .footer-box {
   display: flex;
+  align-items: center;      /* vertically center everything */
   justify-content: space-between;
-  align-items: stretch;  /* <-- stretch children to full height */
   gap: 2rem;
   padding: 2rem;
   background-color: #fff;
@@ -129,8 +129,8 @@ h2 {
   line-height: 1.5;
   max-width: 90%;
   margin: 3rem auto;
-  flex-wrap: wrap;
 }
+
 
 /* --- Footer Image --- */
 .footer-image img {
@@ -153,11 +153,11 @@ h2 {
   flex: 1 1 200px;
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* vertical centering of buttons inside column */
+  justify-content: center;  /* vertical centering */
   align-items: center;      /* horizontal centering */
-  gap: 4rem;
-  height: 100%;             /* make column fill footer-box height */
+  gap: 4rem;                /* space between buttons */
 }
+
 
 /* --- Buttons --- */
 .buy-button {
@@ -319,7 +319,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Fixing the site, sorry.</p>
+      <p>Hello, all! Changing the site, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
