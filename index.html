@@ -357,6 +357,76 @@ h2 {
 
 }
 
+  /* =========================
+   MODAL BUTTONS
+========================= */
+#closeModal, #refreshModal {
+  position: fixed;      /* fix viewport issues */
+  right: 2vw;
+  z-index: 1100;
+
+  width: 5rem;          /* bigger box */
+  height: 5rem;
+  font-size: 4rem;      /* bigger icon */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0,0,0,0.6);
+  border: 0.15rem solid white; /* slightly thicker border for larger box */
+  color: white;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  text-shadow: 0 0 0.3rem rgba(0,0,0,0.7);
+  box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease,
+              color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#closeModal { top: 2vh; }
+#refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
+
+/* Desktop hover effect */
+@media (hover: hover) and (pointer: fine) {
+  #closeModal:hover,
+  #closeModal:focus,
+  #refreshModal:hover,
+  #refreshModal:focus {
+    background-color: white;
+    color: black;
+    transform: scale(1.2);
+    box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+    outline: none;
+  }
+}
+
+/* Mobile flash effect */
+.tapped {
+  background-color: rgba(255,255,255,0.7) !important;
+  color: black !important;
+  transform: scale(1.2) !important;
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+/* Accessibility: show focus ring for keyboard users */
+:focus-visible {
+  outline: 0.18rem solid rgba(255,255,255,0.6);
+  outline-offset: 0.15rem;
+}
+
+/* Slightly larger on very small screens for easier tapping */
+@media (max-width: 480px) {
+  #closeModal, #refreshModal {
+    width: 5.6rem;
+    height: 5.6rem;
+    font-size: 2.8rem;
+    border-radius: 0.6rem;
+    border: 0.14rem solid white;
+  }
+  #refreshModal { top: 12vh; } /* bump refresh a bit on small screens */
+}
   
 </style>
   
