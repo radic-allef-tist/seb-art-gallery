@@ -105,7 +105,7 @@ h2 {
   transform-origin: center;
 }
 
-/* Outer wrapper: image + footer box */
+/* --- Footer Container --- */
 .footer-wrapper {
   display: flex;
   align-items: flex-start;   /* align top of image with top of footer box */
@@ -121,13 +121,10 @@ h2 {
   height: auto;
   display: block;
 }
-  
+
+/* Footer box */
 .footer-box {
   flex: 1 1 0;          /* grow to fill remaining space */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
   padding: 2rem;
   background-color: #fff;
   border: 2px solid #ccc;
@@ -136,6 +133,10 @@ h2 {
   color: #333;
   font-size: 1.3rem;
   line-height: 1.5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;   /* top align text and buttons */
+  gap: 2rem;
 }
 
 /* Text column inside footer box */
@@ -150,12 +151,48 @@ h2 {
   flex: 1 1 200px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertical centering */
-  align-items: center;     /* horizontal centering */
+  justify-content: center; /* vertically center buttons relative to text */
+  align-items: center;     /* horizontally center buttons */
   gap: 2rem;               /* more space between buttons */
 }
 
-/* Mobile stacking */
+.buy-print,
+.buy-epub {
+  margin: 0;
+  max-width: none;
+  align-items: center;
+}
+
+.buy-button {
+  display: inline-block;  
+  border-radius: 0.5em;
+  text-align: center;
+  font-weight: bold;
+  width: clamp(14rem, 50vw, 18rem);
+  font-size: clamp(1.6rem, 2.5vh, 1.8rem);
+  padding: clamp(0.9em, 2vw, 1.1em) clamp(1em, 3vw, 1.4em);
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.buy-button.print {
+  background-color: #2d6a4f;
+  border: 0.15em solid #1b4332;
+}
+
+.buy-button.epub {
+  background-color: #1d3557;
+  border: 0.15em solid #0b1e33;
+}
+
+.buy-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+}
+
+/* --- Mobile --- */
 @media (max-width: 768px) {
   .footer-wrapper {
     flex-direction: column;
@@ -164,30 +201,41 @@ h2 {
 
   .footer-box {
     width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   .footer-text {
-    text-align: center; /* text fills box */
     max-width: 100%;
+    text-align: center;
+  }
+
+  .footer-buttons {
+    align-items: center;
+  }
+
+  .footer-image img {
+    max-width: 150px;  /* scale down image for mobile */
+    margin-bottom: 1rem;
   }
 }
-    
-    
-  #closeModal, #refreshModal {
+
+#closeModal, #refreshModal {
   position: absolute;
   right: 2vw;
   z-index: 1100;
   
-  width: 5rem;   /* bigger box */
+  width: 5rem;
   height: 5rem;
-  font-size: 4rem; /* bigger icon */
+  font-size: 4rem;
   
   display: flex;
   justify-content: center;
   align-items: center;
-
+  
   background: rgba(0,0,0,0.6);
-  border: 0.15rem solid white; /* slightly thicker border for larger box */
+  border: 0.15rem solid white;
   color: white;
   cursor: pointer;
   border-radius: 0.5rem;
@@ -198,10 +246,8 @@ h2 {
 }
 
 #closeModal { top: 2vh; }
-#refreshModal { top: calc(2vh + 5rem + 2vh);  padding-top: 0;  padding-bottom: 0.2rem; }  /* top of Close + its height + margin *//* adjust spacing as needed */
+#refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
 
-
-/* Desktop hover effect */
 @media (hover: hover) and (pointer: fine) {
   #closeModal:hover,
   #closeModal:focus,
@@ -215,8 +261,6 @@ h2 {
   }
 }
 
-    
-/* Mobile flash effect */
 .tapped {
   background-color: rgba(255,255,255,0.7) !important;
   color: black !important;
@@ -225,13 +269,11 @@ h2 {
   transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
-/* Accessibility: show focus ring for keyboard users */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
   outline-offset: 0.15rem;
 }
 
-/* Slightly larger on very small screens for easier tapping */
 @media (max-width: 480px) {
   #closeModal, #refreshModal {
     width: 5.6rem;
@@ -240,16 +282,17 @@ h2 {
     border-radius: 0.6rem;
     border: 0.14rem solid white;
   }
-  #refreshModal { top: 12vh; } /* bump refresh a bit on small screens */
+  #refreshModal { top: 12vh; }
 }
+
 #backToTop {
   display: none;
   position: fixed;
   bottom: 2vh;
   right: 4vw;
   z-index: 99;
-  width: clamp(4rem, 10vw, 5rem);   /* bigger minimum on mobile */
-  height: clamp(4rem, 10vw, 5rem);  /* keep circle proportional */
+  width: clamp(4rem, 10vw, 5rem);
+  height: clamp(4rem, 10vw, 5rem);
   background-color: white;
   color: #333;
   border: 2px solid #333;
@@ -259,7 +302,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s ease, opacity 0.1s ease; /* faster */
+  transition: transform 0.1s ease, opacity 0.1s ease;
 }
 
 #backToTop:hover,
@@ -270,11 +313,10 @@ h2 {
 }
 
 #backToTop svg {
-  width: 70%;  /* arrow fills ~70% of circle */
+  width: 70%;
   height: 70%;
 }
-    
-  </style>
+</style>
   
   </head>
   
@@ -286,14 +328,16 @@ h2 {
     class="title-image">
 </h1>
 
- <div class="footer-wrapper">
+ <div class="footer-container">
 
-   <div class="footer-image">
+  <!-- Left image -->
+  <div class="footer-image">
     <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
   </div>
 
-    <div class="footer-box">
-    
+  <!-- Footer box -->
+  <div class="footer-box">
+
     <div class="footer-text">
       <p>Hey all, if you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredicatable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
@@ -306,10 +350,8 @@ h2 {
         </a> 
         and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
       </p>
-
       <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
       <p>Thanks again to everyone for the support. Stay strong out there.</p>
-        
       <p>-Radic</p>
     </div>
 
@@ -321,7 +363,9 @@ h2 {
         <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
       </div>
     </div>
+
   </div>
+
 </div>
   
 <div class="gallery">
