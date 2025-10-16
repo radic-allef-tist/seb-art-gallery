@@ -113,11 +113,11 @@ h2 {
   .footer-mobile { display: block; }
 }
 
-/* --- Footer Box --- */
+/* --- Desktop Footer Box --- */
 .footer-box {
   display: flex;
   justify-content: space-between;
-  align-items: center;       /* desktop: vertical centering */
+  align-items: center;       /* vertical centering on desktop */
   gap: 2rem;
   padding: 2rem;
   background-color: #fff;
@@ -132,8 +132,8 @@ h2 {
   flex-wrap: wrap;
 }
 
-/* --- Footer Image --- */
-.footer-image img {
+/* --- Desktop Footer Image --- */
+.footer-box .footer-image img {
   width: auto;
   height: 40vh;
   max-height: 50vh;
@@ -141,22 +141,22 @@ h2 {
   border-radius: 0.5rem;
 }
 
-/* --- Footer Text --- */
-.footer-text {
+/* --- Desktop Footer Text --- */
+.footer-box .footer-text {
   flex: 2 1 400px;
   max-width: 60%;
   text-align: left;
 }
 
-/* --- Footer Buttons --- */
-.footer-buttons {
+/* --- Desktop Footer Buttons --- */
+.footer-box .footer-buttons {
   flex: 1 1 200px;
   display: flex;
   flex-direction: column;
-  justify-content: center;   /* vertical centering for desktop */
+  justify-content: center;   /* vertical centering */
   align-items: center;       /* horizontal centering */
   gap: 4rem;                 /* spacing between buttons */
-  height: 100%;              /* fill height of footer-box for vertical centering */
+  height: 100%;              /* fill height of footer-box */
 }
 
 /* --- Buttons --- */
@@ -189,43 +189,53 @@ h2 {
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* --- Mobile Adjustments --- */
-@media (max-width: 768px) {
-  .footer-box {
-    flex-direction: column;      /* stack image, text, buttons vertically */
-    align-items: center;         /* center horizontally */
-    justify-content: flex-start; /* top align everything */
-    gap: 1.5rem;
-  }
+/* --- Mobile Footer Box --- */
+.footer-box-mobile {
+  display: flex;
+  flex-direction: column;      /* stack image, text, buttons vertically */
+  align-items: center;         /* center horizontally */
+  justify-content: flex-start; /* top align everything */
+  gap: 1.5rem;
+  padding: 2rem;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+  color: #333;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  max-width: 90%;
+  margin: 3rem auto;
+}
 
-  .footer-image img {
-    width: 50vw;
-    max-width: 300px;
-    height: auto;
-    margin-bottom: 1.5rem;
-  }
+/* --- Mobile Footer Image --- */
+.footer-box-mobile .footer-image img {
+  width: 50vw;
+  max-width: 300px;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
 
-  .footer-text {
-    max-width: 100%;
-    text-align: center;
-    flex: unset;                /* remove desktop flex sizing */
-  }
+/* --- Mobile Footer Text --- */
+.footer-box-mobile .footer-text {
+  max-width: 100%;
+  text-align: center;
+}
 
-  .footer-buttons {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;         /* spacing below text */
-    height: auto;               /* remove desktop 100% height */
-    flex: unset;                /* remove desktop flex sizing */
-  }
+/* --- Mobile Footer Buttons --- */
+.footer-box-mobile .footer-buttons {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;   /* spacing below text */
+  height: auto;
+}
 
-  .buy-print,
-  .buy-epub {
-    width: 80%;
-    align-items: center;
-  }
+.footer-box-mobile .buy-print,
+.footer-box-mobile .buy-epub {
+  width: 80%;
+  align-items: center;
 }
 
 /* --- Modals & Back to Top --- */
@@ -324,7 +334,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Rearranging the site, sorry.</p>
+      <p>Hello, all! Changing up the site, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -357,7 +367,8 @@ h2 {
 <!-- Mobile Footer -->
 <div class="footer-mobile">
   <div class="footer-container">
-    <div class="footer-box">
+    <div class="footer-box-mobile"> <!-- updated class -->
+      
       <!-- Top image -->
       <div class="footer-image">
         <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
@@ -365,7 +376,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Still testing things out with the site.</p>
+        <p>Hello, all! Still fixing things with the site.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -388,10 +399,10 @@ h2 {
           <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
         </div>
       </div>
-    </div> <!-- end footer-box -->
+
+    </div> <!-- end footer-box-mobile -->
   </div> <!-- end footer-container -->
 </div> <!-- end footer-mobile -->
-
 
   
   
