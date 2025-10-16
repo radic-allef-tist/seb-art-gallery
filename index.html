@@ -187,30 +187,31 @@ h2 {
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;  /* stack text and buttons */
-    align-items: stretch;    /* children fill the container width */
+    align-items: stretch;    /* children fill full width */
   }
 
   .footer-text {
     flex: none;             /* remove desktop flex sizing */
-    max-width: 100% !important;  /* override desktop 60% */
-    text-align: center;     /* center text on mobile */
+    width: 100%;            /* fill container */
+    max-width: 100%;        /* override 60% desktop limit */
+    text-align: center;     /* center on mobile */
     margin-bottom: 2rem;    /* spacing before buttons */
   }
 
   .footer-buttons {
-    flex: none;
+    flex: none;             /* remove desktop flex sizing */
+    width: 100%;            /* fill container */
+    display: flex;
+    flex-direction: column;
     align-items: center;    /* center buttons horizontally */
-    justify-content: center; 
-    gap: 2.5rem;            /* more space between buttons */
+    gap: 2.5rem;            /* space between buttons */
   }
 
   .buy-print,
   .buy-epub {
     align-items: center;
-    gap: 1.5rem;
   }
 }
-
     
     
   #closeModal, #refreshModal {
