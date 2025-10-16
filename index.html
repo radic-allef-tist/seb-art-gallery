@@ -105,11 +105,31 @@ h2 {
   transform-origin: center;
 }
 
-/* --- Footer Box --- */
-.footer-box {
+/* --- Footer Container --- */
+.footer-container {
   display: flex;
-  align-items: center;      /* vertically center everything */
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 90%;
+  margin: 3rem auto;
+}
+
+/* Footer image scaling relative units */
+.footer-image img {
+  width: auto;
+  height: 40vh;
+  max-height: 50vh;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+/* Footer box */
+.footer-box {
+  flex: 1 1 0;
+  display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 2rem;
   padding: 2rem;
   background-color: #fff;
@@ -119,23 +139,12 @@ h2 {
   color: #333;
   font-size: 1.3rem;
   line-height: 1.5;
-  max-width: 90%;
-  margin: 3rem auto;
-}
-
-/* Image scaling using relative units */
-.footer-image img {
-  width: auto;              /* keep natural width/height ratio */
-  height: 40vh;             /* image height = 40% of viewport height */
-  max-height: 50vh;         /* optional cap */
-  display: block;
-  border-radius: 0.5rem;    /* subtle rounding */
 }
 
 /* Text column */
 .footer-text {
   flex: 2 1 400px;
-  max-width: 60%;           /* stops text near center on PC */
+  max-width: 60%;
   text-align: left;
 }
 
@@ -144,9 +153,16 @@ h2 {
   flex: 1 1 200px;
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* vertical centering */
-  align-items: center;      /* horizontal centering */
-  gap: 3rem;                /* space between buttons */
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+.buy-print,
+.buy-epub {
+  margin: 0;
+  max-width: none;
+  align-items: center;
 }
 
 /* Individual buttons */
@@ -179,47 +195,48 @@ h2 {
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* Mobile stacking */
+/* --- Mobile Styling --- */
 @media (max-width: 768px) {
   .footer-container {
-    flex-direction: column;      /* stack everything vertically */
-    align-items: center;         /* center horizontally */
-    gap: 2rem;                   /* space between sections */
+    flex-direction: column;      /* stack image, box, buttons */
+    align-items: center;
+    gap: 2rem;
   }
 
   .footer-image img {
-    width: 50vw;                 /* image takes half the viewport width */
-    max-width: 300px;            /* caps size on mobile */
+    width: 50vw;
+    max-width: 300px;
     height: auto;
   }
 
   .footer-box {
-    width: 90%;                  /* footer box fills most of the screen */
-    flex-direction: column;       /* stack text and buttons vertically */
-    align-items: center;          /* center everything inside box */
-    gap: 2rem;                    /* spacing inside box */
+    width: 90%;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
   }
 
   .footer-text {
-    max-width: 100%;              /* allow text to fill box */
-    text-align: center;           /* center text for mobile */
+    max-width: 100%;
+    text-align: center;
   }
 
   .footer-buttons {
-    flex-direction: column;       /* stack buttons vertically */
-    align-items: center;          /* center buttons */
-    justify-content: center;      /* vertical centering */
-    gap: 1.5rem;                  /* spacing between buttons */
-    width: 100%;                  /* optional: fill box width */
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
   }
 
   .buy-print,
   .buy-epub {
-    width: 80%;                   /* make buttons reasonably wide */
-    align-items: center;          /* center text in buttons */
+    width: 80%;
+    align-items: center;
   }
 }
 
+/* --- Modals & Back to Top --- */
 #closeModal { top: 2vh; }
 #refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
 
@@ -303,33 +320,81 @@ h2 {
     class="title-image">
 </h1>
 
- <div class="footer-box">
 
-  <!-- Left image inside footer box -->
+  <!-- Desktop Footer -->
+<div class="footer-container desktop-footer">
+
+  <!-- Left image -->
   <div class="footer-image">
     <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
   </div>
 
-  <!-- Text column inside footer box -->
-  <div class="footer-text">
-    <p>Hello, all! Still testing things out with the site.</p>
-    <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
-    <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredicatable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
-    <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
-    <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
-    <p>
-      Contact me: 
-      <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
-        @radic-allef-tist.bsky.social
-      </a> 
-      and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
-    </p>
-    <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
-    <p>Thanks again to everyone for the support. Stay strong out there.</p>
-    <p>-Radic</p>
+  <!-- Footer box -->
+  <div class="footer-box">
+
+    <!-- Text column -->
+    <div class="footer-text">
+      <p>Hello, all! Still testing things out with the site.</p>
+      <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
+      <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
+      <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
+      <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
+      <p>
+        Contact me: 
+        <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
+          @radic-allef-tist.bsky.social
+        </a> 
+        and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
+      </p>
+      <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
+      <p>Thanks again to everyone for the support. Stay strong out there.</p>
+      <p>-Radic</p>
+    </div>
+
+    <!-- Buttons column -->
+    <div class="footer-buttons">
+      <div class="buy-print">
+        <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
+      </div>
+      <div class="buy-epub">
+        <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Buttons column inside footer box -->
+</div>
+
+<!-- Mobile Footer -->
+<div class="mobile-footer">
+
+  <!-- Top image -->
+  <div class="footer-image">
+    <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
+  </div>
+
+  <!-- Footer text box -->
+  <div class="footer-box">
+    <div class="footer-text">
+      <p>Hello, all! Still testing things out with the site.</p>
+      <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
+      <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
+      <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
+      <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
+      <p>
+        Contact me: 
+        <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
+          @radic-allef-tist.bsky.social
+        </a> 
+        and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
+      </p>
+      <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
+      <p>Thanks again to everyone for the support. Stay strong out there.</p>
+      <p>-Radic</p>
+    </div>
+  </div>
+
+  <!-- Buy buttons below -->
   <div class="footer-buttons">
     <div class="buy-print">
       <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
@@ -340,6 +405,9 @@ h2 {
   </div>
 
 </div>
+
+
+  
   
 <div class="gallery">
 
