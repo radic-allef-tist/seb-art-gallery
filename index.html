@@ -105,22 +105,98 @@
   transform-origin: center;
 }
 
-.footer {
-  text-align: left;
-  max-width: 90%;
-  margin: 3rem auto 2rem auto;  /* top, sides auto, bottom */
-  padding: 2rem;
-  background-color: rgba(240, 240, 240, 0.8); /* light gray with slight transparency */
-  border: 2px solid #ccc;         /* subtle border */
-  border-radius: 1rem;            /* rounded corners */
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); /* soft shadow for depth */
-  font-size: 1.3rem;
-  font-family: serif;
-  color: #333;
-  line-height: 1.5;
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* top-align buttons with text */
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.footer-text {
+  flex: 2 1 500px; /* text gets most of the width */
+}
+
+.footer-buttons {
+  flex: 1 1 200px; /* buttons column width */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* right-align buttons */
+  gap: 1.5rem;
+}
+
+/* Override previous button container margins and widths */
+.buy-print,
+.buy-epub {
+  margin: 0;
+  max-width: none;
+  align-items: flex-end; /* keep buttons right-aligned in column */
+}
+
+/* Keep responsive stacking on smaller screens */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-buttons {
+    align-items: center;
+  }
+
+  .buy-print,
+  .buy-epub {
+    align-items: center;
+  }
 }
 
 
+  .buy-print {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.buy-epub {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 0.75rem; 
+}
+
+.buy-button {
+  display: inline-block;  
+  border-radius: 0.5em;
+  text-align: center;
+  font-weight: bold;
+  width: clamp(14rem, 50vw, 18rem);
+  font-size: clamp(1.6rem, 2.5vh, 1.8rem);
+  padding: clamp(0.9em, 2vw, 1.1em) clamp(1em, 3vw, 1.4em);
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.buy-button.print {
+  background-color: #2d6a4f;
+  border: 0.15em solid #1b4332;
+}
+
+.buy-button.epub {
+  background-color: #1d3557;
+  border: 0.15em solid #0b1e33;
+}
+
+.buy-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+}
+
+
+    
+    
   #closeModal, #refreshModal {
   position: absolute;
   right: 2vw;
@@ -224,60 +300,6 @@
 
 
 
-.buy-print {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 3rem;
-  max-width: 20rem;
-}
-
-.buy-epub {
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  gap: 0.75rem; 
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 3rem;
-  margin-bottom: 4rem;
-  max-width: 20rem;
-}
-
-.buy-button {
-  display: inline-block;  
-  border-radius: 0.5em;
-  text-align: center;
-  font-weight: bold;
-  width: clamp(14rem, 50vw, 18rem);
-  font-size: clamp(1.6rem, 2.5vh, 1.8rem);
-  padding: clamp(0.9em, 2vw, 1.1em) clamp(1em, 3vw, 1.4em);
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-/* Print Button Style */
-.buy-button.print {
-  background-color: #2d6a4f;
-  border: 0.15em solid #1b4332;
-}
-
-/* ePub Button Style */
-.buy-button.epub {
-  background-color: #1d3557;
-  border: 0.15em solid #0b1e33;
-}
-
-.buy-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-}
-
 
     
   </style>
@@ -292,18 +314,44 @@
     class="title-image">
 </h1>
 
+ <div class="footer">
+  <div class="footer-content">
+    
+    <div class="footer-text">
+      <p>Hey all, if you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
+      <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredicatable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
+      <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
+      <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
+      <p>
+        Contact me: 
+        <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
+          @radic-allef-tist.bsky.social
+        </a> 
+        and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
+      </p>
+
+      <p>Let me know if the buy lunks here break or if the book gets removed by our glorious "free speech absolutists".</p>
+      <p>Thanks again to everyone for the support. Stay strong out there.</p>
+        
+      <p>-Radic</p>
+    </div>
+
+    <div class="footer-buttons">
+      <div class="buy-print">
+        <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
+      </div>
+
+      <div class="buy-epub">
+        <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
+      </div>
+    </div>
+
+  </div>
+</div>
   
 <div class="gallery">
 
-  <div class="gallery-item">
-    <img 
-      src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP_Thumbnails/FULL_COVER_ART_Watermarked_Thumbnail.webp"
-      data-full="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/FULL_COVER_ART_Watermarked.webp"
-      alt="Full Cover Art"
-      class="gallery-img">
-    <div class="caption">FULL COVER ART</div>
-  </div>
-
+  
   <div class="gallery-item">
     <img 
       src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP_Thumbnails/OUR_VOTE_Watermarked_Thumbnail.webp"
@@ -403,43 +451,19 @@
     <div class="caption">FINAL RANT</div>
   </div>
 
-</div>
-
-  <div class="footer">
-  <p>Hey all, if you've found this site then maybe you read my book, so I thank you for the support. Or maybe you just found one of the QR codes I left lying around. Either way, welcome!</p> 
-
-  <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredicatable EPUB compression issues, the art kinda got wrecked sometimes.</p>
-    
-  <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
-
-  <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
-
-  <p>If you read my book, you'd know how much I want to leave this shithole state, and I definitely need all the help I can get.</p>
-
-  <p>
-    Contact me: 
-    <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
-      @radic-allef-tist.bsky.social
-    </a> 
-    and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
-  </p>
-
-  <p>Below are the links to the book in case you want to buy it. Let me know if they break or if the book gets removed by our glorious "free speech absolutists".</p>
-
-  <p>Thanks again to everyone for the support. Stay strong out there.</p>
-    
-  <p>-Radic</p>
-
-  <div class="buy-print">
-    <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
+  <div class="gallery-item">
+    <img 
+      src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP_Thumbnails/FULL_COVER_ART_Watermarked_Thumbnail.webp"
+      data-full="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/FULL_COVER_ART_Watermarked.webp"
+      alt="Full Cover Art"
+      class="gallery-img">
+    <div class="caption">FULL COVER ART</div>
   </div>
 
-  <div class="buy-epub">
-    <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
-  </div>
 
-    
 </div>
+
+  
 
 
     <!-- Modal -->
