@@ -18,12 +18,6 @@ body {
   text-align: center; 
 }
 
-/* stabilizes fixed buttons on mobile zoom */
-html, body {
-  overscroll-behavior: none;
-  touch-action: manipulation;
-}
-
 /* --- Titles --- */
 .title-container {
   display: flex;
@@ -73,13 +67,6 @@ h2 {
   border-radius: 0.5rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-}
-
-/* ensures modal images never block modal buttons */
-#imageModal img {
-  z-index: 1;
-  position: relative;
-  pointer-events: none;
 }
 
 .gallery img:hover {
@@ -152,7 +139,7 @@ h2 {
 
   .footer-box .footer-image img {
     width: auto;
-    height: 45vh;
+    height: 45vh;   /* slightly taller */
     max-height: 55vh;
     display: block;
     border-radius: 0.5rem;
@@ -175,7 +162,7 @@ h2 {
   }
 }
 
-/* =========================
+  /* =========================
    BUTTONS - DESKTOP
 ========================= */
 .buy-button-desktop {
@@ -250,149 +237,113 @@ h2 {
   .footer-box-mobile .footer-text {
     max-width: 100%;
     text-align: justify;
-    font-size: 0.8rem;
+    font-size: 0.8rem;  /* smaller text on mobile */
   }
 
   .footer-box-mobile .footer-buttons {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 2rem;       /* more spacing between buttons */
     margin-top: 1.5rem;
     height: auto;
   }
 
-  /* BUTTONS - MOBILE */
-  .footer-buttons-mobile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.2rem;
-    width: 100%;
-  }
-
-  .footer-buttons-mobile .buy-button-mobile {
-    display: inline-block;
-    border-radius: 0.5em;
-    text-align: center;
-    font-weight: bold;
-    width: 12rem;
-    font-size: 1.2rem;
-    padding: 0.5em 1em;
-    text-decoration: none;
-    color: white;
-    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-  }
-
-  .footer-buttons-mobile .buy-button-mobile.print {
-    background-color: #2d6a4f;
-    border: 0.15em solid #1b4332;
-  }
-
-  .footer-buttons-mobile .buy-button-mobile.epub {
-    background-color: #1d3557;
-    border: 0.15em solid #0b1e33;
-  }
-
-  .footer-buttons-mobile .buy-button-mobile:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-  }
+  /* =========================
+   BUTTONS - MOBILE (same logic as desktop, smaller size)
+========================= */
+.footer-buttons-mobile {
+  display: flex;
+  flex-direction: column;   /* stack buttons vertically */
+  align-items: center;      /* center horizontally */
+  gap: 1.2rem;              /* spacing between buttons */
+  width: 100%;
 }
+
+.footer-buttons-mobile .buy-button-mobile {
+  display: inline-block;
+  border-radius: 0.5em;
+  text-align: center;
+  font-weight: bold;
+  width: 12rem;             /* smaller, fixed width */
+  font-size: 1.2rem;        /* slightly smaller than desktop */
+  padding: 0.5em 1em;       /* smaller padding */
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.footer-buttons-mobile .buy-button-mobile.print {
+  background-color: #2d6a4f;
+  border: 0.15em solid #1b4332;
+}
+
+.footer-buttons-mobile .buy-button-mobile.epub {
+  background-color: #1d3557;
+  border: 0.15em solid #0b1e33;
+}
+
+.footer-buttons-mobile .buy-button-mobile:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+}
+  
 
 /* =========================
    MODALS & BACK TO TOP
 ========================= */
+#closeModal { top: 2vh; }
+#refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
 
-/* Base styles for both modals */
-#closeModal,
-#refreshModal {
-  position: absolute; /* anchor to modal, not window */
-  width: 5rem;
-  height: 5rem;
-  font-size: 2.5rem;
-  border-radius: 0.6rem;       /* slightly larger for drag comfort */
-  border: 0.14rem solid white;
-  background-color: rgba(0,0,0,0.6); /* translucent dark box */
-  color: white;
-  cursor: pointer;
-  z-index: 1010;               /* above image for visibility, but below other overlays */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.5);
-  transition: transform 0.15s ease, background-color 0.15s ease,
-              color 0.15s ease, box-shadow 0.15s ease;
-  pointer-events: auto;
-}
-
-/* Positions inside modal */
-#closeModal {
-  top: 2vh;
-  right: 3vw;
-}
-
-#refreshModal {
-  top: calc(2vh + 5rem + 3vh); /* extra vertical spacing for mobile/zoom */
-  right: 3vw;
-}
-
-/* Hover/focus for mouse devices */
 @media (hover: hover) and (pointer: fine) {
   #closeModal:hover,
   #closeModal:focus,
   #refreshModal:hover,
   #refreshModal:focus {
-    transform: scale(1.1);
     background-color: white;
     color: black;
+    transform: scale(1.2);
+    box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
     outline: none;
   }
 }
 
-/* Touch feedback */
 .tapped {
-  transform: scale(1.1) !important;
-  background-color: rgba(255,255,255,0.9) !important;
+  background-color: rgba(255,255,255,0.7) !important;
   color: black !important;
-  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.6) !important;
+  transform: scale(1.2) !important;
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
-/* Accessibility outline */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
   outline-offset: 0.15rem;
 }
 
-/* Mobile tweaks */
 @media (max-width: 768px) {
-  #closeModal,
-  #refreshModal {
+  #closeModal, #refreshModal {
     width: 5.6rem;
     height: 5.6rem;
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     border-radius: 0.6rem;
+    border: 0.14rem solid white;
   }
-
-  #closeModal { top: 2vh; right: 4vw; }
-  #refreshModal { top: 10vh; right: 4vw; } /* more vertical space so buttons don't overlap on zoom */
+  #refreshModal { top: 12vh; }
 }
 
-/* =========================
-   BACK TO TOP
-========================= */
 #backToTop {
   display: none;
   position: fixed;
   bottom: 2vh;
   right: 4vw;
-  z-index: 9000;
+  z-index: 99;
   width: clamp(4rem, 10vw, 5rem);
   height: clamp(4rem, 10vw, 5rem);
-  background-color: white;   /* original style */
-  color: black;
-  border: 2px solid black;
+  background-color: white;
+  color: #333;
+  border: 2px solid #333;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
@@ -404,7 +355,7 @@ h2 {
 
 #backToTop:hover,
 #backToTop.pressed {
-  background-color: black;
+  background-color: #333;
   color: white;
   transform: scale(1.1);
 }
@@ -413,14 +364,7 @@ h2 {
   width: 70%;
   height: 70%;
 }
-
-/* Hide Back-to-Top whenever modal is open */
-.modal-open #backToTop {
-  display: none !important;
-}
-  
 </style>
-
   
   </head>
   
@@ -444,7 +388,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Fixing the site at the moment, sorry.</p>
+      <p>Hello, all! Still fixing the site, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -488,7 +432,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Editing the site, sorry.</p>
+        <p>Hello, all! Still fixing things with the site.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -637,14 +581,17 @@ h2 {
   
 
 
-   <!-- Modal -->
-<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    <!-- Modal -->
+
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
 
-  <!-- Close and Refresh buttons -->
-  <button id="closeModal" aria-label="Close image modal">✕</button>
-  <button id="refreshModal" aria-label="Reset zoom">⟳</button>
-  
+ <!-- Close button inside modal -->
+<button id="closeModal">✕</button>
+
+<!-- Refresh button inside modal -->
+<button id="refreshModal">&#x21bb;</button>
+
   <!-- Progress bar container (centered & responsive) -->
   <div id="modalProgressContainer" style="
       position:absolute; 
@@ -692,6 +639,7 @@ const closeBtn = document.getElementById('closeModal');
 const refreshBtn = document.getElementById('refreshModal');
 const progressBar = document.getElementById('modalProgressBar');
 
+
 let scale = 1, originX = 0, originY = 0;
 let startX = 0, startY = 0, isDragging = false;
 let initialDistance = 0, initialScale = 1;
@@ -710,10 +658,6 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-
-    /* mark modal as open for CSS visibility logic */
-    document.body.classList.add('modal-open');
-
     scale = 1; originX = 0; originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
@@ -722,21 +666,26 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     modalImg.style.opacity = '0';
     modalImg.src = '';
 
+    // Reference the message element
     const progressMessage = document.getElementById('modalProgressMessage');
     progressMessage.style.display = 'none';
+
+    // Track all timeouts so we can clear them if image loads
     const messageTimeouts = [];
 
-    // Progressive messages
+    // Message after 3 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'These images are kinda big...';
       progressMessage.style.display = 'block';
     }, 5000));
 
+    // Message after 8 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Your connection to these servers is shit...';
       progressMessage.style.display = 'block';
     }, 15000));
 
+    // Message after 15 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Might as well keep waiting...';
       progressMessage.style.display = 'block';
@@ -755,6 +704,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     xhr.onload = () => {
       const blobUrl = URL.createObjectURL(xhr.response);
+
       const finish = () => {
         progressBar.style.width = '100%';
         modalImg.src = blobUrl;
@@ -763,8 +713,11 @@ document.querySelectorAll('.gallery-img').forEach(img => {
           progressBar.parentElement.style.display = 'none';
           progressMessage.style.display = 'none';
         }, 100);
+
+        // clear all pending messages
         messageTimeouts.forEach(timeout => clearTimeout(timeout));
       };
+
       finish();
     };
 
@@ -779,7 +732,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     xhr.send();
   });
 });
-
+  
 // --------------------
 // Detect input type
 // --------------------
@@ -789,12 +742,10 @@ window.addEventListener('touchstart', () => usingMouse = false);
 const isDesktop = () => usingMouse;
 
 // --------------------
-// Desktop click & drag + zoom
+// Desktop zoom & drag
 // --------------------
 modalImg.addEventListener('click', e => {
   if (!isDesktop()) return;
-  // prevent clicking on buttons from zooming
-  if (e.target.closest('#closeModal, #refreshModal')) return;
   if (scale === 1 && !e.touches) {
     const rect = modalImg.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -808,36 +759,44 @@ modalImg.addEventListener('click', e => {
   }
 });
 
+modal.addEventListener('wheel', e => {
+  if (!isDesktop()) return;
+  e.preventDefault();
+  const rect = modalImg.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const offsetY = e.clientY - rect.top;
+  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
+  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
+  originX = newScale === 1 ? 0 : offsetX - ((offsetX - originX) * newScale) / scale;
+  originY = newScale === 1 ? 0 : offsetY - ((offsetY - originY) * newScale) / scale;
+  scale = newScale;
+  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+});
+
 modalImg.addEventListener('mousedown', e => {
   if (!isDesktop() || scale <= 1) return;
-  if (e.target.closest('#closeModal, #refreshModal')) return; // ignore buttons
   isDragging = true;
   startX = e.clientX - originX;
   startY = e.clientY - originY;
   modalImg.style.cursor = 'grabbing';
   e.preventDefault();
 });
-
 window.addEventListener('mousemove', e => {
   if (!isDesktop() || !isDragging) return;
   originX = e.clientX - startX;
   originY = e.clientY - startY;
   modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
 });
-
 window.addEventListener('mouseup', () => {
   if (!isDesktop()) return;
-  if (isDragging) {
-    isDragging = false;
-    modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-  }
+  if (isDragging) { isDragging = false; modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in'; }
 });
 
 // --------------------
-// Mobile pinch & drag (ignore buttons)
+// Mobile pinch & drag
 // --------------------
 modal.addEventListener('touchstart', e => {
-  if (e.target.closest('#closeModal, #refreshModal')) return; // ignore buttons
   if (e.touches.length === 1) {
     lastTouchX = e.touches[0].clientX;
     lastTouchY = e.touches[0].clientY;
@@ -851,7 +810,6 @@ modal.addEventListener('touchstart', e => {
 }, { passive: false });
 
 modal.addEventListener('touchmove', e => {
-  if (e.target.closest('#closeModal, #refreshModal')) return; // ignore buttons
   if (e.touches.length === 1) {
     if (Date.now() - lastPinchTime < 50) return;
     e.preventDefault();
@@ -879,39 +837,45 @@ modal.addEventListener('touchmove', e => {
 }, { passive: false });
 
 // --------------------
-// Reset & Close (mobile + desktop)
+// Reset & Close with mobile tap flash and hybrid support
 // --------------------
 
+// Detect if device supports touch
 const isTouchDevice = () => ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
+// Tap/flash effect
 function flashButton(btn) {
   if (!btn) return;
   btn.classList.add('tapped');
   setTimeout(() => btn.classList.remove('tapped'), 150);
 }
 
+// Reset image zoom/position
 const resetModalImage = (e) => {
   scale = 1;
   originX = 0;
   originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
+
+  // Flash for mobile/hybrid tap
   if (e && e.target && isTouchDevice()) flashButton(e.target);
+
+  // Clear focus/hover properly
   if (e && e.target) setTimeout(() => e.target.blur(), 0);
   if (document.activeElement && document.activeElement !== document.body) {
     setTimeout(() => document.activeElement.blur(), 0);
   }
 };
 
+// Close modal handler
 const closeModal = (e) => {
   if (e && e.target && isTouchDevice()) flashButton(e.target);
+
+  // Slight delay so flash is visible
   setTimeout(() => {
     modal.style.display = 'none';
     document.body.style.overflow = '';
-
-    /* remove modal-open class when modal closes */
-    document.body.classList.remove('modal-open');
-
     resetModalImage();
     modalImg.src = '';
     progressBar.style.width = '0%';
@@ -923,21 +887,108 @@ const closeModal = (e) => {
   }, 120);
 };
 
-refreshBtn.addEventListener('click', resetModalImage);
+// Refresh button
+refreshBtn.addEventListener('click', resetModalImage); // desktop & desktop hybrid
 refreshBtn.addEventListener('touchend', e => {
-  resetModalImage(e);
-  e.preventDefault();
+    resetModalImage(e);    // flash + reset
+    e.preventDefault();    // prevent double trigger
 }, { passive: false });
 
-closeBtn.addEventListener('click', closeModal);
+// Close button
+closeBtn.addEventListener('click', closeModal); // desktop & desktop hybrid
 closeBtn.addEventListener('touchend', e => {
-  closeModal(e);
-  e.preventDefault();
+    closeModal(e);        // flash + close
+    e.preventDefault();    // prevent double trigger
 }, { passive: false });
-
+  
+// Close modal on click outside or Escape
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(e); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(e); });
+</script>
+
+
+<!-- BACK TO TOP ARROW -->
   
+<button id="backToTop" title="Go to top" aria-label="Back to top">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="3"
+       stroke-linecap="round" stroke-linejoin="round"
+       style="width: 70%; height: 70%;">
+    <polyline points="18 15 12 9 6 15" />
+  </svg>
+</button>
+
+<script>
+  const backToTopBtn = document.getElementById("backToTop");
+  let scrollCheck = null;
+
+  // Show/hide button on scroll and reset pressed when at the very top
+  window.addEventListener("scroll", () => {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
+
+    if (scrollTop === 0) {
+      resetButtonEffects();
+    }
+  });
+
+  // --- Helper to remove pressed visuals ---
+  const resetButtonEffects = () => {
+    backToTopBtn.classList.remove("pressed");
+    // if you used inline styles anywhere, clear them here as well:
+    backToTopBtn.style.backgroundColor = "";
+    backToTopBtn.style.color = "";
+    backToTopBtn.style.transform = "";
+  };
+
+  // --- Smooth scroll to top (keeps checking and clears pressed when done) ---
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // clear any previous check
+    if (scrollCheck) {
+      clearInterval(scrollCheck);
+      scrollCheck = null;
+    }
+
+    // Safety: when we reach top, ensure visual state is reset
+    scrollCheck = setInterval(() => {
+      if ((window.scrollY || document.documentElement.scrollTop) === 0) {
+        resetButtonEffects();
+        clearInterval(scrollCheck);
+        scrollCheck = null;
+      }
+    }, 50);
+  };
+
+  // --- Desktop click (normal behavior) ---
+  backToTopBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    scrollToTop();
+  });
+
+  // --- Mobile: treat touchstart (even a long press) like a tap ---
+  backToTopBtn.addEventListener("touchstart", (e) => {
+    // prevent default long-press behavior / synthetic click
+    e.preventDefault();
+
+    // show pressed feedback immediately
+    backToTopBtn.classList.add("pressed");
+
+    // start scrolling right away
+    scrollToTop();
+
+    // remove pressed visual quickly so holding doesn't "stick"
+    // adjust the ms here if you want the pressed visual to last longer
+    setTimeout(resetButtonEffects, 120);
+  });
+
+  // ensure cleanup on end/cancel (safety)
+  backToTopBtn.addEventListener("touchend", resetButtonEffects);
+  backToTopBtn.addEventListener("touchcancel", resetButtonEffects);
+
+  // prevent context menu on long press (optional but helpful on some devices)
+  backToTopBtn.addEventListener("contextmenu", (e) => e.preventDefault());
 </script>
   
   
