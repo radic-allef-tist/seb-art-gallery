@@ -250,38 +250,45 @@ h2 {
   }
 
   /* =========================
-     BUTTONS - MOBILE 
-  ========================= */
-  .footer-buttons-mobile .buy-button-mobile {
-    display: inline-block;
-    border-radius: 0.5em;
-    text-align: center;
-    font-weight: bold;
-    width: 45%;          /* smaller, more manageable buttons */
-    font-size: 1.4rem;
-    padding: 0.6em 1em;
-    text-decoration: none;
-    color: white;
-    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-    margin: 0 auto;       /* centers buttons */
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-  }
+   BUTTONS - MOBILE (fixed equal widths)
+========================= */
+.footer-buttons-mobile {
+  display: flex;
+  justify-content: center;  /* center buttons horizontally */
+  gap: 1rem;                /* spacing between buttons */
+  flex-wrap: wrap;           /* allow wrapping if screen too small */
+}
 
-  .footer-buttons-mobile .buy-button-mobile.print {
-    background-color: #2d6a4f;
-    border: 0.15em solid #1b4332;
-  }
+.footer-buttons-mobile .buy-button-mobile {
+  display: inline-block;
+  border-radius: 0.5em;
+  text-align: center;
+  font-weight: bold;
+  width: 12rem;             /* fixed width for all buttons */
+  min-width: 10rem;         /* prevent too small on tiny screens */
+  max-width: 45%;            /* keep responsive max */
+  font-size: 1.4rem;        /* fixed font size for readability */
+  white-space: nowrap;       /* prevent text from wrapping */
+  padding: 0.6em 1em;       /* uniform padding */
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
 
-  .footer-buttons-mobile .buy-button-mobile.epub {
-    background-color: #1d3557;
-    border: 0.15em solid #0b1e33;
-  }
+.footer-buttons-mobile .buy-button-mobile.print {
+  background-color: #2d6a4f;
+  border: 0.15em solid #1b4332;
+}
 
-  .footer-buttons-mobile .buy-button-mobile:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-  }
+.footer-buttons-mobile .buy-button-mobile.epub {
+  background-color: #1d3557;
+  border: 0.15em solid #0b1e33;
+}
 
+.footer-buttons-mobile .buy-button-mobile:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
   
 
