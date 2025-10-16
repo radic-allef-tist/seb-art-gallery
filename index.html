@@ -312,29 +312,30 @@ h2 {
   width: 5rem;
   height: 5rem;
   font-size: 2.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;       /* slightly larger for drag comfort */
   border: 0.14rem solid white;
   background-color: rgba(0,0,0,0.6); /* translucent dark box */
   color: white;
   cursor: pointer;
-  z-index: 100;
+  z-index: 1010;               /* above image for visibility, but below other overlays */
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.5);
   transition: transform 0.15s ease, background-color 0.15s ease,
               color 0.15s ease, box-shadow 0.15s ease;
+  pointer-events: auto;
 }
 
 /* Positions inside modal */
 #closeModal {
   top: 2vh;
-  right: 2vw;
+  right: 3vw;
 }
 
 #refreshModal {
-  top: calc(2vh + 5rem + 1.5vh);
-  right: 2vw;
+  top: calc(2vh + 5rem + 3vh); /* extra vertical spacing for mobile/zoom */
+  right: 3vw;
 }
 
 /* Hover/focus for mouse devices */
@@ -343,7 +344,7 @@ h2 {
   #closeModal:focus,
   #refreshModal:hover,
   #refreshModal:focus {
-    transform: scale(1.2);
+    transform: scale(1.1);
     background-color: white;
     color: black;
     outline: none;
@@ -352,10 +353,10 @@ h2 {
 
 /* Touch feedback */
 .tapped {
-  transform: scale(1.2) !important;
-  background-color: rgba(255,255,255,0.7) !important;
+  transform: scale(1.1) !important;
+  background-color: rgba(255,255,255,0.9) !important;
   color: black !important;
-  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
+  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.6) !important;
 }
 
 /* Accessibility outline */
@@ -374,15 +375,8 @@ h2 {
     border-radius: 0.6rem;
   }
 
-  #closeModal {
-    top: 2vh;
-    right: 4vw;
-  }
-
-  #refreshModal {
-    top: 10vh;
-    right: 4vw;
-  }
+  #closeModal { top: 2vh; right: 4vw; }
+  #refreshModal { top: 10vh; right: 4vw; } /* more vertical space so buttons don't overlap on zoom */
 }
 
 /* =========================
@@ -393,10 +387,10 @@ h2 {
   position: fixed;
   bottom: 2vh;
   right: 4vw;
-  z-index: 99;
+  z-index: 9000;
   width: clamp(4rem, 10vw, 5rem);
   height: clamp(4rem, 10vw, 5rem);
-  background-color: white;   /* reverted style */
+  background-color: white;   /* original style */
   color: black;
   border: 2px solid black;
   border-radius: 50%;
@@ -424,6 +418,7 @@ h2 {
 .modal-open #backToTop {
   display: none !important;
 }
+  
 </style>
 
   
@@ -449,7 +444,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Tweaking the site at the moment, sorry.</p>
+      <p>Hello, all! Fixing the site at the moment, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -493,7 +488,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Changing the site, sorry.</p>
+        <p>Hello, all! Editing the site, sorry.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -794,10 +789,12 @@ window.addEventListener('touchstart', () => usingMouse = false);
 const isDesktop = () => usingMouse;
 
 // --------------------
-// Desktop zoom & drag
+// Desktop click & drag + zoom
 // --------------------
 modalImg.addEventListener('click', e => {
   if (!isDesktop()) return;
+  // prevent clicking on buttons from zooming
+  if (e.target.closest('#closeModal, #refreshModal')) return;
   if (scale === 1 && !e.touches) {
     const rect = modalImg.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -811,44 +808,36 @@ modalImg.addEventListener('click', e => {
   }
 });
 
-modal.addEventListener('wheel', e => {
-  if (!isDesktop()) return;
-  e.preventDefault();
-  const rect = modalImg.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const offsetY = e.clientY - rect.top;
-  const zoomFactor = Math.exp(-e.deltaY * 0.0025);
-  const newScale = Math.min(Math.max(scale * zoomFactor, 1), 10);
-  originX = newScale === 1 ? 0 : offsetX - ((offsetX - originX) * newScale) / scale;
-  originY = newScale === 1 ? 0 : offsetY - ((offsetY - originY) * newScale) / scale;
-  scale = newScale;
-  modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
-  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-});
-
 modalImg.addEventListener('mousedown', e => {
   if (!isDesktop() || scale <= 1) return;
+  if (e.target.closest('#closeModal, #refreshModal')) return; // ignore buttons
   isDragging = true;
   startX = e.clientX - originX;
   startY = e.clientY - originY;
   modalImg.style.cursor = 'grabbing';
   e.preventDefault();
 });
+
 window.addEventListener('mousemove', e => {
   if (!isDesktop() || !isDragging) return;
   originX = e.clientX - startX;
   originY = e.clientY - startY;
   modalImg.style.transform = `translate(${originX}px,${originY}px) scale(${scale})`;
 });
+
 window.addEventListener('mouseup', () => {
   if (!isDesktop()) return;
-  if (isDragging) { isDragging = false; modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in'; }
+  if (isDragging) {
+    isDragging = false;
+    modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+  }
 });
 
 // --------------------
-// Mobile pinch & drag
+// Mobile pinch & drag (ignore buttons)
 // --------------------
 modal.addEventListener('touchstart', e => {
+  if (e.target.closest('#closeModal, #refreshModal')) return; // ignore buttons
   if (e.touches.length === 1) {
     lastTouchX = e.touches[0].clientX;
     lastTouchY = e.touches[0].clientY;
@@ -862,6 +851,7 @@ modal.addEventListener('touchstart', e => {
 }, { passive: false });
 
 modal.addEventListener('touchmove', e => {
+  if (e.target.closest('#closeModal, #refreshModal')) return; // ignore buttons
   if (e.touches.length === 1) {
     if (Date.now() - lastPinchTime < 50) return;
     e.preventDefault();
