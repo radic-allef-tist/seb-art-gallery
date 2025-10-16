@@ -18,6 +18,12 @@ body {
   text-align: center; 
 }
 
+/* ✅ NEW — stabilizes fixed buttons on mobile zoom */
+html, body {
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
 /* --- Titles --- */
 .title-container {
   display: flex;
@@ -67,6 +73,13 @@ h2 {
   border-radius: 0.5rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* ✅ NEW — ensures modal images never block modal buttons */
+#imageModal img {
+  z-index: 1;
+  position: relative;
+  pointer-events: none;
 }
 
 .gallery img:hover {
@@ -139,7 +152,7 @@ h2 {
 
   .footer-box .footer-image img {
     width: auto;
-    height: 45vh;   /* slightly taller */
+    height: 45vh;
     max-height: 55vh;
     display: block;
     border-radius: 0.5rem;
@@ -162,7 +175,7 @@ h2 {
   }
 }
 
-  /* =========================
+/* =========================
    BUTTONS - DESKTOP
 ========================= */
 .buy-button-desktop {
@@ -237,171 +250,164 @@ h2 {
   .footer-box-mobile .footer-text {
     max-width: 100%;
     text-align: justify;
-    font-size: 0.8rem;  /* smaller text on mobile */
+    font-size: 0.8rem;
   }
 
   .footer-box-mobile .footer-buttons {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;       /* more spacing between buttons */
+    gap: 2rem;
     margin-top: 1.5rem;
     height: auto;
   }
 
-  /* =========================
-   BUTTONS - MOBILE (same logic as desktop, smaller size)
-========================= */
-.footer-buttons-mobile {
-  display: flex;
-  flex-direction: column;   /* stack buttons vertically */
-  align-items: center;      /* center horizontally */
-  gap: 1.2rem;              /* spacing between buttons */
-  width: 100%;
-}
+  /* BUTTONS - MOBILE */
+  .footer-buttons-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    width: 100%;
+  }
 
-.footer-buttons-mobile .buy-button-mobile {
-  display: inline-block;
-  border-radius: 0.5em;
-  text-align: center;
-  font-weight: bold;
-  width: 12rem;             /* smaller, fixed width */
-  font-size: 1.2rem;        /* slightly smaller than desktop */
-  padding: 0.5em 1em;       /* smaller padding */
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
+  .footer-buttons-mobile .buy-button-mobile {
+    display: inline-block;
+    border-radius: 0.5em;
+    text-align: center;
+    font-weight: bold;
+    width: 12rem;
+    font-size: 1.2rem;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
 
-.footer-buttons-mobile .buy-button-mobile.print {
-  background-color: #2d6a4f;
-  border: 0.15em solid #1b4332;
-}
+  .footer-buttons-mobile .buy-button-mobile.print {
+    background-color: #2d6a4f;
+    border: 0.15em solid #1b4332;
+  }
 
-.footer-buttons-mobile .buy-button-mobile.epub {
-  background-color: #1d3557;
-  border: 0.15em solid #0b1e33;
-}
+  .footer-buttons-mobile .buy-button-mobile.epub {
+    background-color: #1d3557;
+    border: 0.15em solid #0b1e33;
+  }
 
-.footer-buttons-mobile .buy-button-mobile:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+  .footer-buttons-mobile .buy-button-mobile:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+  }
 }
-  
 
 /* =========================
    MODALS & BACK TO TOP
 ========================= */
-
-/* Base styles for both modals */
 #closeModal,
 #refreshModal {
   position: fixed;
   width: 5rem;
   height: 5rem;
   font-size: 2.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;
   border: 0.14rem solid white;
-  background-color: white;
-  color: black;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
   cursor: pointer;
-  z-index: 100;
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
   transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  pointer-events: auto;
 }
 
-/* Positions */
 #closeModal {
   top: 2vh;
   right: 2vw;
 }
 
 #refreshModal {
-  top: calc(2vh + 5rem + 1.5vh); /* below closeModal */
+  top: calc(2vh + 5rem + 1.5vh);
   right: 2vw;
 }
 
-/* Hover/focus for devices that support it */
 @media (hover: hover) and (pointer: fine) {
   #closeModal:hover,
-  #closeModal:focus,
   #refreshModal:hover,
+  #closeModal:focus,
   #refreshModal:focus {
-    transform: scale(1.2);
-    background-color: #fff;
+    transform: scale(1.1);
+    background-color: white;
     color: black;
-    box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+    box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.6);
     outline: none;
   }
 }
 
-/* Tapped/active state for touch */
 .tapped {
-  transform: scale(1.2) !important;
-  background-color: rgba(255,255,255,0.7) !important;
+  transform: scale(1.1) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
   color: black !important;
-  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
+  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.6) !important;
   transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
-/* Accessibility focus outline */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
   outline-offset: 0.15rem;
 }
 
-/* Mobile adjustments */
+/* MOBILE MODAL ADJUSTMENTS */
 @media (max-width: 768px) {
   #closeModal,
   #refreshModal {
-    width: 5.6rem;
-    height: 5.6rem;
-    font-size: 2.2rem;
+    width: 4.6rem;
+    height: 4.6rem;
+    font-size: 2rem;
     border-radius: 0.6rem;
+    right: 3vw;
   }
 
   #closeModal {
-    top: 2vh;
-    right: 4vw;
+    top: 2.5vh;
   }
 
   #refreshModal {
-    top: 10vh; /* slightly lower on mobile for spacing */
-    right: 4vw;
+    top: calc(2.5vh + 4.6rem + 1.5vh);
   }
 }
 
 /* =========================
-   Back to Top Button
+   BACK TO TOP BUTTON
 ========================= */
 #backToTop {
   display: none;
   position: fixed;
   bottom: 2vh;
   right: 4vw;
-  z-index: 99;
+  z-index: 9000;
   width: clamp(4rem, 10vw, 5rem);
   height: clamp(4rem, 10vw, 5rem);
-  background-color: white;
-  color: #333;
-  border: 2px solid #333;
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  border: 2px solid white;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s ease, opacity 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
 #backToTop:hover,
 #backToTop.pressed {
-  background-color: #333;
-  color: white;
+  background-color: white;
+  color: black;
   transform: scale(1.1);
 }
 
@@ -410,6 +416,7 @@ h2 {
   height: 70%;
 }
 </style>
+
   
   </head>
   
@@ -433,7 +440,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Fixing the site at the moment, sorry.</p>
+      <p>Hello, all! Editing the site at the moment, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -477,7 +484,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Changing the site up, sorry.</p>
+        <p>Hello, all! Fixing the site, sorry.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -626,17 +633,14 @@ h2 {
   
 
 
-    <!-- Modal -->
-
-<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+   <!-- Modal -->
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
 
- <!-- Close button inside modal -->
-<button id="closeModal">✕</button>
-
-<!-- Refresh button inside modal -->
-<button id="refreshModal">&#x21bb;</button>
-
+  <!-- Close and Refresh buttons -->
+  <button id="closeModal" aria-label="Close image modal">✕</button>
+  <button id="refreshModal" aria-label="Reset zoom">⟳</button>
+  
   <!-- Progress bar container (centered & responsive) -->
   <div id="modalProgressContainer" style="
       position:absolute; 
