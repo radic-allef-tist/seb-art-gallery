@@ -76,15 +76,24 @@ h2 {
 
 .gallery-item {
   text-align: center;
-  font-size: 3rem
+  font-size: 3rem; /* fixed missing semicolon */
   margin-bottom: 2rem;
 }
 
 .caption {
   margin-top: 1rem;
-  font-size: 2rem;
+  font-size: 2rem; /* desktop caption size */
   font-weight: bold;
   color: #333;
+}
+
+/* =========================
+   MOBILE GALLERY CAPTIONS
+========================= */
+@media (max-width: 768px) {
+  .gallery .caption {
+    font-size: 1.2rem; /* smaller on mobile */
+  }
 }
 
 /* --- Angled Strike --- */
