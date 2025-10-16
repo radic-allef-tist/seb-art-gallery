@@ -186,22 +186,22 @@ h2 {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .footer-content {
-    flex-direction: column;   /* stack text and buttons */
-    align-items: stretch;     /* let children fill width */
+    flex-direction: column;  /* stack text and buttons */
+    align-items: stretch;    /* children fill the container width */
   }
 
   .footer-text {
-    flex: none;               /* remove PC flex sizing */
-    max-width: 100%;          /* fill available width */
-    text-align: center;       /* center the text */
-    margin-bottom: 2rem;      /* spacing before buttons */
+    flex: none;             /* remove desktop flex sizing */
+    max-width: 100% !important;  /* override desktop 60% */
+    text-align: center;     /* center text on mobile */
+    margin-bottom: 2rem;    /* spacing before buttons */
   }
 
   .footer-buttons {
-    flex: none;               /* remove PC flex sizing */
-    align-items: center;      /* horizontally center buttons */
-    justify-content: center;  /* vertically center within their column */
-    gap: 2.5rem;              /* maintain spacing between buttons */
+    flex: none;
+    align-items: center;    /* center buttons horizontally */
+    justify-content: center; 
+    gap: 2.5rem;            /* more space between buttons */
   }
 
   .buy-print,
