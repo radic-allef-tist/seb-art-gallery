@@ -7,13 +7,15 @@
 
  
 <style>
-/* --- Global Styles --- */
-body { 
-  font-family: serif; 
-  background: #ffffff; 
-  margin: 0; 
-  padding: 20px; 
-  text-align: center; 
+/* =========================
+   GLOBAL STYLES
+========================= */
+body {
+  font-family: serif;
+  background: #ffffff;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
 }
 
 /* --- Titles --- */
@@ -32,7 +34,6 @@ body {
   display: block;
 }
 
- 
 h1 {
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: bold;
@@ -79,13 +80,13 @@ h2 {
 }
 
 .caption {
-  margin-top: 1rem;    
+  margin-top: 1rem;
   font-size: 2rem;
   font-weight: bold;
   color: #333;
 }
 
-/* --- Angled strike --- */
+/* --- Angled Strike --- */
 .angled-strike {
   position: relative;
   display: inline-block;
@@ -106,70 +107,12 @@ h2 {
   transform-origin: center;
 }
 
-/* --- Footer Visibility --- */
-.footer-desktop { display: block; }
-.footer-mobile { display: none; }
-
-@media (max-width: 768px) {
-  .footer-desktop { display: none; }
-  .footer-mobile { display: block; }
-}
-
-/* --- Desktop Footer Box --- */
-.footer-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;       /* vertical centering on desktop */
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #fff;
-  border: 2px solid #ccc;
-  border-radius: 1rem;
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-  color: #333;
-  font-size: 1.3rem;
-  line-height: 1.5;
-  max-width: 90%;
-  margin: 3rem auto;
-  flex-wrap: wrap;
-}
-
-/* --- Desktop Footer Image --- */
-.footer-box .footer-image img {
-  width: auto;
-  height: 40vh;
-  max-height: 50vh;
-  display: block;
-  border-radius: 0.5rem;
-}
-
-/* --- Desktop Footer Text --- */
-.footer-box .footer-text {
-  flex: 2 1 400px;
-  max-width: 60%;
-  text-align: left;
-}
-
-/* --- Desktop Footer Buttons --- */
-.footer-box .footer-buttons {
-  flex: 1 1 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;   /* vertical centering */
-  align-items: center;       /* horizontal centering */
-  gap: 4rem;                 /* spacing between buttons */
-  height: 100%;              /* fill height of footer-box */
-}
-
 /* --- Buttons --- */
 .buy-button {
   display: inline-block;
   border-radius: 0.5em;
   text-align: center;
   font-weight: bold;
-  width: clamp(14rem, 50vw, 18rem);
-  font-size: clamp(1.6rem, 2.5vh, 1.8rem);
-  padding: clamp(0.9em, 2vw, 1.1em) clamp(1em, 3vw, 1.4em);
   text-decoration: none;
   color: white;
   box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
@@ -190,142 +133,12 @@ h2 {
   transform: scale(1.03);
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
-/* =========================
-   MOBILE STYLES
-========================= */
-@media (max-width: 768px) {
 
-  /* Title Image */
-  .title-image {
-    max-width: 95%;
-    height: auto;
-  }
+/* --- Footer Visibility --- */
+.footer-desktop { display: block; }
+.footer-mobile { display: none; }
 
-  /* Footer Visibility */
-  .footer-desktop { display: none; }
-  .footer-mobile { display: block; }
-
-  /* Footer Box */
-  .footer-box-mobile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1.5rem;
-    padding: 2rem;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-    color: #333;
-    font-size: 1.3rem;
-    line-height: 1.5;
-    max-width: 90%;
-    margin: 3rem auto;
-  }
-
-  .footer-box-mobile .footer-image img {
-    max-width: 95%;
-    height: auto;
-    margin-bottom: 1.5rem;
-  }
-
-  .footer-box-mobile .footer-text {
-    max-width: 100%;
-    text-align: justify;
-    font-size: 0.8rem;  /* smaller text on mobile */
-  }
-
-  .footer-box-mobile .footer-buttons {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;       /* more spacing between buttons */
-    margin-top: 1.5rem;
-    height: auto;
-  }
-
-  /* =========================
-   BUTTONS - MOBILE (same logic as desktop, smaller size)
-========================= */
-.footer-buttons-mobile {
-  display: flex;
-  flex-direction: column;   /* stack buttons vertically */
-  align-items: center;      /* center horizontally */
-  gap: 1.2rem;              /* spacing between buttons */
-  width: 100%;
-}
-
-.footer-buttons-mobile .buy-button-mobile {
-  display: inline-block;
-  border-radius: 0.5em;
-  text-align: center;
-  font-weight: bold;
-  width: 12rem;             /* smaller, fixed width */
-  font-size: 1.2rem;        /* slightly smaller than desktop */
-  padding: 0.5em 1em;       /* smaller padding */
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.footer-buttons-mobile .buy-button-mobile.print {
-  background-color: #2d6a4f;
-  border: 0.15em solid #1b4332;
-}
-
-.footer-buttons-mobile .buy-button-mobile.epub {
-  background-color: #1d3557;
-  border: 0.15em solid #0b1e33;
-}
-
-.footer-buttons-mobile .buy-button-mobile:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-}
-
-/* --- Modals & Back to Top --- */
-#closeModal { top: 2vh; }
-#refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
-
-@media (hover: hover) and (pointer: fine) {
-  #closeModal:hover,
-  #closeModal:focus,
-  #refreshModal:hover,
-  #refreshModal:focus {
-    background-color: white;
-    color: black;
-    transform: scale(1.2);
-    box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
-    outline: none;
-  }
-}
-
-.tapped {
-  background-color: rgba(255,255,255,0.7) !important;
-  color: black !important;
-  transform: scale(1.2) !important;
-  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
-  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
-}
-
-:focus-visible {
-  outline: 0.18rem solid rgba(255,255,255,0.6);
-  outline-offset: 0.15rem;
-}
-
-@media (max-width: 480px) {
-  #closeModal, #refreshModal {
-    width: 5.6rem;
-    height: 5.6rem;
-    font-size: 2.8rem;
-    border-radius: 0.6rem;
-    border: 0.14rem solid white;
-  }
-  #refreshModal { top: 12vh; }
-}
-
+/* --- Modal & Back to Top --- */
 #backToTop {
   display: none;
   position: fixed;
@@ -357,6 +170,161 @@ h2 {
   width: 70%;
   height: 70%;
 }
+
+  /* =========================
+   DESKTOP STYLES
+========================= */
+@media (min-width: 769px) {
+
+  /* Footer Box */
+  .footer-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* vertical centering */
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    color: #333;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 3rem auto;
+    flex-wrap: wrap;
+  }
+
+  .footer-box .footer-image img {
+    width: auto;
+    height: 40vh;
+    max-height: 50vh;
+    display: block;
+    border-radius: 0.5rem;
+  }
+
+  .footer-box .footer-text {
+    flex: 2 1 400px;
+    max-width: 60%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical center each column */
+  }
+
+  .footer-box .footer-buttons {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    height: 100%;
+  }
+
+  .buy-button-desktop {
+    width: clamp(14rem, 50vw, 18rem);
+    font-size: clamp(1.6rem, 2.5vh, 1.8rem);
+    padding: clamp(0.9em, 2vw, 1.1em) clamp(1em, 3vw, 1.4em);
+  }
+
+}
+
+  /* =========================
+   MOBILE STYLES
+========================= */
+@media (max-width: 768px) {
+
+  /* Title Image */
+  .title-image {
+    max-width: 95%;
+    height: auto;
+  }
+
+  /* Footer visibility */
+  .footer-desktop { display: none; }
+  .footer-mobile { display: block; }
+
+  /* Footer Box Mobile */
+  .footer-box-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    color: #333;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 3rem auto;
+  }
+
+  .footer-box-mobile .footer-image img {
+    max-width: 95%;
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-box-mobile .footer-text {
+    max-width: 100%;
+    text-align: justify;
+    font-size: 0.8rem;
+  }
+
+  .footer-box-mobile .footer-buttons {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    height: auto;
+  }
+
+  .footer-buttons-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    width: 100%;
+  }
+
+  .footer-buttons-mobile .buy-button-mobile {
+    display: inline-block;
+    border-radius: 0.5em;
+    text-align: center;
+    font-weight: bold;
+    width: 12rem;
+    font-size: 1.2rem;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .footer-buttons-mobile .buy-button-mobile.print {
+    background-color: #2d6a4f;
+    border: 0.15em solid #1b4332;
+  }
+
+  .footer-buttons-mobile .buy-button-mobile.epub {
+    background-color: #1d3557;
+    border: 0.15em solid #0b1e33;
+  }
+
+  .footer-buttons-mobile .buy-button-mobile:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+  }
+
+}
+
+  
 </style>
   
   </head>
