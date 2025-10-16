@@ -114,22 +114,11 @@ h2 {
   .footer-mobile { display: block; }
 }
 
-/* --- Footer Container --- */
-.footer-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  max-width: 90%;
-  margin: 3rem auto;
-  flex-wrap: wrap;
-}
-
 /* --- Footer Box --- */
 .footer-box {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 2rem;
   padding: 2rem;
   background-color: #fff;
@@ -139,7 +128,9 @@ h2 {
   color: #333;
   font-size: 1.3rem;
   line-height: 1.5;
-  flex: 1 1 0;
+  max-width: 90%;
+  margin: 3rem auto;
+  flex-wrap: wrap;
 }
 
 /* --- Footer Image --- */
@@ -168,7 +159,7 @@ h2 {
   gap: 3rem;
 }
 
-/* --- Individual Buttons --- */
+/* --- Buttons --- */
 .buy-button {
   display: inline-block;
   border-radius: 0.5em;
@@ -200,17 +191,16 @@ h2 {
 
 /* --- Mobile Adjustments --- */
 @media (max-width: 768px) {
-  /* Stack everything vertically */
-  .footer-container {
-    flex-direction: column;
+  .footer-box {
+    flex-direction: column;      /* stack image, text, buttons vertically */
     align-items: center;
   }
 
-  .footer-box {
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    gap: 2rem;
+  .footer-image img {
+    width: 50vw;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 1.5rem;
   }
 
   .footer-text {
@@ -219,23 +209,17 @@ h2 {
   }
 
   .footer-buttons {
+    width: 100%;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 1.5rem;
-    width: 100%;
+    margin-top: 1.5rem; /* ensure spacing below text */
   }
 
   .buy-print,
   .buy-epub {
     width: 80%;
     align-items: center;
-  }
-
-  .footer-image img {
-    width: 50vw;
-    max-width: 300px;
-    height: auto;
   }
 }
 
@@ -336,7 +320,7 @@ h2 {
     <div class="footer-box">
       <!-- Text column -->
       <div class="footer-text">
-        <p>Hello, all! Changing up the site, and I'm no coder. Bear with me.</p>
+        <p>Hello, all! Changing up the site, and I'm no coder. Gimme a bit.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
