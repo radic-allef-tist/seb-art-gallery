@@ -256,42 +256,43 @@ h2 {
   }
 
 
-  /* =========================
+ /* =========================
    BUTTONS - MOBILE
 ========================= */
-@media (max-width: 768px) {
-  .buy-button-mobile {
-    display: inline-block;
-    border-radius: 0.5em;
-    text-align: center;
-    font-weight: bold;
-    width: 40%;             /* smaller buttons on mobile */
-    font-size: 1.4rem;      /* smaller text */
-    padding: 0.6em 1em;     /* smaller padding */
-    text-decoration: none;
-    color: white;
-    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-  }
-
-  .buy-button-mobile.print {
-    background-color: #2d6a4f;
-    border: 0.15em solid #1b4332;
-  }
-
-  .buy-button-mobile.epub {
-    background-color: #1d3557;
-    border: 0.15em solid #0b1e33;
-  }
-
-  .buy-button-mobile:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-  }
+.footer-buttons-mobile .buy-button-mobile {
+  display: inline-block;
+  border-radius: 0.5em;
+  text-align: center;
+  font-weight: bold;
+  width: 50%;           /* slightly bigger, more readable */
+  font-size: 1.4rem;    /* smaller than desktop */
+  padding: 0.6em 1em;   /* smaller padding */
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  text-align: center;
+  margin: 0 auto;       /* centers buttons inside the mobile footer */
 }
+
+.footer-buttons-mobile .buy-button-mobile.print {
+  background-color: #2d6a4f;
+  border: 0.15em solid #1b4332;
+}
+
+.footer-buttons-mobile .buy-button-mobile.epub {
+  background-color: #1d3557;
+  border: 0.15em solid #0b1e33;
+}
+
+.footer-buttons-mobile .buy-button-mobile:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+}
+
   
 }
-
+  
 
 /* =========================
    MODALS & BACK TO TOP
