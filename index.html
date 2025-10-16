@@ -250,13 +250,13 @@ h2 {
   }
 
   /* =========================
-   BUTTONS - MOBILE (fixed equal widths)
+   BUTTONS - MOBILE
 ========================= */
 .footer-buttons-mobile {
   display: flex;
   justify-content: center;  /* center buttons horizontally */
   gap: 1rem;                /* spacing between buttons */
-  flex-wrap: wrap;           /* allow wrapping if screen too small */
+  flex-wrap: wrap;          /* allow wrapping if screen too small */
 }
 
 .footer-buttons-mobile .buy-button-mobile {
@@ -264,16 +264,16 @@ h2 {
   border-radius: 0.5em;
   text-align: center;
   font-weight: bold;
-  width: 12rem;             /* fixed width for all buttons */
-  min-width: 10rem;         /* prevent too small on tiny screens */
-  max-width: 45%;            /* keep responsive max */
-  font-size: 1.4rem;        /* fixed font size for readability */
-  white-space: nowrap;       /* prevent text from wrapping */
-  padding: 0.6em 1em;       /* uniform padding */
+  width: clamp(10rem, 40%, 14rem); /* flexible width, equal for all buttons */
+  font-size: clamp(1.2rem, 2vw, 1.4rem); /* text scales for screen */
+  padding: 0.6em 1em;
   text-decoration: none;
   color: white;
   box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
   transition: transform 0.1s ease, box-shadow 0.1s ease;
+  white-space: nowrap;        /* prevent wrapping */
+  overflow: hidden;           /* prevent overflow */
+  text-overflow: ellipsis;    /* optional ellipsis if text still overflows */
 }
 
 .footer-buttons-mobile .buy-button-mobile.print {
@@ -434,7 +434,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Still tweaking things with the site.</p>
+        <p>Hello, all! Still fixing things with the site.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
