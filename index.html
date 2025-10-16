@@ -6,6 +6,7 @@
 
  
 <style>
+/* --- Global Styles --- */
 body { 
   font-family: serif; 
   background: #ffffff; 
@@ -14,7 +15,7 @@ body {
   text-align: center; 
 }
 
-/* --- Title --- */
+/* --- Titles --- */
 .title-container {
   display: flex;
   justify-content: center;
@@ -31,7 +32,6 @@ body {
   display: block;
 }
 
-/* --- Headings --- */
 h1 {
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: bold;
@@ -105,28 +105,28 @@ h2 {
   transform-origin: center;
 }
 
+/* --- Footer Visibility --- */
+.footer-desktop { display: block; }
+.footer-mobile { display: none; }
+
+@media (max-width: 768px) {
+  .footer-desktop { display: none; }
+  .footer-mobile { display: block; }
+}
+
 /* --- Footer Container --- */
 .footer-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 2rem;
   max-width: 90%;
   margin: 3rem auto;
+  flex-wrap: wrap;
 }
 
-/* Footer image scaling relative units */
-.footer-image img {
-  width: auto;
-  height: 40vh;
-  max-height: 50vh;
-  display: block;
-  border-radius: 0.5rem;
-}
-
-/* Footer box */
+/* --- Footer Box --- */
 .footer-box {
-  flex: 1 1 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -139,16 +139,26 @@ h2 {
   color: #333;
   font-size: 1.3rem;
   line-height: 1.5;
+  flex: 1 1 0;
 }
 
-/* Text column */
+/* --- Footer Image --- */
+.footer-image img {
+  width: auto;
+  height: 40vh;
+  max-height: 50vh;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+/* --- Footer Text --- */
 .footer-text {
   flex: 2 1 400px;
   max-width: 60%;
   text-align: left;
 }
 
-/* Buttons column */
+/* --- Footer Buttons --- */
 .footer-buttons {
   flex: 1 1 200px;
   display: flex;
@@ -158,14 +168,7 @@ h2 {
   gap: 3rem;
 }
 
-.buy-print,
-.buy-epub {
-  margin: 0;
-  max-width: none;
-  align-items: center;
-}
-
-/* Individual buttons */
+/* --- Individual Buttons --- */
 .buy-button {
   display: inline-block;
   border-radius: 0.5em;
@@ -195,24 +198,18 @@ h2 {
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* --- Mobile Styling --- */
+/* --- Mobile Adjustments --- */
 @media (max-width: 768px) {
+  /* Stack everything vertically */
   .footer-container {
-    flex-direction: column;      /* stack image, box, buttons */
+    flex-direction: column;
     align-items: center;
-    gap: 2rem;
-  }
-
-  .footer-image img {
-    width: 50vw;
-    max-width: 300px;
-    height: auto;
   }
 
   .footer-box {
-    width: 90%;
     flex-direction: column;
     align-items: center;
+    width: 90%;
     gap: 2rem;
   }
 
@@ -222,17 +219,23 @@ h2 {
   }
 
   .footer-buttons {
-    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
+    width: 100%;
   }
 
   .buy-print,
   .buy-epub {
     width: 80%;
     align-items: center;
+  }
+
+  .footer-image img {
+    width: 50vw;
+    max-width: 300px;
+    height: auto;
   }
 }
 
@@ -321,37 +324,72 @@ h2 {
 </h1>
 
 
-  <!-- Desktop Footer -->
-<div class="footer-container desktop-footer">
-
-  <!-- Left image -->
-  <div class="footer-image">
-    <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
-  </div>
-
-  <!-- Footer box -->
-  <div class="footer-box">
-
-    <!-- Text column -->
-    <div class="footer-text">
-      <p>Hello, all! Making changes to the site, sorry.</p>
-      <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
-      <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
-      <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
-      <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
-      <p>
-        Contact me: 
-        <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
-          @radic-allef-tist.bsky.social
-        </a> 
-        and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
-      </p>
-      <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
-      <p>Thanks again to everyone for the support. Stay strong out there.</p>
-      <p>-Radic</p>
+<!-- Desktop Footer -->
+<div class="footer-desktop">
+  <div class="footer-container">
+    <!-- Left image -->
+    <div class="footer-image">
+      <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
     </div>
 
-    <!-- Buttons column -->
+    <!-- Footer box -->
+    <div class="footer-box">
+      <!-- Text column -->
+      <div class="footer-text">
+        <p>Hello, all! Making changes to the site, sorry.</p>
+        <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
+        <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
+        <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
+        <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p>
+        <p>Contact me: 
+          <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">@radic-allef-tist.bsky.social</a> 
+          and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
+        </p>
+        <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
+        <p>Thanks again to everyone for the support. Stay strong out there.</p>
+        <p>-Radic</p>
+      </div>
+
+      <!-- Buttons column -->
+      <div class="footer-buttons">
+        <div class="buy-print">
+          <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
+        </div>
+        <div class="buy-epub">
+          <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Footer -->
+<div class="footer-mobile">
+  <div class="footer-container">
+    <!-- Top image -->
+    <div class="footer-image">
+      <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
+    </div>
+
+    <!-- Footer text box -->
+    <div class="footer-box">
+      <div class="footer-text">
+        <p>Hello, all! Still testing things out with the site.</p>
+        <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
+        <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
+        <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
+        <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p>
+        <p>Contact me: 
+          <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">@radic-allef-tist.bsky.social</a> 
+          and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
+        </p>
+        <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
+        <p>Thanks again to everyone for the support. Stay strong out there.</p>
+        <p>-Radic</p>
+      </div>
+    </div>
+
+    <!-- Buy buttons below -->
     <div class="footer-buttons">
       <div class="buy-print">
         <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
@@ -360,50 +398,7 @@ h2 {
         <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
       </div>
     </div>
-
   </div>
-
-</div>
-
-<!-- Mobile Footer -->
-<div class="mobile-footer">
-
-  <!-- Top image -->
-  <div class="footer-image">
-    <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
-  </div>
-
-  <!-- Footer text box -->
-  <div class="footer-box">
-    <div class="footer-text">
-      <p>Hello, all! Still testing things out with the site.</p>
-      <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
-      <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
-      <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
-      <p>Anyway, I'd appreciate it if you didn't, like... steal it all to sell on an Etsy shop or whatever without telling me. Hook me up!</p> 
-      <p>
-        Contact me: 
-        <a href="https://bsky.app/profile/radic-allef-tist.bsky.social" target="_blank" rel="noopener noreferrer">
-          @radic-allef-tist.bsky.social
-        </a> 
-        and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
-      </p>
-      <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
-      <p>Thanks again to everyone for the support. Stay strong out there.</p>
-      <p>-Radic</p>
-    </div>
-  </div>
-
-  <!-- Buy buttons below -->
-  <div class="footer-buttons">
-    <div class="buy-print">
-      <a href="https://a.co/d/5li0CfB" class="buy-button print">Buy Print Edition</a>
-    </div>
-    <div class="buy-epub">
-      <a href="https://books2read.com/u/m0PGLl" class="buy-button epub">Buy eBook</a>
-    </div>
-  </div>
-
 </div>
 
 
