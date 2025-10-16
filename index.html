@@ -293,9 +293,35 @@ h2 {
 /* =========================
    MODALS & BACK TO TOP
 ========================= */
-#closeModal { top: 2vh; }
-#refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
+  #closeModal, #refreshModal {
+  position: absolute;
+  right: 2vw;
+  z-index: 1100;
+  
+  width: 5rem;   /* bigger box */
+  height: 5rem;
+  font-size: 4rem; /* bigger icon */
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  background: rgba(0,0,0,0.6);
+  border: 0.15rem solid white; /* slightly thicker border for larger box */
+  color: white;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  text-shadow: 0 0 0.3rem rgba(0,0,0,0.7);
+  box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease,
+              color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#closeModal { top: 2vh; }
+#refreshModal { top: calc(2vh + 5rem + 2vh);  padding-top: 0;  padding-bottom: 0.2rem; }  /* top of Close + its height + margin *//* adjust spacing as needed */
+
+
+/* Desktop hover effect */
 @media (hover: hover) and (pointer: fine) {
   #closeModal:hover,
   #closeModal:focus,
@@ -309,6 +335,8 @@ h2 {
   }
 }
 
+    
+/* Mobile flash effect */
 .tapped {
   background-color: rgba(255,255,255,0.7) !important;
   color: black !important;
@@ -317,12 +345,14 @@ h2 {
   transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
+/* Accessibility: show focus ring for keyboard users */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
   outline-offset: 0.15rem;
 }
 
-@media (max-width: 768px) {
+/* Slightly larger on very small screens for easier tapping */
+@media (max-width: 480px) {
   #closeModal, #refreshModal {
     width: 5.6rem;
     height: 5.6rem;
@@ -330,17 +360,16 @@ h2 {
     border-radius: 0.6rem;
     border: 0.14rem solid white;
   }
-  #refreshModal { top: 12vh; }
+  #refreshModal { top: 12vh; } /* bump refresh a bit on small screens */
 }
-
 #backToTop {
   display: none;
   position: fixed;
   bottom: 2vh;
   right: 4vw;
   z-index: 99;
-  width: clamp(4rem, 10vw, 5rem);
-  height: clamp(4rem, 10vw, 5rem);
+  width: clamp(4rem, 10vw, 5rem);   /* bigger minimum on mobile */
+  height: clamp(4rem, 10vw, 5rem);  /* keep circle proportional */
   background-color: white;
   color: #333;
   border: 2px solid #333;
@@ -350,7 +379,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s ease, opacity 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease; /* faster */
 }
 
 #backToTop:hover,
@@ -361,7 +390,7 @@ h2 {
 }
 
 #backToTop svg {
-  width: 70%;
+  width: 70%;  /* arrow fills ~70% of circle */
   height: 70%;
 }
 </style>
