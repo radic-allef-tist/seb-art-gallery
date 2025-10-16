@@ -7,7 +7,9 @@
 
  
 <style>
-/* --- Global Styles --- */
+/* =========================
+   GLOBAL STYLES
+========================= */
 body { 
   font-family: serif; 
   background: #ffffff; 
@@ -26,7 +28,7 @@ body {
 }
 
 .title-image {
-  max-width: 60%;
+  max-width: 70%; /* desktop: slightly bigger */
   height: auto;
   object-fit: contain;
   display: block;
@@ -105,62 +107,127 @@ h2 {
   transform-origin: center;
 }
 
-/* --- Footer Visibility --- */
+/* =========================
+   FOOTER VISIBILITY
+========================= */
 .footer-desktop { display: block; }
 .footer-mobile { display: none; }
 
+/* =========================
+   DESKTOP (PC) STYLES
+========================= */
+@media (min-width: 769px) {
+
+  /* Footer Box */
+  .footer-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    color: #333;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 3rem auto;
+    flex-wrap: wrap;
+  }
+
+  .footer-box .footer-image img {
+    width: auto;
+    height: 45vh;   /* slightly taller */
+    max-height: 55vh;
+    display: block;
+    border-radius: 0.5rem;
+  }
+
+  .footer-box .footer-text {
+    flex: 2 1 400px;
+    max-width: 60%;
+    text-align: left;
+  }
+
+  .footer-box .footer-buttons {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    gap: 4rem;
+    height: 100%;
+  }
+}
+
+/* =========================
+   MOBILE STYLES
+========================= */
 @media (max-width: 768px) {
+
+  /* Title Image */
+  .title-image {
+    width: 60vw;       /* slightly bigger */
+    max-width: 350px;
+  }
+
+  /* Footer Visibility */
   .footer-desktop { display: none; }
   .footer-mobile { display: block; }
+
+  /* Footer Box */
+  .footer-box-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    color: #333;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 3rem auto;
+  }
+
+  .footer-box-mobile .footer-image img {
+    width: 55vw;   /* slightly bigger */
+    max-width: 320px;
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-box-mobile .footer-text {
+    max-width: 100%;
+    text-align: center;
+    font-size: 1rem;  /* smaller text on mobile */
+  }
+
+  .footer-box-mobile .footer-buttons {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;       /* more spacing */
+    margin-top: 1.5rem;
+    height: auto;
+  }
+
+  .footer-box-mobile .buy-print,
+  .footer-box-mobile .buy-epub {
+    width: 70%;       /* smaller buttons */
+    align-items: center;
+  }
 }
 
-/* --- Desktop Footer Box --- */
-.footer-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;       /* vertical centering on desktop */
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #fff;
-  border: 2px solid #ccc;
-  border-radius: 1rem;
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-  color: #333;
-  font-size: 1.3rem;
-  line-height: 1.5;
-  max-width: 90%;
-  margin: 3rem auto;
-  flex-wrap: wrap;
-}
-
-/* --- Desktop Footer Image --- */
-.footer-box .footer-image img {
-  width: auto;
-  height: 40vh;
-  max-height: 50vh;
-  display: block;
-  border-radius: 0.5rem;
-}
-
-/* --- Desktop Footer Text --- */
-.footer-box .footer-text {
-  flex: 2 1 400px;
-  max-width: 60%;
-  text-align: left;
-}
-
-/* --- Desktop Footer Buttons --- */
-.footer-box .footer-buttons {
-  flex: 1 1 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;   /* vertical centering */
-  align-items: center;       /* horizontal centering */
-  gap: 4rem;                 /* spacing between buttons */
-  height: 100%;              /* fill height of footer-box */
-}
-
-/* --- Buttons --- */
+/* =========================
+   BUTTONS (GENERAL)
+========================= */
 .buy-button {
   display: inline-block;
   border-radius: 0.5em;
@@ -190,56 +257,9 @@ h2 {
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* --- Mobile Footer Box --- */
-.footer-box-mobile {
-  display: flex;
-  flex-direction: column;      /* stack image, text, buttons vertically */
-  align-items: center;         /* center horizontally */
-  justify-content: flex-start; /* top align everything */
-  gap: 1.5rem;
-  padding: 2rem;
-  background-color: #fff;
-  border: 2px solid #ccc;
-  border-radius: 1rem;
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-  color: #333;
-  font-size: 1.3rem;
-  line-height: 1.5;
-  max-width: 90%;
-  margin: 3rem auto;
-}
-
-/* --- Mobile Footer Image --- */
-.footer-box-mobile .footer-image img {
-  width: 50vw;
-  max-width: 300px;
-  height: auto;
-  margin-bottom: 1.5rem;
-}
-
-/* --- Mobile Footer Text --- */
-.footer-box-mobile .footer-text {
-  max-width: 100%;
-  text-align: center;
-}
-
-/* --- Mobile Footer Buttons --- */
-.footer-box-mobile .footer-buttons {
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 1.5rem;   /* spacing below text */
-  height: auto;
-}
-
-.footer-box-mobile .buy-print,
-.footer-box-mobile .buy-epub {
-  width: 80%;
-  align-items: center;
-}
-
-/* --- Modals & Back to Top --- */
+/* =========================
+   MODALS & BACK TO TOP
+========================= */
 #closeModal { top: 2vh; }
 #refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
 
