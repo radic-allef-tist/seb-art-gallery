@@ -355,6 +355,7 @@ h2 {
     font-size: 1.2rem; /* smaller on mobile */
   }
 
+  
 }
 
   /* =========================
@@ -386,6 +387,20 @@ h2 {
 
 #closeModal { top: 2vh; }
 #refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
+
+  /* --- Modal Buttons Mobile Fix --- */
+@media (max-width: 768px) {
+  #closeModal, #refreshModal {
+    width: 3.6rem;        /* smaller for mobile */
+    height: 3.6rem;
+    font-size: 2rem;      /* smaller icon */
+    border-radius: 0.4rem;
+    border: 0.12rem solid white;
+  }
+
+  #closeModal { top: 2vh; }
+  #refreshModal { top: calc(2vh + 3.6rem + 1.5vh); } /* spacing below Close */
+}
 
 /* Desktop hover effect */
 @media (hover: hover) and (pointer: fine) {
