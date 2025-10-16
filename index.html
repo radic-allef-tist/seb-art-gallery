@@ -293,46 +293,91 @@ h2 {
 /* =========================
    MODALS & BACK TO TOP
 ========================= */
-#closeModal { top: 2vh; }
-#refreshModal { top: calc(2vh + 5rem + 2vh); padding-top: 0; padding-bottom: 0.2rem; }
 
+/* Base styles for both modals */
+#closeModal,
+#refreshModal {
+  position: fixed;
+  width: 5rem;
+  height: 5rem;
+  font-size: 2.5rem;
+  border-radius: 0.5rem;
+  border: 0.14rem solid white;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Positions */
+#closeModal {
+  top: 2vh;
+  right: 2vw;
+}
+
+#refreshModal {
+  top: calc(2vh + 5rem + 1.5vh); /* below closeModal */
+  right: 2vw;
+}
+
+/* Hover/focus for devices that support it */
 @media (hover: hover) and (pointer: fine) {
   #closeModal:hover,
   #closeModal:focus,
   #refreshModal:hover,
   #refreshModal:focus {
-    background-color: white;
-    color: black;
     transform: scale(1.2);
+    background-color: #fff;
+    color: black;
     box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
     outline: none;
   }
 }
 
+/* Tapped/active state for touch */
 .tapped {
+  transform: scale(1.2) !important;
   background-color: rgba(255,255,255,0.7) !important;
   color: black !important;
-  transform: scale(1.2) !important;
   box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
   transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
+/* Accessibility focus outline */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
   outline-offset: 0.15rem;
 }
 
+/* Mobile adjustments */
 @media (max-width: 768px) {
-  #closeModal, #refreshModal {
+  #closeModal,
+  #refreshModal {
     width: 5.6rem;
     height: 5.6rem;
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     border-radius: 0.6rem;
-    border: 0.14rem solid white;
   }
-  #refreshModal { top: 12vh; }
+
+  #closeModal {
+    top: 2vh;
+    right: 4vw;
+  }
+
+  #refreshModal {
+    top: 10vh; /* slightly lower on mobile for spacing */
+    right: 4vw;
+  }
 }
 
+/* =========================
+   Back to Top Button
+========================= */
 #backToTop {
   display: none;
   position: fixed;
@@ -388,7 +433,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Still fixing the site, sorry.</p>
+      <p>Hello, all! Fixing the site at the moment, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -432,7 +477,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Still fixing things with the site.</p>
+        <p>Hello, all! Changing the site up, sorry.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
