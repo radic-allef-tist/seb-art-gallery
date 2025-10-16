@@ -136,7 +136,7 @@ h2 {
   flex-direction: column;
   justify-content: center;  /* vertically center buttons */
   align-items: center;      /* horizontally center buttons */
-  gap: 1.5rem;
+  gap: 2.5rem;              /* increased gap between buttons */
 }
 
 /* Override button container margins */
@@ -151,7 +151,7 @@ h2 {
 .buy-epub {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.5rem;           /* internal spacing for multiple buttons if needed */
 }
 
 .buy-button {
@@ -191,18 +191,20 @@ h2 {
   }
 
   .footer-text {
-    max-width: 90%;      /* allow text to take full width on mobile */
-    text-align: center;
+    max-width: 100%;      /* fill width on mobile */
+    text-align: center;   /* center text on mobile */
   }
 
   .footer-buttons {
     align-items: center;
     justify-content: center;
+    gap: 2.5rem;          /* keep spacing consistent on mobile */
   }
 
   .buy-print,
   .buy-epub {
     align-items: center;
+    gap: 1.5rem;
   }
 }
 
