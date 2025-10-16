@@ -106,16 +106,29 @@ h2 {
 }
 
 /* --- Footer --- */
-.footer-content {
+.footer-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;    /* vertical centering of all three columns */
-  flex-wrap: wrap;
+  align-items: flex-start;  /* top-align image & footer box */
   gap: 2rem;
   max-width: 90%;
-  margin: 3rem auto 2rem auto;
+  margin: 3rem auto;
+  flex-wrap: wrap;          /* for mobile stacking */
+}
+
+.footer-image img {
+  max-width: 250px;        /* make image larger now */
+  height: auto;
+  display: block;
+}
+
+.footer-box {
+  flex: 1 1 500px;          /* grow to fill remaining space */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
   padding: 2rem;
-  background-color: #fff; 
+  background-color: #fff;
   border: 2px solid #ccc;
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
@@ -124,82 +137,46 @@ h2 {
   line-height: 1.5;
 }
 
-/* Left image column */
-.footer-image {
-  flex: 0 0 auto;          /* only as wide as the image */
-  display: flex;
-  align-items: center;     /* vertically center image */
-}
-
-.footer-image img {
-  max-width: 100px;        /* adjust as needed */
-  height: auto;
-  display: block;
-}
-
-/* Middle text column */
+/* Text column inside footer box */
 .footer-text {
-  flex: 1 1 400px;          /* grows, shrinks, base width */
+  flex: 2 1 400px;
   text-align: left;
-  max-width: 500px;         /* constrain text width */
+  max-width: 60%;
 }
 
-/* Right buttons column */
+/* Buttons column inside footer box */
 .footer-buttons {
-  flex: 0 0 auto;           /* size based on content */
+  flex: 1 1 200px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;  /* vertical center */
-  gap: 2rem;                /* space between print & epub buttons */
+  justify-content: center; /* vertical centering */
+  align-items: center;     /* horizontal centering */
+  gap: 2rem;               /* more space between buttons */
 }
 
-/* Buttons themselves */
-.buy-print,
-.buy-epub {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.buy-button {
-  display: inline-block;  
-  border-radius: 0.5em;
-  text-align: center;
-  font-weight: bold;
-  width: clamp(14rem, 50vw, 18rem);
-  font-size: clamp(1.6rem, 2.5vh, 1.8rem);
-  padding: clamp(0.9em, 2vw, 1.1em) clamp(1em, 3vw, 1.4em);
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.buy-button.print { background-color: #2d6a4f; border: 0.15em solid #1b4332; }
-.buy-button.epub { background-color: #1d3557; border: 0.15em solid #0b1e33; }
-
-.buy-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-}
-
-/* --- Mobile --- */
+/* Mobile stacking */
 @media (max-width: 768px) {
-  .footer-content {
+  .footer-wrapper {
     flex-direction: column;
     align-items: center;
+  }
+
+  .footer-box {
+    flex-direction: column;
+    width: 100%;
     text-align: center;
   }
 
-  .footer-image, .footer-text, .footer-buttons {
-    flex: none;
-    width: 100%;
+  .footer-text {
+    max-width: 100%;
+    margin-bottom: 1rem;
   }
 
-  .footer-text { max-width: 100%; margin: 1rem 0; }
-  .footer-buttons { gap: 1.5rem; }
+  .footer-buttons {
+    width: 100%;
+    align-items: center;
+    gap: 1.5rem;
+  }
 }
     
     
@@ -316,12 +293,11 @@ h2 {
     class="title-image">
 </h1>
 
- <div class="footer">
-  <div class="footer-content">
-    
-    <div class="footer-image">
+ <div class="footer-wrapper">
+
+   <div class="footer-image">
     <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
-  </div>
+  </div>     
     
     <div class="footer-text">
       <p>Hey all, if you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
