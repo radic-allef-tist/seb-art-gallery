@@ -8,6 +8,26 @@
   <style>
     body { font-family: serif; background: #f9f9f9; margin: 0; padding: 20px; text-align: center; }
     
+  
+    
+  .title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 2rem 0 1rem 0;
+}
+
+.title-image {
+  max-width: 90%;
+  height: auto;
+  width: 600px; /* nice limit on desktop */
+  object-fit: contain;
+  display: block;
+}   
+    
+    
+  
    h1 {
   font-size: clamp(2rem, 5vw, 4rem);
   font-family: serif;
@@ -265,8 +285,12 @@
   </head>
   
 <body>
-  <h1>Stupid, Evil, or Both</h1>
-  <h2>A Collection of <span class="angled-strike">Rants</span> Art</h2>
+  <h1 class="title-container">
+  <img 
+    src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Title.webp"
+    alt="Stupid, Evil, or Both: A Collection of Rants"
+    class="title-image">
+</h1>
 
   
 <div class="gallery">
