@@ -105,24 +105,25 @@ h2 {
   transform-origin: center;
 }
 
-/* --- Footer --- */
+/* Outer wrapper: image + footer box */
 .footer-wrapper {
   display: flex;
-  align-items: center;   /* vertically center image with footer box */
+  align-items: flex-start;   /* align top of image with top of footer box */
   gap: 2rem;
   max-width: 90%;
   margin: 3rem auto;
-  flex-wrap: wrap;       /* allow stacking on mobile */
+  flex-wrap: wrap;           /* allow stacking on mobile */
 }
 
+/* Footer image */
 .footer-image img {
-  max-width: 200px;      /* control image size */
+  max-width: 180px;   /* adjust to taste */
   height: auto;
   display: block;
 }
   
 .footer-box {
-  flex: 1 1 500px;          /* grow to fill remaining space */
+  flex: 1 1 0;          /* grow to fill remaining space */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -163,6 +164,11 @@ h2 {
 
   .footer-box {
     width: 100%;
+  }
+
+  .footer-text {
+    text-align: center; /* text fills box */
+    max-width: 100%;
   }
 }
     
