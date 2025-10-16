@@ -172,6 +172,28 @@ h2 {
   height: 70%;
 }
 
+
+/* Header beneath footer box / above gallery */
+.art-header {
+  text-align: center;
+  font-family: serif;
+  font-weight: bold;
+  font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+  text-decoration: underline;
+  margin: 3rem 0 2rem 0; /* spacing above and below */
+  color: #333;
+}
+
+/* Bottom page header */
+.thanks-header {
+  text-align: center;
+  font-family: serif;
+  font-weight: bold;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  margin: 4rem 0 2rem 0; /* more space from last gallery item */
+  color: #333;
+}
+
   /* =========================
    DESKTOP STYLES
 ========================= */
@@ -467,7 +489,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Still tweaking the site, sorry.</p>
+      <p>Hello, all! Still changing the site, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -511,7 +533,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Still changing things with the site.</p>
+        <p>Hello, all! Still fixing things with the site.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -541,6 +563,7 @@ h2 {
   </div> <!-- end footer-container -->
 </div> <!-- end footer-mobile -->
 
+<h2 class="art-header">Art from the book</h2>
 
   
   
@@ -658,7 +681,7 @@ h2 {
 
 </div>
 
-  
+  <h2 class="thanks-header">Thanks for scrolling!</h2>
 
 
     <!-- Modal -->
