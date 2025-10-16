@@ -223,6 +223,34 @@ h2 {
     height: 100%;
   }
 
+  /* Desktop Buy Buttons */
+  .buy-button-desktop {
+    display: inline-block;
+    border-radius: 0.5em;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .buy-button-desktop.print {
+    background-color: #2d6a4f;       /* green */
+    border: 0.15em solid #1b4332;    /* darker green border */
+  }
+
+  .buy-button-desktop.epub {
+    background-color: #1d3557;       /* blue */
+    border: 0.15em solid #0b1e33;    /* darker blue border */
+  }
+
+  .buy-button-desktop:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+  }
+
+  /* Adjust size */
   .buy-button-desktop {
     width: clamp(14rem, 50vw, 18rem);
     font-size: clamp(1.6rem, 2.5vh, 1.8rem);
