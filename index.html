@@ -18,7 +18,7 @@ body {
   text-align: center; 
 }
 
-/* ✅ NEW — stabilizes fixed buttons on mobile zoom */
+/* stabilizes fixed buttons on mobile zoom */
 html, body {
   overscroll-behavior: none;
   touch-action: manipulation;
@@ -75,7 +75,7 @@ h2 {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* ✅ NEW — ensures modal images never block modal buttons */
+/* ensures modal images never block modal buttons */
 #imageModal img {
   z-index: 1;
   position: relative;
@@ -304,27 +304,29 @@ h2 {
 /* =========================
    MODALS & BACK TO TOP
 ========================= */
+
+/* Base styles for both modals */
 #closeModal,
 #refreshModal {
-  position: fixed;
+  position: absolute; /* anchor to modal, not window */
   width: 5rem;
   height: 5rem;
   font-size: 2.5rem;
-  border-radius: 0.6rem;
+  border-radius: 0.5rem;
   border: 0.14rem solid white;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0,0,0,0.6); /* translucent dark box */
   color: white;
   cursor: pointer;
-  z-index: 10000;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px);
-  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-  pointer-events: auto;
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background-color 0.15s ease,
+              color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Positions inside modal */
 #closeModal {
   top: 2vh;
   right: 2vw;
@@ -335,85 +337,92 @@ h2 {
   right: 2vw;
 }
 
+/* Hover/focus for mouse devices */
 @media (hover: hover) and (pointer: fine) {
   #closeModal:hover,
-  #refreshModal:hover,
   #closeModal:focus,
+  #refreshModal:hover,
   #refreshModal:focus {
-    transform: scale(1.1);
+    transform: scale(1.2);
     background-color: white;
     color: black;
-    box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.6);
     outline: none;
   }
 }
 
+/* Touch feedback */
 .tapped {
-  transform: scale(1.1) !important;
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.2) !important;
+  background-color: rgba(255,255,255,0.7) !important;
   color: black !important;
-  box-shadow: 0 0.4rem 0.7rem rgba(0,0,0,0.6) !important;
-  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
+  box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5) !important;
 }
 
+/* Accessibility outline */
 :focus-visible {
   outline: 0.18rem solid rgba(255,255,255,0.6);
   outline-offset: 0.15rem;
 }
 
-/* MOBILE MODAL ADJUSTMENTS */
+/* Mobile tweaks */
 @media (max-width: 768px) {
   #closeModal,
   #refreshModal {
-    width: 4.6rem;
-    height: 4.6rem;
-    font-size: 2rem;
+    width: 5.6rem;
+    height: 5.6rem;
+    font-size: 2.2rem;
     border-radius: 0.6rem;
-    right: 3vw;
   }
 
   #closeModal {
-    top: 2.5vh;
+    top: 2vh;
+    right: 4vw;
   }
 
   #refreshModal {
-    top: calc(2.5vh + 4.6rem + 1.5vh);
+    top: 10vh;
+    right: 4vw;
   }
 }
 
 /* =========================
-   BACK TO TOP BUTTON
+   BACK TO TOP
 ========================= */
 #backToTop {
   display: none;
   position: fixed;
   bottom: 2vh;
   right: 4vw;
-  z-index: 9000;
+  z-index: 99;
   width: clamp(4rem, 10vw, 5rem);
   height: clamp(4rem, 10vw, 5rem);
-  background-color: rgba(0,0,0,0.6);
-  color: white;
-  border: 2px solid white;
+  background-color: white;   /* reverted style */
+  color: black;
+  border: 2px solid black;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 0.3vw 0.8vw rgba(0,0,0,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s ease, opacity 0.1s ease, background-color 0.15s ease, color 0.15s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease;
 }
 
 #backToTop:hover,
 #backToTop.pressed {
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: white;
   transform: scale(1.1);
 }
 
 #backToTop svg {
   width: 70%;
   height: 70%;
+}
+
+/* Hide Back-to-Top whenever modal is open */
+.modal-open #backToTop {
+  display: none !important;
 }
 </style>
 
@@ -440,7 +449,7 @@ h2 {
 
     <!-- Text column -->
     <div class="footer-text">
-      <p>Hello, all! Editing the site at the moment, sorry.</p>
+      <p>Hello, all! Tweaking the site at the moment, sorry.</p>
       <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
       <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>      
       <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -484,7 +493,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Fixing the site, sorry.</p>
+        <p>Hello, all! Changing the site, sorry.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
@@ -688,7 +697,6 @@ const closeBtn = document.getElementById('closeModal');
 const refreshBtn = document.getElementById('refreshModal');
 const progressBar = document.getElementById('modalProgressBar');
 
-
 let scale = 1, originX = 0, originY = 0;
 let startX = 0, startY = 0, isDragging = false;
 let initialDistance = 0, initialScale = 1;
@@ -707,6 +715,10 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    /* mark modal as open for CSS visibility logic */
+    document.body.classList.add('modal-open');
+
     scale = 1; originX = 0; originY = 0;
     modalImg.style.transform = `translate(0px,0px) scale(1)`;
     modalImg.style.cursor = 'zoom-in';
@@ -715,26 +727,21 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     modalImg.style.opacity = '0';
     modalImg.src = '';
 
-    // Reference the message element
     const progressMessage = document.getElementById('modalProgressMessage');
     progressMessage.style.display = 'none';
-
-    // Track all timeouts so we can clear them if image loads
     const messageTimeouts = [];
 
-    // Message after 3 seconds
+    // Progressive messages
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'These images are kinda big...';
       progressMessage.style.display = 'block';
     }, 5000));
 
-    // Message after 8 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Your connection to these servers is shit...';
       progressMessage.style.display = 'block';
     }, 15000));
 
-    // Message after 15 seconds
     messageTimeouts.push(setTimeout(() => {
       progressMessage.textContent = 'Might as well keep waiting...';
       progressMessage.style.display = 'block';
@@ -753,7 +760,6 @@ document.querySelectorAll('.gallery-img').forEach(img => {
 
     xhr.onload = () => {
       const blobUrl = URL.createObjectURL(xhr.response);
-
       const finish = () => {
         progressBar.style.width = '100%';
         modalImg.src = blobUrl;
@@ -762,11 +768,8 @@ document.querySelectorAll('.gallery-img').forEach(img => {
           progressBar.parentElement.style.display = 'none';
           progressMessage.style.display = 'none';
         }, 100);
-
-        // clear all pending messages
         messageTimeouts.forEach(timeout => clearTimeout(timeout));
       };
-
       finish();
     };
 
@@ -781,7 +784,7 @@ document.querySelectorAll('.gallery-img').forEach(img => {
     xhr.send();
   });
 });
-  
+
 // --------------------
 // Detect input type
 // --------------------
@@ -886,45 +889,39 @@ modal.addEventListener('touchmove', e => {
 }, { passive: false });
 
 // --------------------
-// Reset & Close with mobile tap flash and hybrid support
+// Reset & Close (mobile + desktop)
 // --------------------
 
-// Detect if device supports touch
 const isTouchDevice = () => ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-// Tap/flash effect
 function flashButton(btn) {
   if (!btn) return;
   btn.classList.add('tapped');
   setTimeout(() => btn.classList.remove('tapped'), 150);
 }
 
-// Reset image zoom/position
 const resetModalImage = (e) => {
   scale = 1;
   originX = 0;
   originY = 0;
   modalImg.style.transform = `translate(0px,0px) scale(1)`;
   modalImg.style.cursor = 'zoom-in';
-
-  // Flash for mobile/hybrid tap
   if (e && e.target && isTouchDevice()) flashButton(e.target);
-
-  // Clear focus/hover properly
   if (e && e.target) setTimeout(() => e.target.blur(), 0);
   if (document.activeElement && document.activeElement !== document.body) {
     setTimeout(() => document.activeElement.blur(), 0);
   }
 };
 
-// Close modal handler
 const closeModal = (e) => {
   if (e && e.target && isTouchDevice()) flashButton(e.target);
-
-  // Slight delay so flash is visible
   setTimeout(() => {
     modal.style.display = 'none';
     document.body.style.overflow = '';
+
+    /* remove modal-open class when modal closes */
+    document.body.classList.remove('modal-open');
+
     resetModalImage();
     modalImg.src = '';
     progressBar.style.width = '0%';
@@ -936,108 +933,21 @@ const closeModal = (e) => {
   }, 120);
 };
 
-// Refresh button
-refreshBtn.addEventListener('click', resetModalImage); // desktop & desktop hybrid
+refreshBtn.addEventListener('click', resetModalImage);
 refreshBtn.addEventListener('touchend', e => {
-    resetModalImage(e);    // flash + reset
-    e.preventDefault();    // prevent double trigger
+  resetModalImage(e);
+  e.preventDefault();
 }, { passive: false });
 
-// Close button
-closeBtn.addEventListener('click', closeModal); // desktop & desktop hybrid
+closeBtn.addEventListener('click', closeModal);
 closeBtn.addEventListener('touchend', e => {
-    closeModal(e);        // flash + close
-    e.preventDefault();    // prevent double trigger
+  closeModal(e);
+  e.preventDefault();
 }, { passive: false });
-  
-// Close modal on click outside or Escape
+
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(e); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(e); });
-</script>
-
-
-<!-- BACK TO TOP ARROW -->
   
-<button id="backToTop" title="Go to top" aria-label="Back to top">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-       fill="none" stroke="currentColor" stroke-width="3"
-       stroke-linecap="round" stroke-linejoin="round"
-       style="width: 70%; height: 70%;">
-    <polyline points="18 15 12 9 6 15" />
-  </svg>
-</button>
-
-<script>
-  const backToTopBtn = document.getElementById("backToTop");
-  let scrollCheck = null;
-
-  // Show/hide button on scroll and reset pressed when at the very top
-  window.addEventListener("scroll", () => {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
-
-    if (scrollTop === 0) {
-      resetButtonEffects();
-    }
-  });
-
-  // --- Helper to remove pressed visuals ---
-  const resetButtonEffects = () => {
-    backToTopBtn.classList.remove("pressed");
-    // if you used inline styles anywhere, clear them here as well:
-    backToTopBtn.style.backgroundColor = "";
-    backToTopBtn.style.color = "";
-    backToTopBtn.style.transform = "";
-  };
-
-  // --- Smooth scroll to top (keeps checking and clears pressed when done) ---
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    // clear any previous check
-    if (scrollCheck) {
-      clearInterval(scrollCheck);
-      scrollCheck = null;
-    }
-
-    // Safety: when we reach top, ensure visual state is reset
-    scrollCheck = setInterval(() => {
-      if ((window.scrollY || document.documentElement.scrollTop) === 0) {
-        resetButtonEffects();
-        clearInterval(scrollCheck);
-        scrollCheck = null;
-      }
-    }, 50);
-  };
-
-  // --- Desktop click (normal behavior) ---
-  backToTopBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    scrollToTop();
-  });
-
-  // --- Mobile: treat touchstart (even a long press) like a tap ---
-  backToTopBtn.addEventListener("touchstart", (e) => {
-    // prevent default long-press behavior / synthetic click
-    e.preventDefault();
-
-    // show pressed feedback immediately
-    backToTopBtn.classList.add("pressed");
-
-    // start scrolling right away
-    scrollToTop();
-
-    // remove pressed visual quickly so holding doesn't "stick"
-    // adjust the ms here if you want the pressed visual to last longer
-    setTimeout(resetButtonEffects, 120);
-  });
-
-  // ensure cleanup on end/cancel (safety)
-  backToTopBtn.addEventListener("touchend", resetButtonEffects);
-  backToTopBtn.addEventListener("touchcancel", resetButtonEffects);
-
-  // prevent context menu on long press (optional but helpful on some devices)
-  backToTopBtn.addEventListener("contextmenu", (e) => e.preventDefault());
 </script>
   
   
