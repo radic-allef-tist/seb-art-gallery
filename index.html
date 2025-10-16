@@ -179,53 +179,45 @@ h2 {
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* --- Mobile stacking --- */
+/* Mobile stacking */
 @media (max-width: 768px) {
-  .footer-box {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  .footer-container {
+    flex-direction: column;      /* stack everything vertically */
+    align-items: center;         /* center horizontally */
+    gap: 2rem;                   /* space between sections */
   }
 
   .footer-image img {
-    width: 40vw;   /* scale nicely on mobile */
-    max-width: 200px;
-    margin-bottom: 1rem;
+    width: 50vw;                 /* image takes half the viewport width */
+    max-width: 300px;            /* caps size on mobile */
+    height: auto;
+  }
+
+  .footer-box {
+    width: 90%;                  /* footer box fills most of the screen */
+    flex-direction: column;       /* stack text and buttons vertically */
+    align-items: center;          /* center everything inside box */
+    gap: 2rem;                    /* spacing inside box */
   }
 
   .footer-text {
-    max-width: 100%;
-    margin-bottom: 1rem;
+    max-width: 100%;              /* allow text to fill box */
+    text-align: center;           /* center text for mobile */
   }
 
   .footer-buttons {
-    width: 100%;
-    gap: 1.5rem;
+    flex-direction: column;       /* stack buttons vertically */
+    align-items: center;          /* center buttons */
+    justify-content: center;      /* vertical centering */
+    gap: 1.5rem;                  /* spacing between buttons */
+    width: 100%;                  /* optional: fill box width */
   }
-}
 
-#closeModal, #refreshModal {
-  position: absolute;
-  right: 2vw;
-  z-index: 1100;
-  
-  width: 5rem;
-  height: 5rem;
-  font-size: 4rem;
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  background: rgba(0,0,0,0.6);
-  border: 0.15rem solid white;
-  color: white;
-  cursor: pointer;
-  border-radius: 0.5rem;
-  text-shadow: 0 0 0.3rem rgba(0,0,0,0.7);
-  box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
-  transition: transform 0.2s ease, background-color 0.2s ease,
-              color 0.2s ease, box-shadow 0.2s ease;
+  .buy-print,
+  .buy-epub {
+    width: 80%;                   /* make buttons reasonably wide */
+    align-items: center;          /* center text in buttons */
+  }
 }
 
 #closeModal { top: 2vh; }
