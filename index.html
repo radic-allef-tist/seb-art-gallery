@@ -201,8 +201,8 @@ h2 {
 
   /* Title Image */
   .title-image {
-  max-width: 95%;
-  height: auto;
+    max-width: 95%;
+    height: auto;
   }
 
   /* Footer Visibility */
@@ -237,60 +237,51 @@ h2 {
   .footer-box-mobile .footer-text {
     max-width: 100%;
     text-align: justify;
-    font-size: .8rem;  /* smaller text on mobile */
+    font-size: 0.8rem;  /* smaller text on mobile */
   }
 
   .footer-box-mobile .footer-buttons {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 4rem;       /* more spacing */
+    gap: 4rem;       /* more spacing between buttons */
     margin-top: 1.5rem;
     height: auto;
   }
 
-  .footer-box-mobile .buy-print,
-  .footer-box-mobile .buy-epub {
-    width: 50%;       /* smaller buttons */
-    align-items: center;
+  /* =========================
+     BUTTONS - MOBILE 
+  ========================= */
+  .footer-buttons-mobile .buy-button-mobile {
+    display: inline-block;
+    border-radius: 0.5em;
+    text-align: center;
+    font-weight: bold;
+    width: 45%;          /* smaller, more manageable buttons */
+    font-size: 1.4rem;
+    padding: 0.6em 1em;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
+    margin: 0 auto;       /* centers buttons */
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
   }
 
+  .footer-buttons-mobile .buy-button-mobile.print {
+    background-color: #2d6a4f;
+    border: 0.15em solid #1b4332;
+  }
 
- /* =========================
-   BUTTONS - MOBILE
-========================= */
-.footer-buttons-mobile .buy-button-mobile {
-  display: inline-block;
-  border-radius: 0.5em;
-  text-align: center;
-  font-weight: bold;
-  width: 50%;           /* slightly bigger, more readable */
-  font-size: 1.4rem;    /* smaller than desktop */
-  padding: 0.6em 1em;   /* smaller padding */
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 0.125em 0.375em rgba(0,0,0,0.2);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  text-align: center;
-  margin: 0 auto;       /* centers buttons inside the mobile footer */
-}
+  .footer-buttons-mobile .buy-button-mobile.epub {
+    background-color: #1d3557;
+    border: 0.15em solid #0b1e33;
+  }
 
-.footer-buttons-mobile .buy-button-mobile.print {
-  background-color: #2d6a4f;
-  border: 0.15em solid #1b4332;
-}
+  .footer-buttons-mobile .buy-button-mobile:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
+  }
 
-.footer-buttons-mobile .buy-button-mobile.epub {
-  background-color: #1d3557;
-  border: 0.15em solid #0b1e33;
-}
-
-.footer-buttons-mobile .buy-button-mobile:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
-}
-
-  
 }
   
 
@@ -436,7 +427,7 @@ h2 {
 
       <!-- Footer text box -->
       <div class="footer-text">
-        <p>Hello, all! Still working on things with the site.</p>
+        <p>Hello, all! Still tweaking things with the site.</p>
         <p>If you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p>
         <p>I made this extremely bare bones site to host the higher-res version of the art from my book. Between Print-On-Demand inconsistencies and unpredictable EPUB compression issues, the art kinda got wrecked sometimes.</p>
         <p>Look — I know it's garbage-tier work. I'm not an artist. It took me an unreasonable amount of time to draw this shit. But it got the message across, yeah?</p>
