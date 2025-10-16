@@ -108,19 +108,19 @@ h2 {
 /* --- Footer --- */
 .footer-wrapper {
   display: flex;
-  align-items: flex-start;  /* top-align image & footer box */
+  align-items: center;   /* vertically center image with footer box */
   gap: 2rem;
   max-width: 90%;
   margin: 3rem auto;
-  flex-wrap: wrap;          /* for mobile stacking */
+  flex-wrap: wrap;       /* allow stacking on mobile */
 }
 
 .footer-image img {
-  max-width: 250px;        /* make image larger now */
+  max-width: 200px;      /* control image size */
   height: auto;
   display: block;
 }
-
+  
 .footer-box {
   flex: 1 1 500px;          /* grow to fill remaining space */
   display: flex;
@@ -162,20 +162,7 @@ h2 {
   }
 
   .footer-box {
-    flex-direction: column;
     width: 100%;
-    text-align: center;
-  }
-
-  .footer-text {
-    max-width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .footer-buttons {
-    width: 100%;
-    align-items: center;
-    gap: 1.5rem;
   }
 }
     
@@ -297,7 +284,9 @@ h2 {
 
    <div class="footer-image">
     <img src="https://cdn.jsdelivr.net/gh/radic-allef-tist/seb-art-gallery@main/Watermarked_WebP/Cover_Art_small.webp" alt="Cover Image">
-  </div>     
+  </div>
+
+    <div class="footer-box">
     
     <div class="footer-text">
       <p>Hey all, if you've found this site then you read my book, found my socials, or have one of the QR codes I left lying around. Either way, welcome!</p> 
