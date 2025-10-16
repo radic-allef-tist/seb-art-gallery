@@ -109,13 +109,13 @@ h2 {
 .footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;   /* make text and buttons columns same height */
   flex-wrap: wrap;
   gap: 2rem;
   max-width: 90%;
   margin: 3rem auto 2rem auto;
   padding: 2rem;
-  background-color: #fff; /* white box */
+  background-color: #fff; 
   border: 2px solid #ccc;
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
@@ -125,32 +125,29 @@ h2 {
 }
 
 .footer-text {
-  flex: 2 1 500px;
+  flex: 2 1 500px;      /* text takes most of the width */
   text-align: left;
+  max-width: 60%;        /* stops text near center on PC */
 }
 
 .footer-buttons {
-  flex: 1 1 200px;
+  flex: 1 1 200px;       /* buttons column */
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: center;  /* vertically center buttons */
+  align-items: center;      /* horizontally center buttons */
   gap: 1.5rem;
 }
 
-/* Override previous button container margins and widths */
+/* Override button container margins */
 .buy-print,
 .buy-epub {
   margin: 0;
   max-width: none;
-  align-items: flex-end;
+  align-items: center;
 }
 
-.buy-print {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
+.buy-print,
 .buy-epub {
   display: flex;
   flex-direction: column;
@@ -186,21 +183,28 @@ h2 {
   box-shadow: 0 0.25em 0.5em rgba(0,0,0,0.3);
 }
 
-/* --- Footer mobile responsiveness --- */
+/* Mobile responsiveness */
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
     align-items: center;
   }
+
+  .footer-text {
+    max-width: 90%;      /* allow text to take full width on mobile */
+    text-align: center;
+  }
+
   .footer-buttons {
     align-items: center;
+    justify-content: center;
   }
+
   .buy-print,
   .buy-epub {
     align-items: center;
   }
 }
-
 
     
     
@@ -332,7 +336,7 @@ h2 {
         and I can license you the unwatermarked versions or something (I know the watermarks I put on are just <i>so</i> toxic). I don't know how this stuff works, but we can work a deal out.
       </p>
 
-      <p>Let me know if the buy lunks here break or if the book gets removed by our glorious "free speech absolutists".</p>
+      <p>Let me know if the buy links here break or if the book gets removed by our glorious "free speech absolutists".</p>
       <p>Thanks again to everyone for the support. Stay strong out there.</p>
         
       <p>-Radic</p>
